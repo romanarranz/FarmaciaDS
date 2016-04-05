@@ -28,15 +28,15 @@ Se pueden utilizar lenguajes de propósito general como **UML como ADLs** así c
 ##Patrones que vamos a usar
 
 ###Aplicación Android y Web
-- Singleton conector BD
-- Fachada en conector de base de datos
-- Patrón Delegación (conector BD a otra clase que hace las operaciones)
-- Singleton Cesta¿?
-- Inmutable Producto
-- Builder para rellenar el catalogo de productos
-- Delegación para cargar catalogo al seleccionar farmacia para visualizar posteriormente al pinchar en mostrar catalogo
-- Proxy carga de puntos Google Maps¿?
-- Patrón Bridge para implementación de los métodos de cliente y administrador (abstracta Usuario)
+- `Singleton` conector BD
+- `Fachada` en conector de base de datos
+- Patrón `Delegación` (conector BD a otra clase que hace las operaciones)
+- `Singleton` Cesta¿?
+- `Inmutable` Producto
+- `Builder` para rellenar el catalogo de productos
+- `Delegación` para cargar catalogo al seleccionar farmacia para visualizar posteriormente al pinchar en mostrar catalogo
+- `Proxy` carga de puntos Google Maps¿?
+- Patrón `Bridge` para implementación de los métodos de cliente y administrador (abstracta Usuario)
 
 ##Clases
 
