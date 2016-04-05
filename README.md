@@ -3,7 +3,9 @@ FarmaciaDS
 
 Sistema de farmacias para la Práctica 2 de la asignatura Desarrollo del Software.
 
-##Protocolo para obtener la representación de una AS 
+##Arquitectura Software
+
+###Protocolo para obtener la representación de una Arquitectura Software 
 
 1. Definir los aspectos estructurales como una composición de componentes
 2. Las estructuras globales de control
@@ -14,7 +16,7 @@ Sistema de farmacias para la Práctica 2 de la asignatura Desarrollo del Softwar
 7. Su distribución física
 8. Su escalabilidad y su desempeño  
 
-##Descripción de una AS
+###Descripción de una Arquitectura Software
 
 1. Guiar en la construcción y mantenimiento del sistema 
 2. Ayudar a planear los costes y evolución del sistema 
@@ -24,6 +26,13 @@ Sistema de farmacias para la Práctica 2 de la asignatura Desarrollo del Softwar
 6. Capturar idiomas arquitectónicos reutilizables (tales como estilos arquitectónicos y patrones) 
 
 Se pueden utilizar lenguajes de propósito general como **UML como ADLs** así como para modelar procesos de negocio y similares. 
+
+###Ejemplos de Estilos Arquitectónicos
+Pipes and filters, Tipos de datos abstractos y OO, Repositorios, Capas, Basados en Eventos, Interpretes, etc.
+
+###Estilo Arquitectónico elegido
+
+Usaremos una **Arquitectura Centradas en los Datos** ya que vamos a tener una base de datos en el servidor a la que van a acceder los clientes web y sobre la que vamos a realizar sincronizaciones con la base de datos de SQLite en los dispositivos Android. Además las aplicaciones de los clientes Android acceden a los datos y ejecutan sus propias operaciones.
 
 ##Patrones que vamos a usar
 
@@ -35,8 +44,14 @@ Se pueden utilizar lenguajes de propósito general como **UML como ADLs** así c
 - `Inmutable` Producto
 - `Builder` para rellenar el catalogo de productos
 - `Delegación` para cargar catalogo al seleccionar farmacia para visualizar posteriormente al pinchar en mostrar catalogo
-- `Proxy` carga de puntos Google Maps¿?
-- Patrón `Bridge` para implementación de los métodos de cliente y administrador (abstracta Usuario)
+- `Delegación` carga de puntos Google Maps¿?
+- Patrón `Bridge` para implementación de los métodos de cliente y administrador (abstracta Usuario), también se podía haber usado `Factoria`
+- `Observable Observador` ya que varios clientes tienen reservas de productos, con este patron podemos informar a todos.
+- `Visitante` realizar la misma operacion en cada farmacia y acumular el resultado.
+
+##Consultas al profesor
+
+Tenemos que hacer los diagramas de casoss de uso y el de secuencia para la interacción entre la aplicacion y el cliente web.
 
 ##Clases
 
