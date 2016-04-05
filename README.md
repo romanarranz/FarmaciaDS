@@ -40,9 +40,7 @@ Se pueden utilizar lenguajes de propósito general como **UML como ADLs** así c
 
 ##Clases
 
-*Clase Cliente especialización de Usuario (sobraria usando el patrón bridge)*
-*Clase Administrador especialización de Usuario (sobraria usando el patrón bridge)*
-
+*Tanto la clase* ***Cliente*** *como la clase* ***Administrador*** *que serían especializaciones de Usuario sobrarían usando el patrón de diseño* `Bridge`
 
 ###Aspectos comunes a Clientes y Administradores
 - Atributos
