@@ -17,7 +17,7 @@ public class Service {
 	
 	private PersonDao personDao = new PersonDao();
 	
-	// Method which sould return a single person object in XML format
+	// Method which should return a single person object in XML format
 	@GET
 	@Path("/getPersonByIdXML/{id}")
 	@Produces(MediaType.APPLICATION_XML)
@@ -25,7 +25,7 @@ public class Service {
 		return personDao.getPersonById(id);
 	}
 	
-	// Method which sould return a single person object in JSON format
+	// Method which should return a single person object in JSON format
 	@GET
 	@Path("/getPersonByIdJSON/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -33,11 +33,46 @@ public class Service {
 		return personDao.getPersonById(id);
 	}
 	
-	// Method which sould return a list of all person object in XML format
+	// Method which should return a list of all person object in XML format
 	@GET
 	@Path("/getAllPersonInXML")
 	@Produces(MediaType.APPLICATION_XML)
 	public List<Person> getAllPersoInXML(){
 		return personDao.getAllPerson();
+	}
+	
+	// Insert new person method - return JSON for ok or not ok response
+	@GET
+	@Path("/savePerson/{fullname}/{age}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String saveNewPerson(@PathParam("fullname") String fullname, @PathParam("age") int age){
+		Person person = new Person();
+		person.setFullName(fullname);
+		person.setAge(age);
+		
+		if(!personDao.savePerson(person)){
+			return "{\"status\":\"ok\"}";
+		}
+		else {
+			return "{\"status\":\"not ok\"}";
+		}
+	}
+	
+	// Update an already existing person - result JSON for ok or not ok response
+	@GET
+	@Path("/savePerson/{id}/{fullname}/{age}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String updatePerson(@PathParam("id") int id, @PathParam("fullname") String fullname, @PathParam("age") int age){
+		Person person = new Person();
+		person.setId(id);
+		person.setFullName(fullname);
+		person.setAge(age);
+		
+		if(!personDao.savePerson(person)){
+			return "{\"status\":\"ok\"}";
+		}
+		else {
+			return "{\"status\":\"not ok\"}";
+		}
 	}
 }
