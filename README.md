@@ -45,7 +45,7 @@ Si nos da tiempo, haremos los dos roles en las dos plataformas
 - `Singleton` para crear el conector BD local, el conector BD del servidor y la Cesta de productos
 - `Factoría` para la creación de los Productos.
 - `Fachada` en conector de base de datos
-- `Inmutable` Producto
+- `Inmutable` Producto solo en el cliente app Android.
 - `Delegación` para cargar catalogo al seleccionar farmacia para visualizar posteriormente al pinchar en mostrar catalogo, para la carga de puntos Google Maps y para el conector BD a otra clase que hace las operaciones
 - Patrón `Bridge` para implementación de los métodos de cliente y administrador (abstracta Usuario), también se podía haber usado `Factoria`
 - `Observable Observador` ya que varios clientes tienen reservas de productos, con este patron podemos informar a todos cuando estén disponibles por e-mail. Sólo en el Servidor si no hacemos el rol user en el Server
