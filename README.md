@@ -47,7 +47,7 @@ Usaremos una **Arquitectura Centradas en los Datos** ya que vamos a tener una ba
 - Patrón `Bridge` para implementación de los métodos de cliente y administrador (abstracta Usuario), también se podía haber usado `Factoria`
 - `Observable Observador` ya que varios clientes tienen reservas de productos, con este patron podemos informar a todos cuando estén disponibles.
 - `Visitante` realizar la misma operacion en cada farmacia y acumular el resultado.
-- `Factoría` o `Factoría abstracta`para la creación de los Productos.
+- `Factoría` o `Factoría abstracta` para la creación de los Productos.
 
 ##Consultas al profesor
 
