@@ -34,20 +34,22 @@ Pipes and filters, Tipos de datos abstractos y OO, Repositorios, Capas, Basados 
 
 Usaremos una **Arquitectura Centradas en los Datos** ya que vamos a tener una base de datos en el servidor a la que van a acceder los clientes web y sobre la que vamos a realizar sincronizaciones con la base de datos de SQLite en los dispositivos Android. Además las aplicaciones de los clientes Android acceden a los datos y ejecutan sus propias operaciones.
 
+### Cliente -> Android en principio
+
+### Gestión -> Web en principio
+Si nos da tiempo, haremos los dos roles en las dos plataformas
+
 ##Patrones que vamos a usar
 
 ###Aplicación Android y Web
-- `Singleton` para crear el conector BD y la Cesta de productos
+- `Singleton` para crear el conector BD local, el conector BD del servidor y la Cesta de productos
+- `Factoría` para la creación de los Productos.
 - `Fachada` en conector de base de datos
-- Patrón `Delegación` (conector BD a otra clase que hace las operaciones)
 - `Inmutable` Producto
-- `Builder` para rellenar el catalogo de productos
-- `Delegación` para cargar catalogo al seleccionar farmacia para visualizar posteriormente al pinchar en mostrar catalogo
-- `Delegación` carga de puntos Google Maps¿?
+- `Delegación` para cargar catalogo al seleccionar farmacia para visualizar posteriormente al pinchar en mostrar catalogo, para la carga de puntos Google Maps y para el conector BD a otra clase que hace las operaciones
 - Patrón `Bridge` para implementación de los métodos de cliente y administrador (abstracta Usuario), también se podía haber usado `Factoria`
-- `Observable Observador` ya que varios clientes tienen reservas de productos, con este patron podemos informar a todos cuando estén disponibles.
-- `Visitante` realizar la misma operacion en cada farmacia y acumular el resultado.
-- `Factoría` o `Factoría abstracta` para la creación de los Productos.
+- `Observable Observador` ya que varios clientes tienen reservas de productos, con este patron podemos informar a todos cuando estén disponibles por e-mail. Sólo en el Servidor si no hacemos el rol user en el Server
+- `Visitante` realizar la misma operacion en cada farmacia y acumular el resultado. Sólo en Android si no hacemos el rol admin en Android
 
 ##Consultas al profesor
 
