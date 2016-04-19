@@ -37,17 +37,17 @@ Usaremos una **Arquitectura Centradas en los Datos** ya que vamos a tener una ba
 ##Patrones que vamos a usar
 
 ###Aplicación Android y Web
-- `Singleton` conector BD
+- `Singleton` conector BD y Cesta
 - `Fachada` en conector de base de datos
 - Patrón `Delegación` (conector BD a otra clase que hace las operaciones)
-- `Singleton` Cesta¿?
 - `Inmutable` Producto
 - `Builder` para rellenar el catalogo de productos
 - `Delegación` para cargar catalogo al seleccionar farmacia para visualizar posteriormente al pinchar en mostrar catalogo
 - `Delegación` carga de puntos Google Maps¿?
 - Patrón `Bridge` para implementación de los métodos de cliente y administrador (abstracta Usuario), también se podía haber usado `Factoria`
-- `Observable Observador` ya que varios clientes tienen reservas de productos, con este patron podemos informar a todos.
+- `Observable Observador` ya que varios clientes tienen reservas de productos, con este patron podemos informar a todos cuando estén disponibles.
 - `Visitante` realizar la misma operacion en cada farmacia y acumular el resultado.
+- `Factoría` o `Factoría abstracta`para la creación de los Productos.
 
 ##Consultas al profesor
 
