@@ -37,7 +37,7 @@ Usaremos una **Arquitectura Centradas en los Datos** ya que vamos a tener una ba
 ##Patrones que vamos a usar
 
 ###Aplicación Android y Web
-- `Singleton` conector BD y Cesta
+- `Singleton` para crear el conector BD y la Cesta de productos
 - `Fachada` en conector de base de datos
 - Patrón `Delegación` (conector BD a otra clase que hace las operaciones)
 - `Inmutable` Producto
