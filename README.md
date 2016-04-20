@@ -85,3 +85,9 @@ Tenemos que hacer los diagramas de casoss de uso y el de secuencia para la inter
 - [Patrones Software](https://sourcemaking.com/design_patterns)
 
 ***Autores: Román Arranz Guerrero y Hugo Maldonado Cózar***
+
+
+
+## Licencia
+
+Los detalles se encuentran en el archivo `LICENSE`. En resumen, todo el contenido tiene como licencia **MIT License** por lo tanto es totalmente gratuito su uso para proyectos privados o de uso comercial.
