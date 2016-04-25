@@ -1,0 +1,8 @@
+JQUERY LOCATION PICKER 
+https://github.com/Logicify/jquery-locationpicker-plugin/blob/master/LICENSE
+
+BOOTSTRAP
+https://github.com/twbs/bootstrap/blob/master/LICENSE
+
+FONT AWESOME
+https://fortawesome.github.io/Font-Awesome/license/

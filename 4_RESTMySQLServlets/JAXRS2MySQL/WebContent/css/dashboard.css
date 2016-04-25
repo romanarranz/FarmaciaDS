@@ -5,6 +5,7 @@
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
   padding-top: 50px;
+  overflow-x: hidden !important;
 }
 
 
@@ -24,6 +25,10 @@ body {
 .navbar-fixed-top {
   border: 0;
   background-color: #fff;
+}
+
+button.navbar-toggle.collapsed {
+	background-color: #454545;
 }
 
 /*
