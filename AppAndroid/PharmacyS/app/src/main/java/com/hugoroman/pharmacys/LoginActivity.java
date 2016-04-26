@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+//http://sourcey.com/beautiful-android-login-and-signup-screens-with-material-design/
+
 public class LoginActivity extends Activity {
 
     private static final int REQUEST_SIGNUP = 0;

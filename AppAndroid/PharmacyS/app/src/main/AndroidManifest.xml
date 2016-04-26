@@ -39,6 +39,9 @@
                 android:value="com.hugoroman.pharmacys.LoginActivity" />
         </activity>
 
+        <!--<activity android:name=".LoginActivity" android:theme="@style/AppTheme" />
+        <activity android:name=".SignUpActivity" android:theme="@style/AppTheme" />-->
+
     </application>
 
 </manifest>
