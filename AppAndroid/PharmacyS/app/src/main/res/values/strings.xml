@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">PharmacyS</string>
+    <string name="login">Login</string>
+    <string name="signup">Sign up</string>
+    <string name="no_account">No account yet? Create one</string>
+    <string name="member">Already a member? Sign in</string>
+    <string name="exit">Press back to exit</string>
+</resources>
