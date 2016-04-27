@@ -39,9 +39,12 @@ public class MyServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
 		PrintWriter out = response.getWriter();
-		out.print("SERVLET CONTESTANDO AL POST");
+		response.setContentType("text/xml");
+		String somedata = "whatever";
+		 out.print("\n<root>");
+		 out.print("\n   <othertag>" + somedata + "</othertag>");
+		 out.print("\n</root>");
 	}
 
 }

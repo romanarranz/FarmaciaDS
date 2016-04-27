@@ -97,44 +97,40 @@
       	<!-- Barra de navegacion izquierda -->
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-          	<li class="active"><a href="#">Mi Farmacia</a></li>
+          	<li><a href="account.html">Mi Farmacia</a></li>
             <li><a href="product.html">Productos</a></li>
             <li><a href="location.html">Ubicacion</a></li>
-            <li><a href="category.html">Categorias</a></li>            
+            <li class="active"><a href="#">Categorias</a></li>            
           </ul>
         </div>
         
         <!-- Bloque central que ocupa un 75% de la pantalla, 100% en responsive movil -->
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div id="main" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
         
           <div class="row">
-            <!-- Cuadro de amdinistracion de mi cuenta que ocupa un 58% de la pantalla -->
-          	<div class="col-md-7 text-center" style="height: 600px; background: #ebeff2; margin: 0 20%">
-          		<h1 style="font-size:40px;">Mi Cuenta</h1>
-          		<hr style="border-top: 1px dashed #cccccc">
-          		<div class="form-group text-left">
-    				<label for="exampleInputEmail1">Email</label>
-    				<input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
-  				</div>
-  				<div class="form-group text-left">
-    				<label for="fullname">Nombre</label>
-    				<input type="email" class="form-control" id="fullname" placeholder="Fullname">
-  				</div>
-  				<div class="form-group text-left">
-    				<label for="surname">Apellidos</label>
-    				<input type="email" class="form-control" id="fullname" placeholder="Surname">
-  				</div>
-  				<div class="form-group text-left">
-    				<label for="fullname">Contraseña actual</label>
-    				<input type="email" class="form-control" id="fullname" placeholder="Current password">
-  				</div>
-  				<div class="form-group text-left">
-    				<label for="fullname">Nueva contraseña</label>
-    				<input type="email" class="form-control" id="fullname" placeholder="New password">
-  				</div>
-  				<!-- Indicates a successful or positive action -->
-				<button type="button" class="btn btn-success">Send</button>
+          	<div id="1" class="col-md-6 maincategory" style="height: 220px;">
+          		<img class="img-thumbnail" src="http://10.211.55.6/img/baby_cat.png" alt="" style="height: 200px;"/>
           	</div>
+          	<div class="col-md-6 maincategory" style="height: 220px;">
+          		<img class="img-thumbnail" src="http://10.211.55.6/img/nutrition_cat.png" alt="" style="height: 200px;"/>
+          	</div>
+          	<div class="col-md-6 maincategory" style="height: 220px;">
+          		<img class="img-thumbnail" src="http://10.211.55.6/img/health_cat.png" alt="" style="height: 200px;"/>
+          	</div>
+          	<div class="col-md-6 maincategory" style="height: 220px;">
+          		<img class="img-thumbnail" src="http://10.211.55.6/img/natural_cat.png" alt="" style="height: 200px;"/>
+          	</div>
+          	<div class="col-md-6 maincategory" style="height: 220px;">
+          		<img class="img-thumbnail" src="http://10.211.55.6/img/hygiene_cat.png" alt="" style="height: 200px;"/>
+          	</div>
+          	<div class="col-md-6 maincategory" style="height: 220px;">
+          		<img class="img-thumbnail" src="http://10.211.55.6/img/cosmetic_cat.png" alt="" style="height: 200px;"/>
+          	</div>
+          	<div class="col-md-6 maincategory" style="height: 220px;">
+          		<img class="img-thumbnail" src="http://10.211.55.6/img/veterinary_cat.png" alt="" style="height: 200px;"/>
+          	</div>
+          </div>
+            
           </div>
         </div>
       </div>
@@ -144,6 +140,9 @@
     ================================================== -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    
+    <!-- CategoryJS -->
+    <script src="../js/categorias.js"></script>
     
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="../assets/js/ie10-viewport-bug-workaround.js"></script>
