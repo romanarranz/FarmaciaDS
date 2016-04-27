@@ -6,7 +6,7 @@
 		
 		<!-- Database Connection Settings -->
 		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-		<property name="hibernate.connection.url">jdbc:mysql://10.211.55.6:3306/testws</property>
+		<property name="hibernate.connection.url">jdbc:mysql://10.211.55.6:3306/pharmacyS</property>
 		<property name="hibernate.connection.username">roman</property>
 		<property name="hibernate.connection.password">o5WKxJkRXw</property>
 		
@@ -19,6 +19,7 @@
 		<!-- Names of the entity classes -->
 		<mapping class="model.Person"/>
 		<mapping class="model.Employee"/>
+		<mapping class="model.Pharmacy"/>
 		
 	</session-factory>
 	
