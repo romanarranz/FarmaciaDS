@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	
+	<title>PharmacyS REST Service</title>	
+	
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	
+	<!-- Custom css -->
+	<link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+     	<div class="container">
+	        <div class="navbar-header">
+	        	<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+	            	<span class="sr-only">Toggle navigation</span>
+	            	<span class="icon-bar"></span>
+	            	<span class="icon-bar"></span>
+	            	<span class="icon-bar"></span>
+	          	</button>
+	          	<a class="navbar-brand" href="#">PharmacyS</a>
+	        </div>
+        
+        	<div id="navbar" class="navbar-collapse collapse">
+          	<form class="navbar-form navbar-right">
+            	<div class="form-group">
+              		<input type="text" placeholder="Email" class="form-control">
+            	</div>
+            	<div class="form-group">
+              		<input type="password" placeholder="Password" class="form-control">
+            	</div>
+            	<button type="submit" class="btn btn-success">Sign in</button>
+          	</form>
+        	</div><!--/.navbar-collapse -->
+      	</div>
+    </nav>
+    
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+     	<div class="container">
+     		<h1 class="wellcome">Wellcome to our Pharmacy API REST!</h1>
+	     	<div class="row">
+	     		<div class="col-md-7">
+	     		
+		        	<p>U can access to all resources introducing the next urls on the list:</p>
+		        	<h3>Getters Operations</h3>
+		        	<ul>
+		        		<li class="uri link">http://localhost:8080/pharmacys/rest/ctofservice</li>
+		        		<li class="uri link">http://localhost:8080/pharmacys/rest/ftocservice</li>
+		        		<li class="uri link">http://localhost:8080/pharmacys/rest/service/getPersonByIdXML/{id}</li>
+		        		<li class="uri link">http://localhost:8080/pharmacys/rest/service/getPersonByIdJSON/{id}</li>
+		        		<li class="uri link">http://localhost:8080/pharmacys/rest/service/getAllPersonInXML</li>
+		        		<li class="uri link">http://localhost:8080/pharmacys/rest/service/getAllPersonInJSON</li>       		
+		        	</ul>
+		        	
+		        	<h3>Insert Operations</h3>
+		        	<ul>
+		        		<li class="uri link">http://localhost:8080/pharmacys/rest/service/savePerson/{fullname}/{age}</li>
+		        	</ul>
+		        	
+		        	<h3>Update Operations</h3>
+		        	<ul>
+		        		<li class="uri link">http://localhost:8080/pharmacys/rest/service/savePerson/{id}/{fullname}/{age}</li>
+		        	</ul>
+		        	<br>		        	
+					
+		        	<p>Additionally you can do a click on the previous links to select what uri you want test, when its done click on Test</p>
+		        	
+		        	<!-- Radio format -->
+		        	<div class="radio">
+					  	<label for="formatjson">
+					    	<input type="radio" name="format" id="formatjson" value="json" checked>	JSON				    	
+					  	</label>
+					  	<br>
+					  	<label for="formatxml">
+					  		<input type="radio" name="format" id="formatxml" value="xml"> XML
+					  	</label>
+					</div>
+					
+					<!-- Input url -->
+		        	<label for="basic-url">Write your URL for testing</label>
+					<div class="input-group">
+					  	<span class="input-group-addon" id="basic-addon3">http://localhost:8080/pharmacys/rest/</span>
+					  	<input id="selected" type="text" class="form-control" aria-describedby="basic-addon3">
+					</div>
+					
+					<br>
+		        	<p><button id="button" type="button" class="btn btn-primary btn-lg">Test</button></p>
+	        	</div>
+	        	<div class="col-md-5">
+	        		<p class="orange">Below you can see the output of the rest service</p>
+	        		<div id="out">
+	        			<div id="loading">
+	        				<img src="img/ajax-loader.gif" alt=""/>
+	        			</div>
+	        			<div id="output"></div>
+	        		</div>
+	        	</div>
+        	</div>
+      	</div>
+    </div>
+    
+    <div class="container">
+    	<!-- Example row of columns -->
+      <div class="row">
+        	<div class="col-md-4">
+          		<h2>Heading</h2>
+          		<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          		<p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+        	</div>
+        	<div class="col-md-4">
+          		<h2>Heading</h2>
+          		<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          		<p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+       		</div>
+        	<div class="col-md-4">
+          		<h2>Heading</h2>
+          		<p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+          		<p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+        	</div>
+      	</div>
+
+      	<hr>
+    	<footer>
+        	<p>&copy; 2015 Company, Inc.</p>
+      	</footer>
+    </div><!-- /container -->
+	<!-- Javascript
+	===================== -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+	<script src="js/JSONPrettyPrint.js"></script>
+	<script src="js/XMLPrettyPrint.js"></script>
+	<script src="js/script.js"></script>
+</body>
+</html>
