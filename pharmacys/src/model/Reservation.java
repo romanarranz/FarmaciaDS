@@ -11,7 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import dao.ProductDao;
+import dao.DBConnector;
 
 @Entity
 @Table(name="RESERVATION")
@@ -57,13 +57,13 @@ public class Reservation {
 	// LIST_PRODUCT
 	private Map<Integer, Product> getProductList(){
 		Map<Integer, Product> productList = new HashMap<Integer, Product>();
-		ProductDao productdao = new ProductDao();
+		DBConnector dbc = new DBConnector();
 		
 		String [] plistArray = this.productList.split(",");
 		int key;
 		for(int i = 0; i<plistArray.length; i++){
 			key = Integer.parseInt(plistArray[i]);
-			productList.put(key, productdao.getProductById(key));
+			productList.put(key, dbc.getProductById(key));
 		}
 		
 		return productList;

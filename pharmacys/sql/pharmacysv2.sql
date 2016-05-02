@@ -93,7 +93,6 @@ CREATE TABLE `PHARMACY` (
 
 LOCK TABLES `PHARMACY` WRITE;
 /*!40000 ALTER TABLE `PHARMACY` DISABLE KEYS */;
-INSERT INTO `PHARMACY` VALUES ('1298377BG','FARMACIA SANTA MARIA',958178920,'',8,19);
 /*!40000 ALTER TABLE `PHARMACY` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -141,8 +140,9 @@ CREATE TABLE `PRODUCT` (
   `SIZE` int(11) NOT NULL,
   `LOT` varchar(45) NOT NULL,
   `URL_IMG` varchar(500) DEFAULT NULL,
+  `QUERY_COUNT` int(11) DEFAULT '0',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -151,7 +151,7 @@ CREATE TABLE `PRODUCT` (
 
 LOCK TABLES `PRODUCT` WRITE;
 /*!40000 ALTER TABLE `PRODUCT` DISABLE KEYS */;
-INSERT INTO `PRODUCT` VALUES (1,'BABY','Nestle Nestum Cerelaes','Nestle Nestum Cerelaes Sin Gluten es una papilla de cereales con bifidus lactis y prebióticos. No contiene azucares ni gluten. Proporcionan sabores mas naturales, facilitan la digestión y ayudan al sistema inmunitario.','Nestle','g','2016-08-17',500,'129081BA',NULL);
+INSERT INTO `PRODUCT` VALUES (1,'BABY','Nestle Nestum Cerelaes','Nestle Nestum Cerelaes Sin Gluten es una papilla de cereales con bifidus lactis y prebióticos. No contiene azucares ni gluten. Proporcionan sabores mas naturales, facilitan la digestión y ayudan al sistema inmunitario.','Nestle','g','2016-08-17',500,'129081BA',NULL,0),(3,'medical','ibuprofeno','','layer','gr','2019-10-21',22,'34989B','',0);
 /*!40000 ALTER TABLE `PRODUCT` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -220,4 +220,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-05-02  0:21:18
+-- Dump completed on 2016-05-02 21:43:29

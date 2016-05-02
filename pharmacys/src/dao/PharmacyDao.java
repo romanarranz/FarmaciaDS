@@ -12,7 +12,7 @@ public class PharmacyDao {
 	
 	SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 
-	public Pharmacy getPharmacyByCIF(String cif){
+	protected Pharmacy getPharmacyByCIF(String cif){
 		Pharmacy pharmacy = null;
 		Session session = null;
 		
@@ -37,7 +37,7 @@ public class PharmacyDao {
 		return pharmacy;
 	}
 	
-	public List<Pharmacy> getAllPharmacies(){
+	protected List<Pharmacy> getAllPharmacies(){
 		List<Pharmacy> pharmacies = null;
 		Session session = null;
 		
@@ -57,5 +57,78 @@ public class PharmacyDao {
 		}
 		
 		return pharmacies;
+	}
+	
+	protected boolean insertPharmacy(Pharmacy p){
+		Session session = null;
+		boolean hasErrors = false;
+		
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			session.save(p);
+			session.getTransaction().commit();
+		}
+		catch (Exception e){
+			if(session != null)
+				session.getTransaction().rollback();
+			
+			hasErrors = true;
+		}
+		finally {
+			if(session != null)
+				session.close();
+		}
+		
+		return hasErrors;
+	}
+	
+	protected boolean updatePharmacy(Pharmacy p){
+		Session session = null;
+		boolean hasErrors = false;
+		
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			session.update(p);
+			session.getTransaction().commit();
+		}
+		catch (Exception e){
+			if(session != null)
+				session.getTransaction().rollback();
+			
+			hasErrors = true;
+		}
+		finally {
+			if(session != null)
+				session.close();
+		}
+		
+		return hasErrors;
+	}
+	
+	protected boolean deletePharmacy(Pharmacy p){
+		Session session = null;
+		boolean hasErrors = false;
+		
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			session.delete(p);
+			session.getTransaction().commit();
+		}
+		catch (Exception e){
+			if(session != null)
+				session.getTransaction().rollback();
+			
+			hasErrors = true;
+		}
+		finally {
+			if(session != null)
+				session.close();
+		}
+		
+		return hasErrors;
+		
 	}
 }

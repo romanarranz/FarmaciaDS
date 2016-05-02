@@ -25,7 +25,8 @@ import javax.xml.bind.annotation.XmlType;
 		"expirationDate",
 		"size",
 		"lot",
-		"urlImg"
+		"urlImg",
+		"queryCount"
 })
 public class Product {
 	
@@ -61,6 +62,9 @@ public class Product {
 	@Column(name="URL_IMG")
 	private String urlImg;
 	
+	@Column(name="QUERY_COUNT")
+	private int queryCount;
+	
 	public Product(){}
 	public Product(String name, String descr, String lab, String u, Date expDate, int size, String lot, String url){
 		this.name = name;
@@ -71,6 +75,7 @@ public class Product {
 		this.size = size;
 		this.lot = lot;
 		this.urlImg = url;
+		this.queryCount = 0;
 	}
 	
 	// ID
@@ -161,5 +166,14 @@ public class Product {
 	}
 	public void setUrlImg(String uri){
 		this.urlImg = uri;
+	}
+	
+	// QUERY_COUNT
+	@XmlElement(required=true)
+	public int getQueryCount(){
+		return this.queryCount;
+	}
+	public void setQueryCount(int count){
+		this.queryCount = count;
 	}
 }

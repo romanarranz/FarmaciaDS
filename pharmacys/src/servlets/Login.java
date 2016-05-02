@@ -1,9 +1,7 @@
 package servlets;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
-import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import dao.UserDao;
 import model.UserRefinedAbstraction;
+import util.SHA512;
 
 /**
  * Servlet implementation class MyServlet
@@ -35,10 +34,12 @@ public class Login extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-		PrintWriter out = response.getWriter();
-		out.print("SERVLET CONTESTANDO AL GET");
+		String logout  = request.getParameter("logout");
+		
+		if(logout.equals("yes")){
+			request.getSession().invalidate();
+			request.getRequestDispatcher("/index.jsp").forward(request, response);
+		}
 	}
 
 	/**
@@ -63,15 +64,24 @@ public class Login extends HttpServlet {
 				String email = request.getParameter("email");
 		        String password = request.getParameter("password");
 		        
-		        UserRefinedAbstraction user = userdao.getUserById(email);
+		        try {
+		        	password = SHA512.hashText(password);
+		        }
+		        catch(Exception e) {
+		        	e.getStackTrace();
+		        }
+		        
+		        UserRefinedAbstraction user = userdao.getUserByEmailPassword(email,password);
 		        
 		        if (user != null) {
+		        	System.out.println("encontrado");
 		            request.getSession().setAttribute("user", user.getName());
-		            response.sendRedirect("/pharmacys/index.jsp");
+		            response.sendRedirect("/pharmacys/management/product.jsp");
 		        }
 		        else {
-		            request.setAttribute("error", "Unknown user, please try again");
-		            request.getRequestDispatcher("/pharmacys/index.jsp").forward(request, response);
+		        	System.out.println("no encontrado");
+		            request.getSession().setAttribute("error", "Unknown user, please try again");
+		            response.sendRedirect("/pharmacys/index.jsp");
 		        }
 				break;
 			
@@ -81,7 +91,7 @@ public class Login extends HttpServlet {
 				break;
 				
 			default:
-				request.getRequestDispatcher("/pharmacys/index.jsp").forward(request, response);
+				request.getRequestDispatcher("/index.jsp").forward(request, response);
 				break;
 		}		       
     }

@@ -11,11 +11,29 @@
    		<div class="inner-bg">
    			<div class="container">
    			<%
- 				// si tenemos un visitante nuevo
-				if(session.isNew()){									
+   				// mostrar todos los atributos definidos en la sesion
+				/*for (Enumeration e = session.getAttributeNames(); e.hasMoreElements(); ) {     
+					String attribName = (String) e.nextElement();
+					Object attribValue = session.getAttribute(attribName);
+					System.out.println(attribName + " - " + attribValue);
+				}*/			 			
+				
+				// si la sesion es nueva o el atributo user no esta definido
+				if(session.isNew()||session.getAttribute("user") == null){ 	
 			%>
-<div class="row">
+				<div class="row">
                 <div class="col-sm-8 col-sm-offset-2 text">
+                	<%
+                	if(session.getAttribute("error") != null){                		
+                	%>
+                	<div class="alert alert-danger" role="alert">
+  						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+  						<span class="sr-only">Error:</span>
+  						Incorrect email or password
+					</div>
+                	<%} 
+                	session.removeAttribute("error");
+                	%>
                     <h1><strong>PharmacyS</strong> Login Form</h1>
                     <div class="description">
 	                    <p>
@@ -74,21 +92,29 @@
                 </div> <!-- end row -->
 			<%					
 				}
-				else {
-					String email = null;
-					email = session.getAttribute("user").toString();
+				else { // la sesion no es nueva y session tiene definidos atributos
+					String username = null;
+					if(session.getAttribute("user") != null)
+						username = session.getAttribute("user").toString();
 					
-					if(email != null){
+					if(username != null){
 			%>
 				<div class="row">
                 <div class="col-sm-8 col-sm-offset-2 text">
-                    <h1>Welcome <strong><% out.print(email); %></strong> to PharmacyS </h1>
-                    
+                    <h1>Welcome <strong><% out.print(username); %></strong> to PharmacyS </h1>                                       
+                </div>
+               	</div> <!-- end row -->
+               	
+               	<div class="row">
+                <div class="col-sm-5 logged">
+                	<a class="btn btn-link-1 btn-link-1-facebook" href="management/product.jsp">
+	                    <i class="fa fa-sign-in"></i> Continue
+					</a>
                     <form role="form" action="login" method="post" class="login-form">
-                    	<button type="submit" name="action" value="logout" class="btn">Sign out</button>
+                    	<button type="submit" name="action" value="logout" class="btn btn-link-1 signout"><i class="fa fa-sign-out"></i>Sign out</button>
                     </form>
                 </div>
-               	</div> <!-- end row -->        	            	
+                </div>    	            	
                 <%
 					} // end if email
                 } // end else 

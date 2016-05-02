@@ -136,3 +136,6 @@ ul.nav.navbar-nav.navbar-right > li:last-child {
   border-radius: 50%;
 }
 
+#searchTopNav {
+	height: 34px !important;
+}

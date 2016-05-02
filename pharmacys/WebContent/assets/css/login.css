@@ -164,6 +164,22 @@ img { max-width: 100%; }
 	margin-top: 25px;
 }
 
+.logged {
+	margin: 0 auto;
+	display: block;
+	float: none;
+	text-align:center;
+	padding: 10px 100px;
+}
+
+.logged a, .logged button {
+	float: left;
+	margin: 5px;
+}
+
+.logged button.signout {
+	background: #97143c;
+}
 
 /***** Media queries *****/
 

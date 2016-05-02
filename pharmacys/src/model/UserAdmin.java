@@ -7,13 +7,7 @@ import util.SHA512;
 import util.SendEmailUsingGMAILSMTP;
 
 public class UserAdmin implements UserImplementator {
-
-	@Override
-	public boolean login(String email, String password) {
-		// comprobar email y contraseña con la bd, ademas comprobar que su campo de user admin esta a 1
-		return false;
-	}
-
+	
 	@Override
 	public boolean sendResetMail() {
 		

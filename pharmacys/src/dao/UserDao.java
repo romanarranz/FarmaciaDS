@@ -78,6 +78,32 @@ public class UserDao {
 		return user;
 	}
 	
+	public UserRefinedAbstraction getUserByEmailPassword(String email, String password){
+		UserRefinedAbstraction user = null;
+		Session session = null;
+		
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			user = (UserRefinedAbstraction) session
+					.createQuery("from UserRefinedAbstraction u where u.email = :EMAIL and u.password = :PASSWORD")
+					.setParameter("EMAIL", email)
+					.setParameter("PASSWORD", password)
+					.uniqueResult();
+			session.getTransaction().commit();
+		}
+		catch(Exception e){
+			if(session != null)
+				session.getTransaction().rollback();
+		}
+		finally {
+			if(session != null)
+				session.close();
+		}
+		
+		return user;
+	}
+	
 	public List<UserRefinedAbstraction> getAllUsers(){
 		List<UserRefinedAbstraction> users = null;
 		Session session = null;
@@ -98,5 +124,53 @@ public class UserDao {
 		}
 		
 		return users;
+	}
+	
+	public boolean insertUser(UserRefinedAbstraction user){
+		Session session = null;
+		boolean hasErrors = false;
+		
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			session.save(user);
+			session.getTransaction().commit();
+		}
+		catch(Exception e){
+			if(session != null)
+				session.getTransaction().rollback();
+			
+			hasErrors = true;
+		}
+		finally {
+			if(session != null)
+				session.close();
+		}
+		
+		return hasErrors;
+	}
+	
+	public boolean updateUser(UserRefinedAbstraction user){
+		Session session = null;
+		boolean hasErrors = false;
+		
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			session.update(user);
+			session.getTransaction().commit();
+		}
+		catch (Exception e){
+			if(session != null)
+				session.getTransaction().rollback();
+			
+			hasErrors = true;
+		}
+		finally {
+			if(session != null)
+				session.close();
+		}
+		
+		return hasErrors;
 	}
 }

@@ -25,7 +25,7 @@
           	<div class="input-group">
 				<input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term">
 				<div class="input-group-btn">
-					<button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+					<button id="searchTopNav" class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
 				</div>
 			</div>            
           </form>
@@ -38,13 +38,18 @@
             <!-- Dropdown Usuario -->
             <li class="dropdown">
 			  <a class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-			    <i class="fa fa-user" aria-hidden="true"></i><span>Operario</span>
+			  <%
+			    String username = null;
+				if(session.getAttribute("user") != null)
+					username = session.getAttribute("user").toString();
+				%>
+			    <i class="fa fa-user" aria-hidden="true"></i><span><% out.print(username); %></span>
 			    <span class="caret"></span>
 			  </a>
 			  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-			    <li><a href="#">Action</a></li>
+			    <li><a href="account.jsp">Preferences</a></li>
 			    <li role="separator" class="divider"></li>
-			    <li><a href="#">Logout</a></li>
+			    <li><a href="../login?logout=yes">Sign out</a></li>
 			  </ul>
 			</li>
           </ul>

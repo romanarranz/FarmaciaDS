@@ -142,20 +142,6 @@ public class UserRefinedAbstraction implements UserAbstraction {
 	}
 	
 	@Transient
-	@Override
-	public boolean login(String email, String password) {
-		boolean result = false;
-		
-		if(this.implementator.login(email, password)){
-			result = true;
-			this.email = email;
-			this.password = password;
-		}
-			
-		return result;
-	}
-	
-	@Transient
 	public boolean logout(){
 		return false;
 	}

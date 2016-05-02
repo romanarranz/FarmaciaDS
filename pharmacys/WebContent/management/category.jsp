@@ -1,9 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <jsp:include page="include/heads/general.jsp" />
 <body>
-	
+
 	<%
 	if(session.isNew()||session.getAttribute("user") == null){
 	%>
@@ -21,14 +20,14 @@
       
       <!-- Agrupamiento del contenigo en filas -->
       <div class="row">
-		
-		<jsp:include page="include/leftNavbar.jsp" />
-		<jsp:include page="include/content/content_product.jsp" />
-
-	  </div>
+      	
+      	<jsp:include page="include/leftNavbar.jsp" />
+		<jsp:include page="include/content/content_category.jsp" />                
+                      
+      </div>
     </div>
 
- 	<jsp:include page="include/scripts/general.jsp"></jsp:include>
+	<jsp:include page="include/scripts/general.jsp"></jsp:include>
  	<%} %>
 </body>
 </html>

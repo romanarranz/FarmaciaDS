@@ -1,5 +1,7 @@
 package dao;
 
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -9,7 +11,7 @@ import util.HibernateUtil;
 public class ProductDao {
 	SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 	
-	public Product getProductById(int id){
+	protected Product getProductById(int id){
 		Product product = null;
 		Session session = null;
 		
@@ -34,7 +36,29 @@ public class ProductDao {
 		return product;
 	}
 	
-	public boolean saveProduct(Product p){
+	protected List<Product> getAllProducts(){
+		List<Product> products = null;
+		Session session = null;
+		
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			products = session.createQuery("from Product p").list();
+			session.getTransaction().commit();
+		}
+		catch(Exception e){
+			if(session != null)
+				session.getTransaction().rollback();
+		}
+		finally {
+			if(session != null)
+				session.close();
+		}
+		
+		return products;
+	}
+	
+	protected boolean insertProduct(Product p){
 		Session session = null;
 		boolean hasErrors = false;
 		
@@ -56,5 +80,54 @@ public class ProductDao {
 		}
 		
 		return hasErrors;
+	}
+	
+	protected boolean updateProduct(Product p){
+		Session session = null;
+		boolean hasErrors = false;
+		
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			session.update(p);
+			session.getTransaction().commit();
+		}
+		catch (Exception e){
+			if(session != null)
+				session.getTransaction().rollback();
+			
+			hasErrors = true;
+		}
+		finally {
+			if(session != null)
+				session.close();
+		}
+		
+		return hasErrors;
+	}
+	
+	protected boolean deleteProduct(Product p){
+		Session session = null;
+		boolean hasErrors = false;
+		
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			session.delete(p);
+			session.getTransaction().commit();
+		}
+		catch (Exception e){
+			if(session != null)
+				session.getTransaction().rollback();
+			
+			hasErrors = true;
+		}
+		finally {
+			if(session != null)
+				session.close();
+		}
+		
+		return hasErrors;
+		
 	}
 }
