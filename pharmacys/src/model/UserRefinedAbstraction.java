@@ -22,7 +22,8 @@ import javax.xml.bind.annotation.XmlType;
 		"resetHash",
 		"role",
 		"orders",
-		"active"
+		"active",
+		"cifPharmacy"
 })
 public class UserRefinedAbstraction implements UserAbstraction {
 	
@@ -55,6 +56,9 @@ public class UserRefinedAbstraction implements UserAbstraction {
 		
 	@Column(name="ACTIVE")
 	private int active;
+	
+	@Column(name="CIFPHARMACY")
+	private String cifPharmacy;
 	
 	public UserRefinedAbstraction(){
 		this.implementator = null;
@@ -134,6 +138,15 @@ public class UserRefinedAbstraction implements UserAbstraction {
 	}
 	public void setActive(){
 		this.active = 1;
+	}
+	
+	// PHARMACIES
+	@XmlElement(required=true)
+	public String getCifPharmacy(){
+		return this.cifPharmacy;
+	}
+	public void setCifPharmacy(String cif){
+		this.cifPharmacy = cif;
 	}
 	
 	@Transient

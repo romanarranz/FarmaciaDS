@@ -9,12 +9,9 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
-  
-  <!-- Expiration Time in minutes -->
   <session-config>
     <session-timeout>15</session-timeout>
   </session-config>
-  
   <servlet>
     <servlet-name>Jersey Web Application</servlet-name>
     <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
@@ -24,8 +21,6 @@
     <servlet-name>Jersey Web Application</servlet-name>
     <url-pattern>/rest/*</url-pattern>
   </servlet-mapping>
-  
-  <!-- Login Servlet -->
   <servlet>
     <servlet-name>Login</servlet-name>
     <servlet-class>servlets.Login</servlet-class>
@@ -35,14 +30,22 @@
     <servlet-name>Login</servlet-name>
     <url-pattern>/login/*</url-pattern>
   </servlet-mapping>
-  
-  <!-- <servlet>
-    <servlet-name>MyServlet</servlet-name>
-    <servlet-class>servlets.MyServlet</servlet-class>
-    <load-on-startup>2</load-on-startup>
+  <servlet>
+    <servlet-name>SProduct</servlet-name>
+    <servlet-class>servlets.Product</servlet-class>
+    <load-on-startup>3</load-on-startup>
   </servlet>
   <servlet-mapping>
-    <servlet-name>MyServlet</servlet-name>
-    <url-pattern>/MyServlet/*</url-pattern>
-  </servlet-mapping> -->
+    <servlet-name>SProduct</servlet-name>
+    <url-pattern>/product/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>SPharmacy</servlet-name>
+    <servlet-class>servlets.Pharmacy</servlet-class>
+    <load-on-startup>4</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SPharmacy</servlet-name>
+    <url-pattern>/pharmacy/*</url-pattern>
+  </servlet-mapping>
 </web-app>

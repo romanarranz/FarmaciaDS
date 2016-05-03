@@ -51,7 +51,7 @@ button.navbar-toggle.collapsed {
     overflow-x: hidden;
     overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
     /*background-color: #f5f5f5;*/
-    background-color: #fff;
+    background-color: #454545;
     border-right: 1px solid #eee;
   }
 }
@@ -88,12 +88,16 @@ ul.nav.navbar-nav.navbar-right > li:last-child {
 .nav-sidebar > li > a {
   padding-right: 20px;
   padding-left: 20px;
+  color: #fff;
+}
+.nav-sidebar > li > a:hover {
+	background: #d3dae0;
 }
 .nav-sidebar > .active > a,
 .nav-sidebar > .active > a:hover,
 .nav-sidebar > .active > a:focus {
   color: #fff;
-  background-color: #428bca;
+  background-color: #f4989e;
 }
 
 
@@ -138,4 +142,29 @@ ul.nav.navbar-nav.navbar-right > li:last-child {
 
 #searchTopNav {
 	height: 34px !important;
+}
+
+i.fa.fa-trash, i.fa.fa-pencil {
+	font-size: 20px;
+}
+
+.modal-dialog {
+	width: 800px;
+}
+
+.modal-header {
+	background: #333;
+	color: #fff;
+}
+
+.modal-footer {
+	background: #ccc;
+}
+
+.container-fluid {
+	background: #5fc235;
+}
+
+div.navbar-header > a.navbar-brand {
+	color: #fff;
 }

@@ -4,14 +4,18 @@ import java.util.List;
 
 import model.Pharmacy;
 import model.Product;
+import model.UserAbstraction;
+import model.UserRefinedAbstraction;
 
 public class DBConnector {
 	private final PharmacyDao pharmacydao;
 	private final ProductDao productdao;
+	private final UserDao userdao;
 	
 	public DBConnector(){
 		pharmacydao = new PharmacyDao();
 		productdao = new ProductDao();
+		userdao = new UserDao();
 	}
 	
 	// PHARMACYDAO
@@ -46,5 +50,25 @@ public class DBConnector {
 	}
 	public boolean deleteProduct(Product p){
 		return this.productdao.deleteProduct(p);
+	}
+	
+	// USERDAO
+	public UserAbstraction getUserFuncById(String email){
+		return this.userdao.getUserFuncById(email);
+	}
+	public UserRefinedAbstraction getUserByEmailPassword(String email, String password){
+		return this.userdao.getUserByEmailPassword(email, password);
+	}
+	public UserRefinedAbstraction getUserById(String email){
+		return this.userdao.getUserById(email);
+	}
+	public List<UserRefinedAbstraction> getAllUsers(){
+		return this.userdao.getAllUsers();
+	}
+	public boolean insertUser(UserRefinedAbstraction user){
+		return this.userdao.insertUser(user);
+	}
+	public boolean updateUser(UserRefinedAbstraction user){
+		return this.userdao.updateUser(user);
 	}
 }

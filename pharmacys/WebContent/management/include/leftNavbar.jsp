@@ -13,12 +13,13 @@
         		String myPage = uriSplitted[uriSplitted.length-1];
         	
         		Map<String, String> menuList = new LinkedHashMap<String,String>();
+        		menuList.put("pharmacy.jsp", "Mi Farmacia");
         		menuList.put("product.jsp", "Productos");
         		menuList.put("location.html", "Ubicacion");
         		menuList.put("category.jsp", "Categorias");
         		
         		for(Map.Entry<String, String> entry : menuList.entrySet()){
-        			System.out.println(entry.getKey() + " " + entry.getValue());
+        			//System.out.println(entry.getKey() + " " + entry.getValue());
         			if(myPage.equals(entry.getKey()))
         				out.println("<li class='active'><a href='#'>"+entry.getValue()+"</a></li>");
         			else

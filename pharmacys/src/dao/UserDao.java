@@ -15,7 +15,7 @@ public class UserDao {
 	
 	SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 	
-	public UserAbstraction getUserFuncById(String email){
+	protected UserAbstraction getUserFuncById(String email){
 		UserRefinedAbstraction user = null;
 		Session session = null;
 		
@@ -53,7 +53,7 @@ public class UserDao {
 		return uAbstraction;
 	}
 	
-	public UserRefinedAbstraction getUserById(String email){
+	protected UserRefinedAbstraction getUserById(String email){
 		UserRefinedAbstraction user = null;
 		Session session = null;
 		
@@ -78,7 +78,7 @@ public class UserDao {
 		return user;
 	}
 	
-	public UserRefinedAbstraction getUserByEmailPassword(String email, String password){
+	protected UserRefinedAbstraction getUserByEmailPassword(String email, String password){
 		UserRefinedAbstraction user = null;
 		Session session = null;
 		
@@ -104,7 +104,7 @@ public class UserDao {
 		return user;
 	}
 	
-	public List<UserRefinedAbstraction> getAllUsers(){
+	protected List<UserRefinedAbstraction> getAllUsers(){
 		List<UserRefinedAbstraction> users = null;
 		Session session = null;
 		
@@ -126,7 +126,7 @@ public class UserDao {
 		return users;
 	}
 	
-	public boolean insertUser(UserRefinedAbstraction user){
+	protected boolean insertUser(UserRefinedAbstraction user){
 		Session session = null;
 		boolean hasErrors = false;
 		
@@ -150,7 +150,7 @@ public class UserDao {
 		return hasErrors;
 	}
 	
-	public boolean updateUser(UserRefinedAbstraction user){
+	protected boolean updateUser(UserRefinedAbstraction user){
 		Session session = null;
 		boolean hasErrors = false;
 		

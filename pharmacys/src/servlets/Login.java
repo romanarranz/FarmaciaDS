@@ -8,31 +8,22 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dao.UserDao;
+import dao.DBConnector;
 import model.UserRefinedAbstraction;
 import util.SHA512;
 
-/**
- * Servlet implementation class MyServlet
- */
 @WebServlet("/login")
 public class Login extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private UserDao userdao;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+	private DBConnector dbc;
+
     public Login() {
         super();
-        this.userdao = new UserDao();
+        this.dbc = new DBConnector();
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String logout  = request.getParameter("logout");
 		
@@ -41,19 +32,6 @@ public class Login extends HttpServlet {
 			request.getRequestDispatcher("/index.jsp").forward(request, response);
 		}
 	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	/*protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		PrintWriter out = response.getWriter();
-		response.setContentType("text/xml");
-		String somedata = "whatever";
-		 out.print("\n<root>");
-		 out.print("\n   <othertag>" + somedata + "</othertag>");
-		 out.print("\n</root>");
-	}*/
 	
 	@Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -71,15 +49,16 @@ public class Login extends HttpServlet {
 		        	e.getStackTrace();
 		        }
 		        
-		        UserRefinedAbstraction user = userdao.getUserByEmailPassword(email,password);
+		        UserRefinedAbstraction user = dbc.getUserByEmailPassword(email,password);
 		        
 		        if (user != null) {
-		        	System.out.println("encontrado");
 		            request.getSession().setAttribute("user", user.getName());
-		            response.sendRedirect("/pharmacys/management/product.jsp");
+		            request.getSession().setAttribute("userEmail", user.getEmail());		            
+		            request.getSession().setAttribute("cif", user.getCifPharmacy());
+		            
+		            response.sendRedirect("/pharmacys/management/pharmacy.jsp");
 		        }
 		        else {
-		        	System.out.println("no encontrado");
 		            request.getSession().setAttribute("error", "Unknown user, please try again");
 		            response.sendRedirect("/pharmacys/index.jsp");
 		        }

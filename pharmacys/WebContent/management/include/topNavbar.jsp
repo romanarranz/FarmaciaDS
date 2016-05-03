@@ -18,17 +18,7 @@
         </div>
         
         <!-- Cuerpo barra de navegacion -->
-        <div id="navbar" class="navbar-collapse collapse">
-          
-          <!-- Buscador de la izquierda -->
-          <form class="navbar-form navbar-left">
-          	<div class="input-group">
-				<input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term">
-				<div class="input-group-btn">
-					<button id="searchTopNav" class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
-				</div>
-			</div>            
-          </form>
+        <div id="navbar" class="navbar-collapse collapse">         
           
           <!-- Botones de menu principal -->
           <ul class="nav navbar-nav navbar-right">
