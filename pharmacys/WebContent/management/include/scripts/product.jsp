@@ -9,6 +9,7 @@
     <script src="../assets/js/bootstrap-table/extensions/mobile/bootstrap-table-mobile.js"></script>
     
     <!-- Product js -->
+    <script src="../js/textParser.js"></script>
     <script src="../js/product.js"></script>
     <script src="../js/imagePrevisualization.js"></script>
     <script>

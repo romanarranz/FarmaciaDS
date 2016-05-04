@@ -34,7 +34,7 @@
   					<div class="form-group row">
     					<label for="insertName" class="col-sm-4 form-control-label">Name</label>
     					<div class="col-sm-8">
-      						<input type="text" class="form-control" id="insertName" placeholder="ProductName...">
+      						<input type="text" class="form-control" name="insertName" id="insertName" placeholder="ProductName...">
     					</div>
   					</div>  						
   					<!-- Laboratory -->
@@ -87,7 +87,7 @@
       	<!-- Modal Footer -->
       	<div class="modal-footer">
         	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        	<button type="submit" class="btn btn-primary" name="action" value="insert">Save changes</button>
+        	<button type="submit" class="btn btn-primary" name="actionProduct" value="insert">Save changes</button>
       	</div>
       	</form><!-- /.form -->
       	

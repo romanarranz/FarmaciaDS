@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
+<jsp:include page="modal_insert_product.jsp" />
 <jsp:include page="modal_edit_product.jsp" />
 <jsp:include page="modal_delete_product.jsp" />
 

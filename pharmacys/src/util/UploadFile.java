@@ -26,44 +26,49 @@ public class UploadFile {
 	 
 	 public static String upload(HttpServletRequest request, HttpServletResponse response, String inputName) throws ServletException, IOException {
 		 response.setContentType("text/html;charset=UTF-8");
-		 String result = null;
+		 String result = "";
 		 
 		// Create path components to save the file
 		String path = ServletsConfig.dataDirectory;
 		Part filePart = request.getPart(inputName);
-		String fileName = getSubmittedFileName(filePart);
-
-		OutputStream out = null;
-	    InputStream filecontent = null;
-	    
-	    try {
-	        out = new FileOutputStream(new File(path + File.separator + fileName));
-	        filecontent = filePart.getInputStream();
-
-	        int read = 0;
-	        final byte[] bytes = new byte[1024];
-
-	        while ((read = filecontent.read(bytes)) != -1) {
-	            out.write(bytes, 0, read);
-	        }
-	        
-	        System.out.println("New file " + fileName + " created at " + path);
-	        result = path+"/"+fileName;
-	        
-	    } catch (FileNotFoundException fne) {
-	        System.out.println("You either did not specify a file to upload or are "
-	                + "trying to upload a file to a protected or nonexistent "
-	                + "location.");
-	        System.out.println("ERROR: " + fne.getMessage());	        
-	    } finally {
-	        if (out != null) {
-	            out.close();
-	        }
-	        if (filecontent != null) {
-	            filecontent.close();
-	        }
-	    }
-	    
+		String fileName;
+		
+		if(filePart != null){
+			
+			fileName = getSubmittedFileName(filePart);
+	
+			OutputStream out = null;
+		    InputStream filecontent = null;
+		    
+		    try {
+		        out = new FileOutputStream(new File(path + File.separator + fileName));
+		        filecontent = filePart.getInputStream();
+	
+		        int read = 0;
+		        final byte[] bytes = new byte[1024];
+	
+		        while ((read = filecontent.read(bytes)) != -1) {
+		            out.write(bytes, 0, read);
+		        }
+		        
+		        System.out.println("New file " + fileName + " created at " + path);
+		        result = path+"/"+fileName;
+		        
+		    } catch (FileNotFoundException fne) {
+		        System.out.println("You either did not specify a file to upload or are "
+		                + "trying to upload a file to a protected or nonexistent "
+		                + "location.");
+		        System.out.println("ERROR: " + fne.getMessage());	        
+		    } finally {
+		        if (out != null) {
+		            out.close();
+		        }
+		        if (filecontent != null) {
+		            filecontent.close();
+		        }
+		    }
+	 }
+	 
 		return result;
 	 }
 }

@@ -14,11 +14,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
-
 import dao.DBConnector;
 import model.Product;
+import util.TextParser;
 import util.UploadFile;
 
 @WebServlet("/product")
@@ -37,17 +35,74 @@ public class SProduct extends HttpServlet {
         this.errors = new ArrayList<String>();
     }
     
-    private void edit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	int id, size, queryCount;
-		String urlImg, category, name, laboratory, units, expirationDate, lot, description;
+    private void insert(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	int size;
+		String category, name, laboratory, units, expirationDate, lot, description;
 		SimpleDateFormat formatter;
 		Date date = null;
 		java.sql.Date sqlDate;
 		
 		Product product;
 		
-    	id = Integer.parseInt(request.getParameter("editId"));            	
-    	urlImg = request.getParameter("editImg");
+        category = request.getParameter("insertCategory");
+        name = request.getParameter("insertName");
+        laboratory = request.getParameter("insertLaboratory");
+        units = request.getParameter("insertUnits"); 
+        expirationDate = request.getParameter("insertExpDate");               
+        size = Integer.parseInt(request.getParameter("insertSize"));
+        lot = request.getParameter("insertLot");
+        description = request.getParameter("insertDescr");
+        
+        product = new Product();
+        product.setCategory(TextParser.parseLatinToHTML(category));
+		product.setName(TextParser.parseLatinToHTML(name));
+		product.setDescription(TextParser.parseLatinToHTML(description));
+		product.setLaboratory(TextParser.parseLatinToHTML(laboratory));
+		product.setUnits(units);
+		
+        // expiration date
+     	formatter = new SimpleDateFormat("dd-MM-yyyy");
+     	date = null;
+     	try {
+     		date = formatter.parse(expirationDate);
+     	}
+     	catch (ParseException e) {
+     		e.printStackTrace();
+     	}
+     	sqlDate = new java.sql.Date(date.getTime());
+     	product.setExpirationDate(sqlDate);
+     	
+     	product.setSize(size);
+		product.setLot(lot);
+		
+		// subir la imagen
+		String resultUploadImg = UploadFile.upload(request, response, "insertImg");
+		if(resultUploadImg == "")
+			System.out.println("error de subida de imagen");
+		else{
+			System.out.println("EXITO de subida de imagen");
+			product.setUrlImg(resultUploadImg.replace("/Users/roman/Documents/workspace/pharmacys/WebContent/", "http://localhost:8080/pharmacys/"));
+		}
+		
+		product.setQueryCount(0);
+		
+		if(!dbc.insertProduct(product))
+			this.msg.add("Product inserted successfully");
+		else
+			this.errors.add("The product cannot be inserted");
+		
+    }
+    
+    private void edit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	int id, size, queryCount;
+		String category, name, laboratory, units, expirationDate, lot, description;
+		SimpleDateFormat formatter;
+		Date date = null;
+		java.sql.Date sqlDate;
+		
+		Product product;
+		
+    	id = Integer.parseInt(request.getParameter("editId"));
         category = request.getParameter("editCategory");
         name = request.getParameter("editName");
         laboratory = request.getParameter("editLaboratory");
@@ -59,11 +114,11 @@ public class SProduct extends HttpServlet {
         queryCount = Integer.parseInt(request.getParameter("editQueryCount"));
         
         product = dbc.getProductById(id);
-        product.setCategory(StringEscapeUtils.escapeHtml(category));
-        product.setName(StringEscapeUtils.escapeHtml(name));
-        product.setLaboratory(StringEscapeUtils.escapeHtml(laboratory));
+        product.setCategory(TextParser.parseLatinToHTML(category));
+        product.setName(TextParser.parseLatinToHTML(name));
+        product.setLaboratory(TextParser.parseLatinToHTML(laboratory));
         product.setUnits(units);        
-        
+
         // expiration date
 		formatter = new SimpleDateFormat("dd-MM-yyyy");
 		date = null;
@@ -78,7 +133,7 @@ public class SProduct extends HttpServlet {
         
 		product.setSize(size);
 		product.setLot(lot);
-		product.setDescription(StringEscapeUtils.escapeHtml(description));
+		product.setDescription(TextParser.parseLatinToHTML(description));
 		
 		// subir la imagen
 		String resultUploadImg = UploadFile.upload(request, response, "editImg");
@@ -86,7 +141,7 @@ public class SProduct extends HttpServlet {
 			System.out.println("error de subida de imagen");
 		else{
 			System.out.println("EXITO de subida de imagen");
-			product.setUrlImg(resultUploadImg.replace("/Users/roman/Documents/workspace/pharmacys/WebContent", "http://localhost:8080/pharmacys/"));
+			product.setUrlImg(resultUploadImg.replace("/Users/roman/Documents/workspace/pharmacys/WebContent/", "http://localhost:8080/pharmacys/"));
 		}
 		
 		product.setQueryCount(queryCount);
@@ -113,73 +168,17 @@ public class SProduct extends HttpServlet {
     }
     
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html;charset=UTF-8");
+		response.setContentType("text/html;charset=iso-8859-1");
 		
 		// Limpiar los mensajes que hubiera anteriormente
 		if(!this.msg.isEmpty()) 	this.msg.clear();
 		if(!this.errors.isEmpty()) 	this.errors.clear();
 		
 		String submit = request.getParameter("actionProduct");
-		
-		int size;
-		String urlImg, category, name, laboratory, units, expirationDate, lot, description;
-		SimpleDateFormat formatter;
-		Date date = null;
-		java.sql.Date sqlDate;
-		
-		Product product;
+				
 		switch(submit){
-			case "insert":
-				
-				// Check that we have a file upload request
-		    	boolean isMultipart = ServletFileUpload.isMultipartContent(request);
-		    	String path = "";
-		    	if (isMultipart){
-		    		
-		    		UploadFile.upload(request, response, "insertImg");
-		    	}
-		    	else
-		    		this.errors.add("No image selected");
-		    	
-		        urlImg = path;
-		        category = request.getParameter("insertCategory");
-		        name = request.getParameter("insertName");
-		        laboratory = request.getParameter("insertLaboratory");
-		        units = request.getParameter("insertUnits"); 
-		        expirationDate = request.getParameter("insertExpDate");               
-		        size = Integer.parseInt(request.getParameter("insertSize"));
-		        lot = request.getParameter("insertLot");
-		        description = request.getParameter("insertDescr");
-		        
-		        product = new Product();
-		        product.setCategory(category);
-				product.setName(name);
-				product.setDescription(description);
-				product.setLaboratory(laboratory);
-				product.setUnits(units);
-				
-		        // expiration date
-		     	formatter = new SimpleDateFormat("dd-MM-yyyy");
-		     	date = null;
-		     	try {
-		     		date = formatter.parse(expirationDate);
-		     	}
-		     	catch (ParseException e) {
-		     		e.printStackTrace();
-		     	}
-		     	sqlDate = new java.sql.Date(date.getTime());
-		     	product.setExpirationDate(sqlDate);
-		     	
-		     	product.setSize(size);
-				product.setLot(lot);
-				product.setUrlImg(urlImg);
-				product.setQueryCount(0);
-				
-				if(!dbc.insertProduct(product))
-					this.msg.add("Product inserted successfully");
-				else
-					this.errors.add("The product cannot be inserted");
-				
+			case "insert":				
+		    	insert(request, response);
 				break;		
 			case "edit":
 				edit(request, response);

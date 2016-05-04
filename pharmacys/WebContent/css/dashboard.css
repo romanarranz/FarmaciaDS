@@ -168,3 +168,7 @@ i.fa.fa-trash, i.fa.fa-pencil {
 div.navbar-header > a.navbar-brand {
 	color: #fff;
 }
+
+i.glyphicon.glyphicon-list-alt.icon-list-alt {
+	padding: 3px;
+}
