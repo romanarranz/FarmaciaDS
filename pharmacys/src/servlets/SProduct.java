@@ -8,98 +8,191 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
+
 import dao.DBConnector;
 import model.Product;
+import util.UploadFile;
 
 @WebServlet("/product")
+@MultipartConfig
 public class SProduct extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-      
+	private static final long serialVersionUID = 1L;	
+    
 	private DBConnector dbc;
 	private List<String> msg;
-	private List<String> errors;	
+	private List<String> errors;
+	
     public SProduct() {
         super();
         this.dbc = new DBConnector();
         this.msg = new ArrayList<String>();
         this.errors = new ArrayList<String>();
     }
-
+    
+    private void edit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	int id, size, queryCount;
+		String urlImg, category, name, laboratory, units, expirationDate, lot, description;
+		SimpleDateFormat formatter;
+		Date date = null;
+		java.sql.Date sqlDate;
+		
+		Product product;
+		
+    	id = Integer.parseInt(request.getParameter("editId"));            	
+    	urlImg = request.getParameter("editImg");
+        category = request.getParameter("editCategory");
+        name = request.getParameter("editName");
+        laboratory = request.getParameter("editLaboratory");
+        units = request.getParameter("editUnits");
+        expirationDate = request.getParameter("editExpDate");
+        size = Integer.parseInt(request.getParameter("editSize"));
+        lot = request.getParameter("editLot");
+        description = request.getParameter("editDescr");
+        queryCount = Integer.parseInt(request.getParameter("editQueryCount"));
+        
+        product = dbc.getProductById(id);
+        product.setCategory(StringEscapeUtils.escapeHtml(category));
+        product.setName(StringEscapeUtils.escapeHtml(name));
+        product.setLaboratory(StringEscapeUtils.escapeHtml(laboratory));
+        product.setUnits(units);        
+        
+        // expiration date
+		formatter = new SimpleDateFormat("dd-MM-yyyy");
+		date = null;
+		try {
+			date = formatter.parse(expirationDate);
+		}
+		catch (ParseException e) {
+			e.printStackTrace();
+		}
+		sqlDate = new java.sql.Date(date.getTime());
+		product.setExpirationDate(sqlDate);
+        
+		product.setSize(size);
+		product.setLot(lot);
+		product.setDescription(StringEscapeUtils.escapeHtml(description));
+		
+		// subir la imagen
+		String resultUploadImg = UploadFile.upload(request, response, "editImg");
+		if(resultUploadImg == "")
+			System.out.println("error de subida de imagen");
+		else{
+			System.out.println("EXITO de subida de imagen");
+			product.setUrlImg(resultUploadImg.replace("/Users/roman/Documents/workspace/pharmacys/WebContent", "http://localhost:8080/pharmacys/"));
+		}
+		
+		product.setQueryCount(queryCount);
+		
+        if(!dbc.updateProduct(product))
+        	this.msg.add("Product updated successfully");         	
+        else 
+        	this.errors.add("The product cannot be updated");    	
+    }
+    
+    private void delete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	int id = Integer.parseInt(request.getParameter("deleteId"));
+		String option = request.getParameter("deleteOption");
+		Product product;
+		
+		if(option.equals("yes")){
+			product = dbc.getProductById(id);
+		
+			if(!dbc.deleteProduct(product))
+				this.msg.add("Product deleted successfully");
+			else
+				this.errors.add("The product cannot be deleted");
+		}
+    }
+    
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html;charset=UTF-8");
+		
 		// Limpiar los mensajes que hubiera anteriormente
 		if(!this.msg.isEmpty()) 	this.msg.clear();
 		if(!this.errors.isEmpty()) 	this.errors.clear();
 		
-		String submit = request.getParameter("action");
+		String submit = request.getParameter("actionProduct");
 		
-		int id, size;
+		int size;
 		String urlImg, category, name, laboratory, units, expirationDate, lot, description;
-		Product p;
+		SimpleDateFormat formatter;
+		Date date = null;
+		java.sql.Date sqlDate;
+		
+		Product product;
 		switch(submit){
-			case "edit":
-				id = Integer.parseInt(request.getParameter("editId"));
-		        urlImg = request.getParameter("editImg");
-		        category = request.getParameter("editCategory");
-		        name = request.getParameter("editName");
-		        laboratory = request.getParameter("editLaboratory");
-		        units = request.getParameter("editUnits");
-		        expirationDate = request.getParameter("editExpDate");
-		        size = Integer.parseInt(request.getParameter("editSize"));
-		        lot = request.getParameter("editLot");
-		        description = request.getParameter("editDescr");
+			case "insert":
+				
+				// Check that we have a file upload request
+		    	boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+		    	String path = "";
+		    	if (isMultipart){
+		    		
+		    		UploadFile.upload(request, response, "insertImg");
+		    	}
+		    	else
+		    		this.errors.add("No image selected");
+		    	
+		        urlImg = path;
+		        category = request.getParameter("insertCategory");
+		        name = request.getParameter("insertName");
+		        laboratory = request.getParameter("insertLaboratory");
+		        units = request.getParameter("insertUnits"); 
+		        expirationDate = request.getParameter("insertExpDate");               
+		        size = Integer.parseInt(request.getParameter("insertSize"));
+		        lot = request.getParameter("insertLot");
+		        description = request.getParameter("insertDescr");
 		        
-		        p = dbc.getProductById(id);
-		        p.setCategory(category);
-		        p.setName(name);
-		        p.setLaboratory(laboratory);
-		        p.setUnits(units);
-		        
+		        product = new Product();
+		        product.setCategory(category);
+				product.setName(name);
+				product.setDescription(description);
+				product.setLaboratory(laboratory);
+				product.setUnits(units);
+				
 		        // expiration date
-				SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-				Date date = null;
-				try {
-					date = formatter.parse(expirationDate);
-				}
-				catch (ParseException e) {
-					e.printStackTrace();
-				}
-				java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-				p.setExpirationDate(sqlDate);
-		        
-				p.setSize(size);
-				p.setLot(lot);
-				p.setDescription(description);
-				p.setUrlImg(urlImg);
+		     	formatter = new SimpleDateFormat("dd-MM-yyyy");
+		     	date = null;
+		     	try {
+		     		date = formatter.parse(expirationDate);
+		     	}
+		     	catch (ParseException e) {
+		     		e.printStackTrace();
+		     	}
+		     	sqlDate = new java.sql.Date(date.getTime());
+		     	product.setExpirationDate(sqlDate);
+		     	
+		     	product.setSize(size);
+				product.setLot(lot);
+				product.setUrlImg(urlImg);
+				product.setQueryCount(0);
 				
-		        if(!dbc.updateProduct(p))
-		        	this.msg.add("Product updated successfully");         	
-		        else 
-		        	this.errors.add("The product cannot be updated");		        
-				break;
-			
+				if(!dbc.insertProduct(product))
+					this.msg.add("Product inserted successfully");
+				else
+					this.errors.add("The product cannot be inserted");
+				
+				break;		
+			case "edit":
+				edit(request, response);
+				break;			
 			case "delete":
-				id = Integer.parseInt(request.getParameter("deleteId"));
-				String option = request.getParameter("deleteOption");
-			
-				if(option.equals("yes")){
-					p = dbc.getProductById(id);
-				
-					if(!dbc.deleteProduct(p))
-						this.msg.add("Product deleted successfully");
-					else
-						this.errors.add("The product cannot be deleted");
-				}
-					
+				delete(request, response);
 				break;
+				
 			default:
 				this.msg.add("Something was wrong");
 				break;
 		}
+		
 		request.getSession().setAttribute("msg", this.msg);
 		request.getSession().setAttribute("errors", this.errors);	
 		response.sendRedirect("/pharmacys/management/product.jsp");

@@ -48,4 +48,13 @@
     <servlet-name>SPharmacy</servlet-name>
     <url-pattern>/pharmacy/*</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>fileUpload</servlet-name>
+    <servlet-class>servlets.fileUpload</servlet-class>
+    <load-on-startup>5</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>fileUpload</servlet-name>
+    <url-pattern>/fileUpload/*</url-pattern>
+  </servlet-mapping>
 </web-app>

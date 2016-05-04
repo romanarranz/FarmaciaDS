@@ -93,6 +93,7 @@ CREATE TABLE `PHARMACY` (
 
 LOCK TABLES `PHARMACY` WRITE;
 /*!40000 ALTER TABLE `PHARMACY` DISABLE KEYS */;
+INSERT INTO `PHARMACY` VALUES ('73890889B','farmaciaa',891308843,'',10,22),('89899878H','FARMACIA PEPELUIS',987678392,NULL,10,22),('90889932G','FARMACIA ISABEL',987654321,'farmacia situada en el centro de granada en la calle valencia 14 asesasdsa',11,21),('90890889B','farmaciaa',891308843,'',10,22),('91829193B','FARMACIA CENTRO',957892736,'Farmacia situada en el centro de granada.',10,21),('97989898G','farmaciapepis',999999999,'alkjdlksadlkasndkl',28,38739),('98371937A','FARMACIA SANTA MARIA',987381821,'',10,22);
 /*!40000 ALTER TABLE `PHARMACY` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -139,10 +140,10 @@ CREATE TABLE `PRODUCT` (
   `EXPIRATION_DATE` date NOT NULL,
   `SIZE` int(11) NOT NULL,
   `LOT` varchar(45) NOT NULL,
-  `URL_IMG` varchar(500) DEFAULT NULL,
+  `URL_IMG` varchar(500) DEFAULT 'http://10.211.55.6/img/products/img_no_aviable.png',
   `QUERY_COUNT` int(11) DEFAULT '0',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -151,7 +152,7 @@ CREATE TABLE `PRODUCT` (
 
 LOCK TABLES `PRODUCT` WRITE;
 /*!40000 ALTER TABLE `PRODUCT` DISABLE KEYS */;
-INSERT INTO `PRODUCT` VALUES (1,'BABY','Nestle Nestum Cerelaes','Nestle Nestum Cerelaes Sin Gluten es una papilla de cereales con bifidus lactis y prebióticos. No contiene azucares ni gluten. Proporcionan sabores mas naturales, facilitan la digestión y ayudan al sistema inmunitario.','Nestle','g','2016-08-17',500,'129081BA',NULL,0),(3,'medical','ibuprofeno','','layer','gr','2019-10-21',22,'34989B','',0);
+INSERT INTO `PRODUCT` VALUES (6,'BABY','PaÃ?????Ã????Ã???Ã??Ã?Â±ales','paÃ?????Ã????Ã???Ã??Ã?Â±ales ultra absorventes','Nenuco','u','0009-03-07',60,'12d181BA','http://localhost:8080/pharmacys//data/avatar.png',1111111111),(7,'BABY','Pañales','pañales ultra absorventes','Nenuco','u','2016-09-01',60,'12d181BA','http://10.211.55.6/img/products/img_no_aviable.png',0),(8,'BABY','Pañales','pañales ultra absorventes','Nenuco','u','2016-09-01',60,'12d181BA','http://10.211.55.6/img/products/img_no_aviable.png',0),(9,'BABY','Pañales','pañales ultra absorventes','Nenuco','u','2016-09-01',60,'12d181BA','http://10.211.55.6/img/products/img_no_aviable.png',0),(10,'BABY','Pañales','pañales ultra absorventes','Nenuco','u','2016-09-01',60,'12d181BA','http://10.211.55.6/img/products/img_no_aviable.png',0);
 /*!40000 ALTER TABLE `PRODUCT` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -197,6 +198,7 @@ CREATE TABLE `USER` (
   `ROLE` tinyint(1) NOT NULL,
   `LIST_ORDERS` varchar(400) DEFAULT NULL,
   `ACTIVE` tinyint(1) NOT NULL DEFAULT '0',
+  `CIFPHARMACY` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`EMAIL`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -207,7 +209,7 @@ CREATE TABLE `USER` (
 
 LOCK TABLES `USER` WRITE;
 /*!40000 ALTER TABLE `USER` DISABLE KEYS */;
-INSERT INTO `USER` VALUES ('pharmacysds@gmail.com','admin','admin','9c9de5fa26966625507c2afa04b368be534321503dc3565a68a0eb54725d9f2cc88dca78c142d7b9f71ca823876511eeb57597bb3a65cc65aaead896031395cf','',1,'',1);
+INSERT INTO `USER` VALUES ('pharmacysds@gmail.com','admin','admin','9c9de5fa26966625507c2afa04b368be534321503dc3565a68a0eb54725d9f2cc88dca78c142d7b9f71ca823876511eeb57597bb3a65cc65aaead896031395cf','',1,'',1,'90889932G');
 /*!40000 ALTER TABLE `USER` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -220,4 +222,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-05-02 21:43:29
+-- Dump completed on 2016-05-04 22:48:53

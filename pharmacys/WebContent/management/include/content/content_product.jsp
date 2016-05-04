@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-<jsp:include page="modal_edit_product.jsp" />	
+<jsp:include page="modal_edit_product.jsp" />
 <jsp:include page="modal_delete_product.jsp" />
 
 <!-- Bloque central que ocupa un 75% de la pantalla, 100% en responsive movil -->
@@ -67,7 +67,7 @@
     	<h2 class="sub-header">Listado de productos</h2>
     	
     	<!-- Add product -->
-    	<button type="button" class="btn btn-primary" style="position:relative; top: 45px">Añadir</button>
+    	<button type="button" class="btn btn-primary" style="position:relative; top: 45px" data-toggle="modal" data-target="#insert">Añadir</button>
     	
     	<!-- Table -->
        	<table class="table table-striped" data-toggle="table" data-height="460" data-sort-name="id" data-sort-order="desc"

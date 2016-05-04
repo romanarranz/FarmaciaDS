@@ -10,3 +10,8 @@
     
     <!-- Product js -->
     <script src="../js/product.js"></script>
+    <script src="../js/imagePrevisualization.js"></script>
+    <script>
+    	imagePrevisualization($('#insertImg'), $('#insertImgViewer'));
+    	imagePrevisualization($('#editImg'), $('#editImgViewer'));
+    </script>

@@ -12,7 +12,7 @@
       	</div>
       	
       	<!-- Form Edit Parameters --> 
-      	<form method="post" action="http://localhost:8080/pharmacys/product" role="form">
+      	<form method="post" action="http://localhost:8080/pharmacys/product" role="form" enctype="multipart/form-data">
       	<input type="hidden" name="deleteId" id="deleteId" />
       	
       	<!-- Modal Body -->
@@ -39,7 +39,7 @@
       	<!-- Modal Footer -->
       	<div class="modal-footer">
         	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        	<button type="submit" class="btn btn-primary" name="action" value="delete">Accept</button>
+        	<button type="submit" class="btn btn-primary" name="actionProduct" value="delete">Accept</button>
       	</div>
       	</form><!-- /.form -->
       	
