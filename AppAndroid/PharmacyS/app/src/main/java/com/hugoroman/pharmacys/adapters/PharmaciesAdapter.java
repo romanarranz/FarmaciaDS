@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.hugoroman.pharmacys.R;
 import com.hugoroman.pharmacys.model.Pharmacy;
 
-
 import java.util.List;
 
 public class PharmaciesAdapter extends RecyclerView.Adapter<PharmaciesAdapter.PharmaciesViewHolder> {

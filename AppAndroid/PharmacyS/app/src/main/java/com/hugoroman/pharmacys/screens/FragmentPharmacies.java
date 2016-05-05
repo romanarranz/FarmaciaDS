@@ -4,16 +4,18 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import java.util.List;
 
 import com.hugoroman.pharmacys.R;
 import com.hugoroman.pharmacys.adapters.PharmaciesAdapter;
 import com.hugoroman.pharmacys.data.DBConnector;
 import com.hugoroman.pharmacys.model.Pharmacy;
+
+import java.util.List;
 
 public class FragmentPharmacies extends Fragment {
 
@@ -21,6 +23,8 @@ public class FragmentPharmacies extends Fragment {
 
     public FragmentPharmacies() {
         // Required empty public constructor
+        this.setEnterTransition(new Slide(Gravity.RIGHT));
+        this.setExitTransition(new Slide(Gravity.LEFT));
     }
 
     @Override

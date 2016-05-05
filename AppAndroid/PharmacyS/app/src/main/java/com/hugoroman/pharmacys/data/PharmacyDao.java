@@ -3,11 +3,11 @@ package com.hugoroman.pharmacys.data;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.hugoroman.pharmacys.data.PharmacySContract.PharmacyTable;
 import com.hugoroman.pharmacys.model.Pharmacy;
+
+import java.util.ArrayList;
+import java.util.List;
 
 // Clase que realiza las operaciones con la base de datos referentes a las farmacias solamente
 public final class PharmacyDao {

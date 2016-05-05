@@ -20,6 +20,8 @@ public class FragmentMain extends Fragment implements View.OnClickListener {
 
     public FragmentMain() {
         // Required empty public constructor
+        this.setEnterTransition(new Slide(Gravity.LEFT));
+        this.setExitTransition(new Slide(Gravity.BOTTOM));
     }
 
     @Override

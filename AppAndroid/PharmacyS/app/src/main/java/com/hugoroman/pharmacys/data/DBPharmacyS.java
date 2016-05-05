@@ -4,10 +4,10 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.util.List;
-
 import com.hugoroman.pharmacys.data.PharmacySContract.PharmacyTable;
 import com.hugoroman.pharmacys.model.Pharmacy;
+
+import java.util.List;
 
 public class DBPharmacyS extends SQLiteOpenHelper {
 

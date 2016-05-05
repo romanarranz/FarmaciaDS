@@ -125,9 +125,6 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         if(fragmentTransaction) {
-                            fragment.setEnterTransition(new Slide(Gravity.LEFT));
-                            fragment.setExitTransition(new Slide(Gravity.BOTTOM));
-
                             if(fragmentToStack)
                                 getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(String.valueOf(menuItem.getItemId())).commit();
                             else

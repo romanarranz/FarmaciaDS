@@ -2,9 +2,9 @@ package com.hugoroman.pharmacys.data;
 
 import android.content.Context;
 
-import java.util.List;
-
 import com.hugoroman.pharmacys.model.Pharmacy;
+
+import java.util.List;
 
 public class DBConnector {
 
