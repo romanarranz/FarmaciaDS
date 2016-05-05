@@ -10,7 +10,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import dao.DBConnector;
-import model.Pharmacy;
 import model.UserRefinedAbstraction;
 
 @Path("/user")

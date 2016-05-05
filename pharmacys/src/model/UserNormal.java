@@ -3,13 +3,10 @@ package model;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import dao.UserDao;
 import util.SHA512;
 import util.SendEmailUsingGMAILSMTP;
 
 public class UserNormal implements UserImplementator{
-
-	private UserDao userdao = new UserDao();
 
 	@Override
 	public boolean sendResetMail() {

@@ -11,7 +11,7 @@ import util.HibernateUtil;
 public class ProductDao {
 	SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 	
-	protected Product getProductById(int id){
+	protected Product getLastInserted(){
 		Product product = null;
 		Session session = null;
 		
@@ -19,9 +19,8 @@ public class ProductDao {
 			session = sessionFactory.openSession();
 			session.beginTransaction();
 			product = (Product) session
-					.createQuery("from Product p where p.id = :ID")
-					.setParameter("ID", id)
-					.uniqueResult();
+					.createQuery("from Product p order by p.id desc")
+					.setMaxResults(1).list().get(0);
 			session.getTransaction().commit();
 		}
 		catch(Exception e){
@@ -36,6 +35,61 @@ public class ProductDao {
 		return product;
 	}
 	
+	@SuppressWarnings("unchecked")
+	protected List<Product> getProductByIdsList(List<Long> ids){
+		List<Product> products = null;
+		Session session = null;
+		
+		try {						
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+		
+			System.out.println("me llega "+ids.get(0));
+			products = session.createQuery("FROM Product p WHERE p.id IN :ids")
+					.setParameter("ids", ids)
+					.list();
+			session.getTransaction().commit();
+						
+		}
+		catch(Exception e){
+			if(session != null)
+				session.getTransaction().rollback();
+		}
+		finally {
+			if(session != null)
+				session.close();
+		}
+		
+		return products;
+	}
+	
+	protected Product getProductById(int id){
+		Product product = null;
+		Session session = null;
+		
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			product = (Product) session
+					.createQuery("from Product p where p.id = :ID")
+					.setParameter("ID", id)
+					.uniqueResult();
+			session.getTransaction().commit();
+			
+		}
+		catch(Exception e){
+			if(session != null)
+				session.getTransaction().rollback();
+		}
+		finally {
+			if(session != null)
+				session.close();
+		}
+		
+		return product;
+	}
+	
+	@SuppressWarnings("unchecked")
 	protected List<Product> getAllProducts(){
 		List<Product> products = null;
 		Session session = null;
@@ -65,7 +119,7 @@ public class ProductDao {
 		try {
 			session = sessionFactory.openSession();
 			session.beginTransaction();
-			session.saveOrUpdate(p);
+			session.save(p);
 			session.getTransaction().commit();
 		}
 		catch(Exception e){

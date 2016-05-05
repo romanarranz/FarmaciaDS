@@ -104,6 +104,7 @@ public class UserDao {
 		return user;
 	}
 	
+	@SuppressWarnings("unchecked")
 	protected List<UserRefinedAbstraction> getAllUsers(){
 		List<UserRefinedAbstraction> users = null;
 		Session session = null;

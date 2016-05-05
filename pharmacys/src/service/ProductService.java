@@ -48,6 +48,13 @@ public class ProductService {
 		return dbc.getAllProducts();
 	}
 	
+	@GET
+	@Path("/getLastInserted")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Product getLastInserted(){
+		return dbc.getLastProductInserted();
+	}
+	
 	@POST
 	@Path("/insert/{category}/{name}/{lab}/{units}/{expDate}/{size}/{lot}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -83,8 +90,7 @@ public class ProductService {
 		
 		product.setSize(size);
 		product.setLot(lot);
-		product.setUrlImg("");
-		product.setQueryCount(0);
+		product.setUrlImg("");		
 		
 		if(!dbc.insertProduct(product))
 			result = "{\"status\":\"ok\"}";

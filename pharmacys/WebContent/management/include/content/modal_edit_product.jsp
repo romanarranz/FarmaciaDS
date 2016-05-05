@@ -73,6 +73,20 @@
    						<div class="col-sm-8">
       						<input type="text" class="form-control" id="editLot" name="editLot">
     					</div>
+  					</div>
+  					<!-- Price -->
+  					<div class="form-group row">
+    					<label for="editPrice" class="col-sm-4">Price</label>
+   						<div class="col-sm-8">
+      						<input type="text" class="form-control" id="editPrice" name="editPrice">
+    					</div>
+  					</div>
+  					<!-- Stock -->
+  					<div class="form-group row">
+    					<label for="editStock" class="col-sm-4">Stock</label>
+   						<div class="col-sm-8">
+      						<input type="text" class="form-control" id="editStock" name="editStock">
+    					</div>
   					</div>					
           		</div>
           		

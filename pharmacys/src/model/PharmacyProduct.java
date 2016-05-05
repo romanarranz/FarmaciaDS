@@ -12,32 +12,38 @@ import javax.xml.bind.annotation.XmlType;
 
 @Entity
 @Table(name="PHARMACY_PRODUCT")
-@XmlRootElement(name="pharmacyProduct")
+@XmlRootElement(name="product")
 @XmlType(propOrder={
 		"id",
-		"pharmacyId",
+		"pharmacyid",
 		"productId",
 		"price",
-		"quantity"
+		"stock",
+		"queryCount"
 })
 public class PharmacyProduct {
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="ID")
 	private int id;
 	
 	@Column(name="PHARMACY_ID")
-	private int pharmacyId;
-
+	private String pharmacyId;
+	
 	@Column(name="PRODUCT_ID")
 	private int productId;
 	
 	@Column(name="PRICE")
-	private double price;
+	private float price;
 	
-	@Column(name="QUANTITY")
-	private int quantity;
+	@Column(name="STOCK")
+	private int stock;
 	
+	@Column(name="QUERY_COUNT")
+	private int queryCount;
+	
+	// ID
 	@XmlElement(required=true)
 	public int getId(){
 		return this.id;
@@ -46,14 +52,16 @@ public class PharmacyProduct {
 		this.id = id;
 	}
 	
+	// PHARMACYID
 	@XmlElement(required=true)
-	public int getPharmacyId(){
+	public String getPharmacyId(){
 		return this.pharmacyId;
 	}
-	public void setPharmacyId(int id){
-		this.pharmacyId = id;
+	public void setPharmacyId(String cif){
+		this.pharmacyId = cif;
 	}
 	
+	// PRODUCTID
 	@XmlElement(required=true)
 	public int getProductId(){
 		return this.productId;
@@ -61,20 +69,31 @@ public class PharmacyProduct {
 	public void setProductId(int id){
 		this.productId = id;
 	}
-	
+
+	// PRICE
 	@XmlElement(required=true)
-	public double getPrice(){
+	public float getPrice(){
 		return this.price;
 	}
-	public void setId(double p){
-		this.price = p;
+	public void setPrice(float price){
+		this.price = price;
 	}
 	
+	// STOCK
 	@XmlElement(required=true)
-	public int getQuantity(){
-		return this.quantity;
+	public int getStock(){
+		return this.stock;
 	}
-	public void setQuantity(int q){
-		this.quantity = q;
+	public void setStock(int stock){
+		this.stock = stock;
+	}
+	
+	// QUERY_COUNT
+	@XmlElement(required=true)
+	public int getQueryCount(){
+		return this.queryCount;
+	}
+	public void setQueryCount(int count){
+		this.queryCount = count;
 	}
 }

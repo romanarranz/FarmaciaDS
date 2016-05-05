@@ -1,9 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-<jsp:include page="modal_insert_product.jsp" />
-<jsp:include page="modal_edit_product.jsp" />
-<jsp:include page="modal_delete_product.jsp" />
-
 <!-- Bloque central que ocupa un 75% de la pantalla, 100% en responsive movil -->
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">	
         
@@ -35,26 +31,19 @@
     %>
 	<div class="row placeholders" style="padding:0 20px">
     	<h1 class="page-header text-left">Últimas consultas</h1>
-	    <div class="col-xs-6 col-sm-3 placeholder">
-	    	<img src="http://10.211.55.6/img/products/img_no_aviable.png" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-	        <h4>Label</h4>
-	        <span class="text-muted">Something else</span>
-	    </div>
-	    <div class="col-xs-6 col-sm-3 placeholder">
-	       	<img src="http://10.211.55.6/img/products/img_no_aviable.png" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-	        <h4>Label</h4>
-	     	<span class="text-muted">Something else</span>
-	   	</div>
-		<div class="col-xs-6 col-sm-3 placeholder">
-	       	<img src="http://10.211.55.6/img/products/img_no_aviable.png" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-	        <h4>Label</h4>
-	        <span class="text-muted">Something else</span>
-	  	</div>
-	   	<div class="col-xs-6 col-sm-3 placeholder">
-	      	<img src="http://10.211.55.6/img/products/img_no_aviable.png" width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-	      	<h4>Label</h4>
-	     	<span class="text-muted">Something else</span>
-		</div>
+    	<%
+    	DBConnector dbc = new DBConnector();
+    	String cif = session.getAttribute("cif").toString();    	
+    	List<Product> topProducts = dbc.getTopProducts(4, cif);
+    	for(int i = 0; i<topProducts.size(); i++){
+    		out.println("<div class=\"col-xs-6 col-sm-3 placeholder\">");
+	    	out.println("<img src=\""+topProducts.get(i).getUrlImg()+"\" width=\"200\" height=\"200\" class=\"img-responsive\" alt=\"Generic placeholder thumbnail\">");
+	        out.println("<h4>"+topProducts.get(i).getName()+"</h4>");
+	        out.println("<span class=\"text-muted\">"+topProducts.get(i).getCategory()+"</span>");
+	    	out.println("</div>");    
+	    } 
+	    %>
+	    
 	</div>
     
     <script>
@@ -87,9 +76,8 @@
           	</thead>
           	<tbody>
             <%@ page import="dao.DBConnector, java.util.*, model.Product" %>
-          	<%
-          		DBConnector dbc = new DBConnector();
-          		List<Product> productlist = dbc.getAllProducts();
+          	<%          		
+          		List<Product> productlist = dbc.getAllProductsByPharmacy(cif);
           		for(Product p : productlist){
           			out.println("<tr>");
           			out.println("<td>"+p.getId()+"</td>");

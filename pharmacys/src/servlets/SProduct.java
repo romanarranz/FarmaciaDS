@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import dao.DBConnector;
+import model.PharmacyProduct;
 import model.Product;
 import util.TextParser;
 import util.UploadFile;
@@ -84,17 +85,32 @@ public class SProduct extends HttpServlet {
 			product.setUrlImg(resultUploadImg.replace("/Users/roman/Documents/workspace/pharmacys/WebContent/", "http://localhost:8080/pharmacys/"));
 		}
 		
-		product.setQueryCount(0);
-		
-		if(!dbc.insertProduct(product))
+		if(!dbc.insertProduct(product)){
 			this.msg.add("Product inserted successfully");
+			
+			// Una vez que el producto se ha insertado bien, procedemos a insertar su precio y vinculamos el producto a la farmacia
+			float price = Float.parseFloat(request.getParameter("insertPrice"));
+			int stock = Integer.parseInt(request.getParameter("insertStock"));
+			String pharmacyId = (String) request.getSession().getAttribute("cif");
+			
+			PharmacyProduct pp = new PharmacyProduct();
+			pp.setPharmacyId(pharmacyId);
+			pp.setProductId(dbc.getLastProductInserted().getId());
+			pp.setStock(stock);
+			pp.setPrice(price);
+			pp.setQueryCount(0);
+			
+			if(!dbc.insertPharmacyProduct(pp))
+				this.msg.add("Product linked to your pharmacy successfully");
+			else
+				this.errors.add("Error when product tried to link to your pharmacy");
+		}
 		else
 			this.errors.add("The product cannot be inserted");
-		
     }
     
     private void edit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	int id, size, queryCount;
+    	int id, size;
 		String category, name, laboratory, units, expirationDate, lot, description;
 		SimpleDateFormat formatter;
 		Date date = null;
@@ -111,7 +127,6 @@ public class SProduct extends HttpServlet {
         size = Integer.parseInt(request.getParameter("editSize"));
         lot = request.getParameter("editLot");
         description = request.getParameter("editDescr");
-        queryCount = Integer.parseInt(request.getParameter("editQueryCount"));
         
         product = dbc.getProductById(id);
         product.setCategory(TextParser.parseLatinToHTML(category));
@@ -144,10 +159,26 @@ public class SProduct extends HttpServlet {
 			product.setUrlImg(resultUploadImg.replace("/Users/roman/Documents/workspace/pharmacys/WebContent/", "http://localhost:8080/pharmacys/"));
 		}
 		
-		product.setQueryCount(queryCount);
+		// actualizar el precio del producto y el contador de consultas
 		
-        if(!dbc.updateProduct(product))
-        	this.msg.add("Product updated successfully");         	
+        if(!dbc.updateProduct(product)){
+        	this.msg.add("Product updated successfully");
+        	
+        	// Una vez que el producto se ha editado bien, procedemos a insertar su precio y vinculamos el producto a la farmacia
+        	float price = Float.parseFloat(request.getParameter("editPrice"));
+        	int stock = Integer.parseInt(request.getParameter("editStock"));
+        	String pharmacyId = (String) request.getSession().getAttribute("cif");
+        				
+        	PharmacyProduct pp = dbc.getByPharmacyProduct(pharmacyId, id);
+        	pp.setStock(stock);
+        	pp.setPrice(price);
+        	pp.setQueryCount(pp.getQueryCount()+1);
+        				
+        	if(!dbc.updatePharmacyProduct(pp))
+        		this.msg.add("Price, stock and queryCount updated succesfully");
+        	else
+        		this.errors.add("Error updating stock, price...");
+        }
         else 
         	this.errors.add("The product cannot be updated");    	
     }
@@ -159,11 +190,24 @@ public class SProduct extends HttpServlet {
 		
 		if(option.equals("yes")){
 			product = dbc.getProductById(id);
-		
-			if(!dbc.deleteProduct(product))
-				this.msg.add("Product deleted successfully");
-			else
-				this.errors.add("The product cannot be deleted");
+			
+			// primero borro el registro de la tabla PHARMACY_PRODUCT
+			String pharmacyId = request.getSession().getAttribute("cif").toString();
+			PharmacyProduct pp = dbc.getByPharmacyProduct(pharmacyId, id);
+			
+			if(!dbc.deletePharmacyProduct(pp)){
+				this.msg.add("Link beetween product and pharmacy deleted");
+				
+				// si todo ha ido bien procedo a eliminar el producto de esa farmacia
+				if(!dbc.deleteProduct(product)){
+					this.msg.add("Product deleted successfully");
+				}	
+				else
+					this.errors.add("The product cannot be deleted");
+			}	
+			else {
+				this.errors.add("Link beetween product and pharmacy couldnt be deleted");
+			}
 		}
     }
     

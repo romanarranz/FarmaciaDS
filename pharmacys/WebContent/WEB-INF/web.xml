@@ -32,7 +32,7 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>SProduct</servlet-name>
-    <servlet-class>servlets.Product</servlet-class>
+    <servlet-class>servlets.SProduct</servlet-class>
     <load-on-startup>3</load-on-startup>
   </servlet>
   <servlet-mapping>
@@ -41,20 +41,11 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>SPharmacy</servlet-name>
-    <servlet-class>servlets.Pharmacy</servlet-class>
+    <servlet-class>servlets.SPharmacy</servlet-class>
     <load-on-startup>4</load-on-startup>
   </servlet>
   <servlet-mapping>
     <servlet-name>SPharmacy</servlet-name>
     <url-pattern>/pharmacy/*</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>fileUpload</servlet-name>
-    <servlet-class>servlets.fileUpload</servlet-class>
-    <load-on-startup>5</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>fileUpload</servlet-name>
-    <url-pattern>/fileUpload/*</url-pattern>
   </servlet-mapping>
 </web-app>

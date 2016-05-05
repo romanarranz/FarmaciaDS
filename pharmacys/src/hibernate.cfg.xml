@@ -19,8 +19,9 @@
 		<!-- Names of the entity classes -->
 		<mapping class="model.Order"/>
 		<mapping class="model.Pharmacy"/>
+		<mapping class="model.PharmacyProduct"/>
 		<mapping class="model.Product"/>
-		<mapping class="model.Reservation"/>
+		<mapping class="model.Reservation"/>		
 		<mapping class="model.UserRefinedAbstraction"/>
 		
 	</session-factory>

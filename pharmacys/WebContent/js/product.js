@@ -14,7 +14,7 @@ $('#edit').on('show.bs.modal', function (event) {
 		success: function(jsondata){
 			// update #edit inputs values	
 			modal.find('#editId').val(jsondata.id);
-			modal.find('#editQueryCount').val(jsondata.queryCount+1);
+			modal.find('#editQueryCount').val(jsondata.queryCount);
 			
 			modal.find('#editName').val(parse(jsondata.name));
 			modal.find('#editLaboratory').val(parse(jsondata.laboratory));

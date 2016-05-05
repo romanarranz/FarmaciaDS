@@ -71,7 +71,21 @@
    						<div class="col-sm-8">
       						<input type="text" class="form-control" name="insertLot" id="insertLot" placeholder="Lot...">
     					</div>
-  					</div>					
+  					</div>  					
+  					<!-- Price -->
+  					<div class="form-group row">
+    					<label for="insertLot" class="col-sm-4">Price</label>
+   						<div class="col-sm-8">
+      						<input type="text" class="form-control" name="insertPrice" id="insertPrice" placeholder="Price...">
+    					</div>
+  					</div>
+  					<!-- Stock -->
+  					<div class="form-group row">
+    					<label for="insertLot" class="col-sm-4">Stock</label>
+   						<div class="col-sm-8">
+      						<input type="number" class="form-control" name="insertStock" id="insertStock" placeholder="Stock...">
+    					</div>
+  					</div>
           		</div>
           		
           	    <!-- Description -->
