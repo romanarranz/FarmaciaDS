@@ -1,0 +1,47 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group
+        android:id="@+id/navigation_menu"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/navigation_item_1"
+            android:icon="@mipmap/logo"
+            android:title="@string/main"/>
+        <item
+            android:id="@+id/navigation_item_2"
+            android:icon="@mipmap/logo"
+            android:title="@string/pharmacies"/>
+        <item
+            android:id="@+id/navigation_item_3"
+            android:icon="@mipmap/logo"
+            android:title="@string/map"/>
+        <item
+            android:id="@+id/navigation_item_5"
+            android:icon="@mipmap/logo"
+            android:title="@string/basket"/>
+        <item
+            android:id="@+id/navigation_item_6"
+            android:icon="@mipmap/logo"
+            android:title="@string/orders"/>
+        <item
+            android:id="@+id/navigation_item_7"
+            android:icon="@mipmap/logo"
+            android:title="@string/reservations"/>
+    </group>
+
+    <group
+        android:id="@+id/navigation_menu_settings"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/navigation_item_settings"
+            android:title="@string/settingsTittle"
+            android:checkable="false" />
+        <item
+            android:id="@+id/navigation_item_settings_1"
+            android:icon="@mipmap/logo"
+            android:title="@string/settings" />
+        <item
+            android:id="@+id/navigation_item_settings_2"
+            android:icon="@mipmap/logo"
+            android:title="@string/logout"/>
+    </group>
+</menu>

@@ -50,6 +50,7 @@ Si nos da tiempo, haremos los dos roles en las dos plataformas
 - Patrón `Bridge` para implementación de los métodos de cliente y administrador (abstracta Usuario), también se podía haber usado `Factoria`
 - `Observable Observador` ya que varios clientes tienen reservas de productos, con este patron podemos informar a todos cuando estén disponibles por e-mail. Sólo en el Servidor si no hacemos el rol user en el Server
 - `Visitante` realizar la misma operacion en cada farmacia y acumular el resultado. Sólo en Android si no hacemos el rol admin en Android
+- `View Holder` para realizar la carga del cotenido de la base de datos en la vista al usuario
 
 ##Consultas al profesor
 

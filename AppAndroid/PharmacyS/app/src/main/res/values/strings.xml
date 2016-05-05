@@ -5,4 +5,27 @@
     <string name="no_account">No account yet? Create one</string>
     <string name="member">Already a member? Sign in</string>
     <string name="exit">Press back to exit</string>
+
+    <!-- Elementos del NavView -->
+    <string name="user">User</string>
+    <string name="main">Main</string>
+    <string name="map">Map</string>
+    <string name="pharmacies">Pharmacies</string>
+    <string name="products">Products</string>
+    <string name="basket">Basket</string>
+    <string name="orders">Orders</string>
+    <string name="reservations">Reservations</string>
+
+    <!-- Menú secundario del NavView -->
+    <string name="settingsTittle">ACCOUNT</string>
+    <string name="settings">Settings</string>
+    <string name="logout">Log out</string>
+
+    <!-- Contenido del fragment Main -->
+    <string name="contentMain1">Pharmacies</string>
+    <string name="contentMain2">map</string>
+    <string name="contentMain3">Products</string>
+    <string name="contentMain4">Basket</string>
+    <string name="contentMain5">Orders</string>
+    <string name="contentMain6">Reservations</string>
 </resources>
