@@ -141,7 +141,6 @@ CREATE TABLE `PRODUCT` (
   `SIZE` int(11) NOT NULL,
   `LOT` varchar(45) NOT NULL,
   `URL_IMG` varchar(500) DEFAULT 'http://10.211.55.6/img/products/img_no_aviable.png',
-  `QUERY_COUNT` int(11) DEFAULT '0',
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;

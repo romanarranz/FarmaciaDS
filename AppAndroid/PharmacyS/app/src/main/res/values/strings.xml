@@ -11,7 +11,6 @@
     <string name="main">Main</string>
     <string name="map">Map</string>
     <string name="pharmacies">Pharmacies</string>
-    <string name="products">Products</string>
     <string name="basket">Basket</string>
     <string name="orders">Orders</string>
     <string name="reservations">Reservations</string>
@@ -28,4 +27,7 @@
     <string name="contentMain4">Basket</string>
     <string name="contentMain5">Orders</string>
     <string name="contentMain6">Reservations</string>
+
+    <!-- Botón de catálogo del fragment Pharmacy -->
+    <string name="pharmacyCatalog">Product Catalog</string>
 </resources>

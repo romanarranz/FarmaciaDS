@@ -24,10 +24,6 @@ public class Pharmacy {
         return cif;
     }
 
-    public void setCif(String cif) {
-        this.cif = cif;
-    }
-
     public String getName() {
         return name;
     }
@@ -40,31 +36,15 @@ public class Pharmacy {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(Integer phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
     public String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public Integer getStartSchedule() {
         return startSchedule;
     }
 
-    public void setStartSchedule(Integer startSchedule) {
-        this.startSchedule = startSchedule;
-    }
-
     public Integer getEndSchedule() {
         return endSchedule;
-    }
-
-    public void setEndSchedule(Integer endSchedule) {
-        this.endSchedule = endSchedule;
     }
 }

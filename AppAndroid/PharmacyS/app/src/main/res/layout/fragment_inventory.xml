@@ -4,12 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".screens.FragmentPharmacies">
+    tools:context=".screens.FragmentInventory">
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/pharmacies_rv">
+        android:id="@+id/inventory_rv">
     </android.support.v7.widget.RecyclerView>
+
+   <!-- <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="40dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:id="@+id/tv"/>-->
 
 </FrameLayout>

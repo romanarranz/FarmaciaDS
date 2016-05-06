@@ -9,16 +9,13 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.transition.Slide;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.hugoroman.pharmacys.R;
+import com.hugoroman.pharmacys.data.DBPharmacyS;
 
 import java.util.List;
-
-//http://www.sgoliver.net/blog/interfaz-de-usuario-en-android-navigation-drawer-navigationview/
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,13 +28,14 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NavigationView navView;
     private int navMenuItem;
-    private int currentFragment;
     private String actionBarTittle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        this.getApplicationContext().deleteDatabase(DBPharmacyS.DATABASE_NAME);
 
         preferences = getPreferences(MODE_PRIVATE);
 
@@ -56,31 +54,9 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_nav_menu);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-        if(savedInstanceState == null) {
-            navMenuItem = R.id.navigation_item_1;
-            currentFragment = 1;
-            actionBarTittle = "PharmacyS";
-        } else {
-            navMenuItem = savedInstanceState.getInt(NAV_MENU_ITEM);
-            currentFragment = savedInstanceState.getInt(CURRENT_FRAGMENT);
-            actionBarTittle = savedInstanceState.getString(ACTIONBAR_TITTLE);
-        }
-
-        Fragment fragment = null;
-        switch(currentFragment) {
-            case 1:
-                fragment = new FragmentMain();
-                break;
-            case 2:
-                fragment = new FragmentPharmacies();
-        }
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
-        navView.getMenu().findItem(navMenuItem).setChecked(true);
+        onRestoreInstanceState(savedInstanceState);
 
         navView.setItemIconTintList(null);
-
 
         navView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -94,9 +70,8 @@ public class MainActivity extends AppCompatActivity {
 
                         switch(menuItem.getItemId()) {
                             case R.id.navigation_item_1:
-                                if(currentFragment != 1) {
+                                if(navMenuItem != R.id.navigation_item_1) {
                                     fragment = new FragmentMain();
-                                    currentFragment = 1;
 
                                     fragmentTransaction = true;
 
@@ -107,9 +82,8 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 break;
                             case R.id.navigation_item_2:
-                                if(currentFragment != 2) {
+                                if(navMenuItem != R.id.navigation_item_2) {
                                     fragment = new FragmentPharmacies();
-                                    currentFragment = 2;
 
                                     fragmentTransaction = true;
                                 }
@@ -153,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()) {
+        switch(item.getItemId()) {
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
                 return true;
@@ -180,32 +154,46 @@ public class MainActivity extends AppCompatActivity {
 
         // Guardar el menú actualmente seleccionado
         savedInstanceState.putInt(NAV_MENU_ITEM, navMenuItem);
-        savedInstanceState.putInt(CURRENT_FRAGMENT, currentFragment);
         savedInstanceState.putString(ACTIONBAR_TITTLE, getSupportActionBar().getTitle().toString());
 
-        // Always call the superclass so it can save the view hierarchy state
-        super.onSaveInstanceState(savedInstanceState);
+        Fragment fragment = getVisibleFragment();
+
+        getSupportFragmentManager().putFragment(savedInstanceState, "FRAGMENT", fragment);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
-        navMenuItem = savedInstanceState.getInt(NAV_MENU_ITEM);
-        currentFragment = savedInstanceState.getInt(CURRENT_FRAGMENT);
-        actionBarTittle = savedInstanceState.getString(ACTIONBAR_TITTLE);
 
         Fragment fragment = null;
-        switch(currentFragment) {
-            case 1:
-                fragment = new FragmentMain();
-                break;
-            case 2:
-                fragment = new FragmentPharmacies();
+
+        if(savedInstanceState == null) {
+            navMenuItem = R.id.navigation_item_1;
+            actionBarTittle = "PharmacyS";
+
+            fragment = new FragmentMain();
         }
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
-        navView.getMenu().findItem(navMenuItem).setChecked(true);
+        else {
+            super.onRestoreInstanceState(savedInstanceState);
+
+            navMenuItem = savedInstanceState.getInt(NAV_MENU_ITEM);
+            actionBarTittle = savedInstanceState.getString(ACTIONBAR_TITTLE);
+
+            fragment = getSupportFragmentManager().getFragment(savedInstanceState, "FRAGMENT");
+        }
+
+        if(fragment != null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
+
+            if(navMenuItem > 0)
+                navView.getMenu().findItem(navMenuItem).setChecked(true);
+            else {
+                for(int i=0; i<navView.getMenu().size(); i++)
+                    navView.getMenu().getItem(i).setChecked(false);
+            }
+        }
+
         getSupportActionBar().setTitle(actionBarTittle);
+
     }
 
     @Override
@@ -238,16 +226,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void setCurrentFragment(int fragment) {
-
-        currentFragment = fragment;
-    }
-
-    public void setCurrentMenuItem(int menuItem) {
-
-        navMenuItem = menuItem;
-    }
-
     private Fragment getVisibleFragment(){
 
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
@@ -269,7 +247,6 @@ public class MainActivity extends AppCompatActivity {
 
         if(fragment.getClass() == FragmentMain.class) {
             navMenuItem = R.id.navigation_item_1;
-            currentFragment = 1;
             actionBarTittle = "PharmacyS";
 
             // Vaciar la pila de Fragments, para si se pulsa en el botón atrás cerrar la App.
@@ -277,11 +254,26 @@ public class MainActivity extends AppCompatActivity {
         }
         else if(fragment.getClass() == FragmentPharmacies.class) {
             navMenuItem = R.id.navigation_item_2;
-            currentFragment = 2;
             actionBarTittle = "Pharmacies";
         }
+        else if(fragment.getClass() == FragmentPharmacy.class) {
+            if(navMenuItem > 0)
+                navView.getMenu().findItem(navMenuItem).setChecked(false);
 
-        navView.getMenu().findItem(navMenuItem).setChecked(true);
+            navMenuItem = -1;
+            actionBarTittle = "Pharmacy";
+        }
+        else if(fragment.getClass() == FragmentInventory.class) {
+            if(navMenuItem > 0)
+                navView.getMenu().findItem(navMenuItem).setChecked(false);
+
+            navMenuItem = -1;
+            actionBarTittle = "Product Categories";
+        }
+
+        if(navMenuItem > 0)
+            navView.getMenu().findItem(navMenuItem).setChecked(true);
+
         getSupportActionBar().setTitle(actionBarTittle);
     }
 

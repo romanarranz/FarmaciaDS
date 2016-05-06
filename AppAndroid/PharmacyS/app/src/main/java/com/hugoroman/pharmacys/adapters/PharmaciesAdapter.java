@@ -15,26 +15,38 @@ import java.util.List;
 public class PharmaciesAdapter extends RecyclerView.Adapter<PharmaciesAdapter.PharmaciesViewHolder> {
 
     private List<Pharmacy> pharmacies;
+    private static ClickListener clickListener;
 
     public PharmaciesAdapter(List<Pharmacy> pharmacies) {
 
         this.pharmacies = pharmacies;
     }
 
-    public static class PharmaciesViewHolder extends RecyclerView.ViewHolder {
+    public static class PharmaciesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public static CardView pharmacyCV;
-        public static TextView pharmacyName;
-        public static TextView pharmacyPhone;
+        public TextView pharmacyName;
+        public TextView pharmacyPhone;
 
-        public PharmaciesViewHolder(View view) {
-            super(view);
+        public PharmaciesViewHolder(View itemView) {
+            super(itemView);
 
-            pharmacyCV = (CardView) view.findViewById(R.id.pharmacy_cv);
-            pharmacyName = (TextView) view.findViewById(R.id.pharmacy_name);
-            pharmacyPhone = (TextView) view.findViewById(R.id.pharmacy_phone);
+            pharmacyName = (TextView) itemView.findViewById(R.id.pharmacy_name);
+            pharmacyPhone = (TextView) itemView.findViewById(R.id.pharmacy_phone);
+
+            itemView.setOnClickListener(this);
 
         }
+
+        @Override
+        public void onClick(View view) {
+
+            clickListener.onItemClick(getAdapterPosition(), view);
+        }
+    }
+
+    public void setOnItemClickListener(ClickListener clickListener) {
+
+        PharmaciesAdapter.clickListener = clickListener;
     }
 
     @Override
@@ -46,10 +58,10 @@ public class PharmaciesAdapter extends RecyclerView.Adapter<PharmaciesAdapter.Ph
     }
 
     @Override
-    public void onBindViewHolder(PharmaciesViewHolder holder, int position) {
+    public void onBindViewHolder(PharmaciesViewHolder holder, final int position) {
 
-        PharmaciesViewHolder.pharmacyName.setText(pharmacies.get(position).getName());
-        PharmaciesViewHolder.pharmacyPhone.setText("Phone: " + pharmacies.get(position).getPhoneNumber().toString());
+        holder.pharmacyName.setText(pharmacies.get(position).getName());
+        holder.pharmacyPhone.setText("Phone: " + pharmacies.get(position).getPhoneNumber().toString());
 
     }
 

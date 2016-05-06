@@ -14,14 +14,15 @@ import com.hugoroman.pharmacys.R;
 public class FragmentMain extends Fragment implements View.OnClickListener {
 
     private static final Slide enterAnim = new Slide(Gravity.LEFT);
-    private static final Slide exitAnim = new Slide(Gravity.RIGHT);
+    private static final Slide exitAnim = new Slide(Gravity.BOTTOM);
+
     private View view;
     private CardView cardView1;
 
     public FragmentMain() {
         // Required empty public constructor
-        this.setEnterTransition(new Slide(Gravity.LEFT));
-        this.setExitTransition(new Slide(Gravity.BOTTOM));
+        this.setEnterTransition(enterAnim);
+        this.setExitTransition(exitAnim);
     }
 
     @Override
@@ -48,18 +49,8 @@ public class FragmentMain extends Fragment implements View.OnClickListener {
                 break;
         }
 
-        fragment.setEnterTransition(enterAnim);
-        fragment.setExitTransition(exitAnim);
-        getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
 
         ((MainActivity) getActivity()).setMenuItemCheck(fragment);
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-
-    }
-
 }
