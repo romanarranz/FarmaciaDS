@@ -81,6 +81,49 @@ Tenemos que hacer los diagramas de casoss de uso y el de secuencia para la inter
 	- Email
 	- ListaServicios
 
+## ULTIMAS CONSIDERACIONES
+
+- TABLA FARMACIA 
+	- latitud      float
+	- longitud   float
+	- dirección varchar
+
+
+- INVENTARIO
+	- clave compuesta IDPRODUCT, IDFARMACIA
+	
+- PRODUCTO
+	- IDCATEGORIA - FOREIGN KEY
+
+- CATEGORIA
+	- ID
+	- NAME
+	- IMG
+
+- PEDIDO (se resta stock de ese producto en esa farmacia cuando se complete)
+	- KEY (EMAIL, IDPRODUCT, IDFARMACIA )
+	- CANTIDAD
+
+- RESERVA
+	- KEY (EMAIL, IDPRODUCT, IDFARMACIA)
+	- CANTIDAD
+	- NOTIFICADO
+
+se le debe ofrecer la oportunidad de cancelarla o confirmarla.
+
+EN LA APLICACION SE MOSTRARA STOCK DE LOS PRODUCTOS PERO DESCONTANDO LAS UNIDADES RESERVADAS.
+
+
+**PARTE CLIENTE (ANDROID)**
+	
+- CONSULTA USUARIO -> guardado en system preferences
+- SYNC FARMACIA
+- SYNC CATEGORIA
+- SYNC  PRODUCTOS	
+- SYNC INVENTARIO
+- ACTUALIZAR PEDIDOS -> ACTUALIZAR STOCKAJE DE PRODUCTOS EN EL INVENTARIO
+- ACTUALIZAR RESERVAS
+
 ##Referencias
 
 - [Patrones Software](https://sourcemaking.com/design_patterns)
