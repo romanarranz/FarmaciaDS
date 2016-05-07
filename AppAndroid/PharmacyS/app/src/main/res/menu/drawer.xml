@@ -4,27 +4,27 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/navigation_item_1"
-            android:icon="@mipmap/logo"
+            android:icon="@drawable/ic_main"
             android:title="@string/main"/>
         <item
             android:id="@+id/navigation_item_2"
-            android:icon="@mipmap/logo"
+            android:icon="@drawable/ic_pharmacies"
             android:title="@string/pharmacies"/>
         <item
             android:id="@+id/navigation_item_3"
-            android:icon="@mipmap/logo"
+            android:icon="@drawable/ic_map"
             android:title="@string/map"/>
         <item
             android:id="@+id/navigation_item_4"
-            android:icon="@mipmap/logo"
+            android:icon="@drawable/ic_basket"
             android:title="@string/basket"/>
         <item
             android:id="@+id/navigation_item_5"
-            android:icon="@mipmap/logo"
+            android:icon="@drawable/ic_orders"
             android:title="@string/orders"/>
         <item
             android:id="@+id/navigation_item_6"
-            android:icon="@mipmap/logo"
+            android:icon="@drawable/ic_reservations"
             android:title="@string/reservations"/>
     </group>
 
@@ -37,11 +37,11 @@
             android:checkable="false" />
         <item
             android:id="@+id/navigation_item_settings_1"
-            android:icon="@mipmap/logo"
+            android:icon="@drawable/ic_settings"
             android:title="@string/settings" />
         <item
             android:id="@+id/navigation_item_settings_2"
-            android:icon="@mipmap/logo"
+            android:icon="@drawable/ic_logout"
             android:title="@string/logout"/>
     </group>
 </menu>

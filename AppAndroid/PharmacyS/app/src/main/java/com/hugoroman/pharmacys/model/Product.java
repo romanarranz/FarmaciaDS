@@ -1,12 +1,13 @@
 package com.hugoroman.pharmacys.model;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Product {
 
     private int id;
     private int category;
     private String name;
+    private String description;
     private String laboratory;
     private String units;
     private Date expiration_date;
@@ -15,11 +16,12 @@ public class Product {
     private String urlImage;
 
 
-    public Product(int id, int category, String name, String laboratory, String units, Date expiration_date, int sizeUnits, String lot, String urlImage) {
+    public Product(int id, int category, String name, String description, String laboratory, String units, Date expiration_date, int sizeUnits, String lot, String urlImage) {
 
         this.id = id;
         this.category = category;
         this.name = name;
+        this.description = description;
         this.laboratory = laboratory;
         this.units = units;
         this.expiration_date = expiration_date;
@@ -38,6 +40,10 @@ public class Product {
 
     public String getName() {
         return name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public String getLaboratory() {

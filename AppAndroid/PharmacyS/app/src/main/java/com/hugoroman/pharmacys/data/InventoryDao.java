@@ -34,4 +34,19 @@ public final class InventoryDao {
 
         return inventories;
     }
+
+    public static int getInventoryQuantity(SQLiteDatabase db, String pharmacyCif, int productId) {
+
+        String selectQuery = "SELECT " + PharmacySContract.InventoryTable.QUANTITY + " FROM " + PharmacySContract.InventoryTable.TABLE_NAME + " WHERE " +
+                PharmacySContract.InventoryTable.PHARMACY_ID + " = '" + pharmacyCif + "' AND " + PharmacySContract.InventoryTable.PRODUCT_ID + " = " + productId;
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        int quantity = 0;
+
+        if(c.moveToFirst())
+            quantity = c.getInt(c.getColumnIndex(PharmacySContract.InventoryTable.QUANTITY));
+
+        return quantity;
+    }
 }

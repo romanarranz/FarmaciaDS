@@ -52,4 +52,12 @@ public final class PharmacySContract {
         public static final String PRICE = "PRICE";
         public static final String QUANTITY = "QUANTITY";
     }
+
+    public static abstract class BasketTable implements BaseColumns {
+
+        public static final String TABLE_NAME = "BASKET";
+        public static final String PHARMACY_ID = "PHARMACY_ID";
+        public static final String PRODUCT_ID = "PRODCUT_ID";
+        public static final String QUANTITY = "QUANTITY";
+    }
 }

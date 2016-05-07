@@ -46,4 +46,9 @@ public class DBConnector {
 
         return pharmacyS.getAllProductsByCategoryId(categoryId);
     }
+
+    public int getInventoryQuantity(String pharmacyCif, int productId) {
+
+        return pharmacyS.getInventoryQuantity(pharmacyCif, productId);
+    }
 }

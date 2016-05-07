@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.hugoroman.pharmacys.data.PharmacySContract.BasketTable;
 import com.hugoroman.pharmacys.data.PharmacySContract.CategoryTable;
 import com.hugoroman.pharmacys.data.PharmacySContract.InventoryTable;
 import com.hugoroman.pharmacys.data.PharmacySContract.PharmacyTable;
@@ -12,6 +13,7 @@ import com.hugoroman.pharmacys.model.Inventory;
 import com.hugoroman.pharmacys.model.Pharmacy;
 import com.hugoroman.pharmacys.model.Product;
 
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class DBPharmacyS extends SQLiteOpenHelper {
@@ -30,12 +32,12 @@ public class DBPharmacyS extends SQLiteOpenHelper {
                                                     ");";
 
     private static final String CREATE_CATEGORY = "CREATE TABLE " + CategoryTable.TABLE_NAME + " (" +
-                                                    CategoryTable.ID + " int(11) NOT NULL PRIMARY KEY," +
+                                                    CategoryTable.ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
                                                     CategoryTable.NAME + " varchar(20) NOT NULL" +
                                                     ");";
 
     private static final String CREATE_PRODUCT = "CREATE TABLE " + ProductTable.TABLE_NAME + " (" +
-                                                    ProductTable.ID + "  int(11) NOT NULL PRIMARY KEY," +
+                                                    ProductTable.ID + "  INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
                                                     ProductTable.CATEGORY + " int(11) REFERENCES " + CategoryTable.TABLE_NAME + " (" + CategoryTable.ID + ")" + " NOT NULL," +
                                                     ProductTable.NAME + " varchar(160) NOT NULL," +
                                                     ProductTable.DESCRIPTION + " varchar(600) NOT NULL," +
@@ -55,6 +57,13 @@ public class DBPharmacyS extends SQLiteOpenHelper {
                                                     "PRIMARY KEY("+ InventoryTable.PHARMACY_ID + "," + InventoryTable.PRODUCT_ID +")" +
                                                     ");";
 
+    public static final String CREATE_BASKET = "CREATE TABLE " + BasketTable.TABLE_NAME + " ( " +
+                                                BasketTable.PHARMACY_ID + " varchar(9) REFERENCES " + PharmacyTable.TABLE_NAME + "(" + PharmacyTable.CIF_ID + ")" + " NOT NULL," +
+                                                BasketTable.PRODUCT_ID + " int(11) REFERENCES " + ProductTable.TABLE_NAME + "(" + ProductTable.ID + ")" + " NOT NULL," +
+                                                BasketTable.QUANTITY + " int(5) NOT NULL" +
+                                                "PRIMARY KEY("+ BasketTable.PHARMACY_ID + "," + BasketTable.PRODUCT_ID +")" +
+                                                ");";
+
     // Variables estáticas para la inserción inicial de la base de datos - PRUEBAS
     private static final String CREATE_INITIAL_PHARMACY_DATA = "INSERT INTO " + PharmacyTable.TABLE_NAME + " VALUES ('73890889B','farmaciaa',891308843,'',10,22)," +
                                                                 " ('89899878H','FARMACIA PEPELUIS',987678392,NULL,10,22)," +
@@ -65,22 +74,21 @@ public class DBPharmacyS extends SQLiteOpenHelper {
                                                                 " ('98371937A','FARMACIA SANTA MARIA',987381821,'',10,22)" +
                                                                 ";";
 
-    private static final String CREATE_INITIAL_CATEGORY = "INSERT INTO " + CategoryTable.TABLE_NAME + " VALUES (1, 'BABY'), (2, 'BEAUTY');";
+    private static final String CREATE_INITIAL_CATEGORY = "INSERT INTO " + CategoryTable.TABLE_NAME + " VALUES (1, 'BABY'), (NULL, 'BEAUTY');";
 
     private static final String CREATE_INITIAL_PRODUCT = "INSERT INTO " + ProductTable.TABLE_NAME + " VALUES (1, 1, 'PACIFIER', 'BABY PACIFIER', 'SUAVINEX', 'u', NULL, 1, '12d181BA', NULL)," +
-                                                        "(2, 2, 'FACE CREAM', 'FACE CREAM FOR BEAUTY', 'NIVEA', 'g', NULL, 100, '12d181BA', NULL);";
+                                                        "(NULL, 2, 'FACE CREAM', 'FACE CREAM FOR BEAUTY', 'NIVEA', 'g', " + new GregorianCalendar(2017, 0, 15).getTimeInMillis() +" , 100, '12d181BA', NULL);";
 
-    private static final String CREATE_INITIAL_INVENTORY = "INSERT INTO " + InventoryTable.TABLE_NAME + " VALUES ('73890889B', 1, 3.20, 10), ('73890889B', 2, 5.90, 20);";
+    private static final String CREATE_INITIAL_INVENTORY = "INSERT INTO " + InventoryTable.TABLE_NAME + " VALUES ('73890889B', 1, 3.20, 10), ('73890889B', 2, 5.90, 0);";
 
 
-    private static final String DELETE_TABLES = "DROP TABLE IF EXISTS " + PharmacyTable.TABLE_NAME + "; " +
+    private static final String DELETE_TABLES = "DROP TABLE IF EXISTS " + BasketTable.TABLE_NAME + ";" +
                                                 "DROP TABLE IF EXISTS " + InventoryTable.TABLE_NAME + "; " +
+                                                "DROP TABLE IF EXISTS " + PharmacyTable.TABLE_NAME + "; " +
                                                 "DROP TABLE IF EXISTS " + ProductTable.TABLE_NAME + "; " +
                                                 "DROP TABLE IF EXISTS " + CategoryTable.TABLE_NAME + ";";
 
     public DBPharmacyS(Context context) {
-
-
 
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -115,6 +123,11 @@ public class DBPharmacyS extends SQLiteOpenHelper {
         return ProductDao.getAllProductsByCategoryId(this.getReadableDatabase(), categoryId);
     }
 
+    public int getInventoryQuantity(String pharmacyCif, int productId) {
+
+        return InventoryDao.getInventoryQuantity(this.getReadableDatabase(), pharmacyCif, productId);
+    }
+
     @Override
     public void onConfigure(SQLiteDatabase db) {
         super.onConfigure(db);
@@ -130,6 +143,7 @@ public class DBPharmacyS extends SQLiteOpenHelper {
         db.execSQL(CREATE_CATEGORY);
         db.execSQL(CREATE_PRODUCT);
         db.execSQL(CREATE_INVENTORY);
+        db.execSQL(CREATE_BASKET);
 
         db.execSQL(CREATE_INITIAL_PHARMACY_DATA);
         db.execSQL(CREATE_INITIAL_CATEGORY);
@@ -139,12 +153,11 @@ public class DBPharmacyS extends SQLiteOpenHelper {
 
     @Override
     public void onOpen(SQLiteDatabase db) {
-
+        super.onOpen(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
 
         onCreate(db);
     }

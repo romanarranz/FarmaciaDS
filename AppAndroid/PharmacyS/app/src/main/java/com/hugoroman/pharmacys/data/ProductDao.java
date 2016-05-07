@@ -24,6 +24,7 @@ public final class ProductDao {
         Product product = new Product(c.getInt(c.getColumnIndex(PharmacySContract.ProductTable.ID)),
                                         c.getInt(c.getColumnIndex(PharmacySContract.ProductTable.CATEGORY)),
                                         c.getString(c.getColumnIndex(PharmacySContract.ProductTable.NAME)),
+                                        c.getString(c.getColumnIndex(PharmacySContract.ProductTable.DESCRIPTION)),
                                         c.getString(c.getColumnIndex(PharmacySContract.ProductTable.LABORATORY)),
                                         c.getString(c.getColumnIndex(PharmacySContract.ProductTable.UNITS)),
                                         new Date(c.getLong(c.getColumnIndex(PharmacySContract.ProductTable.EXPIRATION_DATE))),
@@ -81,14 +82,15 @@ public final class ProductDao {
         if(c != null && c.moveToFirst()) {
             do {
                 Product product = new Product(c.getInt(c.getColumnIndex(PharmacySContract.ProductTable.ID)),
-                        c.getInt(c.getColumnIndex(PharmacySContract.ProductTable.CATEGORY)),
-                        c.getString(c.getColumnIndex(PharmacySContract.ProductTable.NAME)),
-                        c.getString(c.getColumnIndex(PharmacySContract.ProductTable.LABORATORY)),
-                        c.getString(c.getColumnIndex(PharmacySContract.ProductTable.UNITS)),
-                        new Date(c.getLong(c.getColumnIndex(PharmacySContract.ProductTable.EXPIRATION_DATE))),
-                        c.getInt(c.getColumnIndex(PharmacySContract.ProductTable.SIZE)),
-                        c.getString(c.getColumnIndex(PharmacySContract.ProductTable.LOT)),
-                        c.getString(c.getColumnIndex(PharmacySContract.ProductTable.URL_IMAGE)));
+                                                c.getInt(c.getColumnIndex(PharmacySContract.ProductTable.CATEGORY)),
+                                                c.getString(c.getColumnIndex(PharmacySContract.ProductTable.NAME)),
+                                                c.getString(c.getColumnIndex(PharmacySContract.ProductTable.DESCRIPTION)),
+                                                c.getString(c.getColumnIndex(PharmacySContract.ProductTable.LABORATORY)),
+                                                c.getString(c.getColumnIndex(PharmacySContract.ProductTable.UNITS)),
+                                                new Date(c.getLong(c.getColumnIndex(PharmacySContract.ProductTable.EXPIRATION_DATE))),
+                                                c.getInt(c.getColumnIndex(PharmacySContract.ProductTable.SIZE)),
+                                                c.getString(c.getColumnIndex(PharmacySContract.ProductTable.LOT)),
+                                                c.getString(c.getColumnIndex(PharmacySContract.ProductTable.URL_IMAGE)));
 
                 products.add(product);
 

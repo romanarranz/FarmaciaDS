@@ -12,8 +12,8 @@
     <string name="map">Map</string>
     <string name="pharmacies">Pharmacies</string>
     <string name="basket">My Basket</string>
-    <string name="orders">Orders</string>
-    <string name="reservations">Reservations</string>
+    <string name="orders">My Orders</string>
+    <string name="reservations">My Reservations</string>
 
     <!-- Menú secundario del NavView -->
     <string name="settingsTittle">ACCOUNT</string>
@@ -30,4 +30,7 @@
 
     <!-- Botón de catálogo del fragment Pharmacy -->
     <string name="pharmacyCatalog">Product Catalog</string>
+
+    <!-- Label para reservar procucto -->
+    <string name="reserve">Reserve</string>
 </resources>

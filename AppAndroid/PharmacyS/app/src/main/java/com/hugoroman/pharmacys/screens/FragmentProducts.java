@@ -10,6 +10,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import com.hugoroman.pharmacys.R;
 import com.hugoroman.pharmacys.adapters.ClickListener;
@@ -28,6 +30,7 @@ public class FragmentProducts extends Fragment {
 
     private View view;
     private int categoryID;
+    private String pharmacyCif;
 
     public FragmentProducts() {
         // Required empty public constructor
@@ -43,7 +46,7 @@ public class FragmentProducts extends Fragment {
         view = inflater.inflate(R.layout.fragment_products, container, false);
 
         categoryID = getArguments().getInt("CATEGORY_ID");
-
+        pharmacyCif = getArguments().getString("PH_CIF");
 
         DBConnector dbConnector = new DBConnector(this.getContext());
 
@@ -65,6 +68,14 @@ public class FragmentProducts extends Fragment {
                 // Añadir los eventos que tienen que ocurrir cuando se pulse algún CardView del RecyclerView
                 FragmentProduct fragmentProduct = new FragmentProduct();
 
+                Bundle bundle = new Bundle();
+
+                bundle.putString("PH_CIF", pharmacyCif);
+
+                fragmentProduct.setArguments(bundle);
+
+                fragmentProduct.setProduct(products.get(position));
+
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragmentProduct).addToBackStack(null).commit();
 
                 ((MainActivity) getActivity()).setMenuItemCheck(fragmentProduct);
@@ -74,6 +85,8 @@ public class FragmentProducts extends Fragment {
         recyclerView.setAdapter(productsAdapter);
 
         FloatingActionButton FAB = (FloatingActionButton) view.findViewById(R.id.fab_basket);
+        Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.simple_grow);
+        FAB.setAnimation(animation);
 
         FAB.setOnClickListener(new View.OnClickListener() {
 

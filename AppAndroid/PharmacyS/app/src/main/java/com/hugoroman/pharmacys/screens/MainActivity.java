@@ -165,7 +165,8 @@ public class MainActivity extends AppCompatActivity {
 
         Fragment fragment = getVisibleFragment();
 
-        getSupportFragmentManager().putFragment(savedInstanceState, "FRAGMENT", fragment);
+        if(fragment != null)
+            getSupportFragmentManager().putFragment(savedInstanceState, "FRAGMENT", fragment);
     }
 
     @Override
@@ -284,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
             navMenuItem = -1;
             actionBarTittle = "Products Catalogue";
         }
-        else if(fragment.getClass() == FragmentProducts.class) {
+        else if(fragment.getClass() == FragmentProduct.class) {
             if(navMenuItem > 0)
                 navView.getMenu().findItem(navMenuItem).setChecked(false);
 

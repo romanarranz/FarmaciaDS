@@ -69,6 +69,7 @@ public class FragmentInventory extends Fragment {
                 Bundle bundle = new Bundle();
 
                 bundle.putInt("CATEGORY_ID", categoryID);
+                bundle.putString("PH_CIF", pharmacyCif);
 
                 fragmentProducts.setArguments(bundle);
 
