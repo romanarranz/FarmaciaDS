@@ -66,17 +66,17 @@ public class FragmentPharmacy extends Fragment {
             @Override
             public void onClick(View v) {
 
-                FragmentInventory fragment = new FragmentInventory();
+                FragmentInventory fragmentInventory = new FragmentInventory();
 
                 Bundle bundle = new Bundle();
 
                 bundle.putString("PH_CIF", pharmacy.getCif());
 
-                fragment.setArguments(bundle);
+                fragmentInventory.setArguments(bundle);
 
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragmentInventory).addToBackStack(null).commit();
 
-                ((MainActivity) getActivity()).setMenuItemCheck(fragment);
+                ((MainActivity) getActivity()).setMenuItemCheck(fragmentInventory);
             }
         });
 

@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.hugoroman.pharmacys.model.Inventory;
 import com.hugoroman.pharmacys.model.Pharmacy;
+import com.hugoroman.pharmacys.model.Product;
 
 import java.util.List;
 
@@ -34,5 +35,15 @@ public class DBConnector {
     public String getProductCategoryName(int idProduct) {
 
         return pharmacyS.getProductCategoryName(idProduct);
+    }
+
+    public int getProductCategoryId(int idProduct) {
+
+        return pharmacyS.getProductCategoryId(idProduct);
+    }
+
+    public List<Product> getAllProductsByCategoryId(int categoryId) {
+
+        return pharmacyS.getAllProductsByCategoryId(categoryId);
     }
 }

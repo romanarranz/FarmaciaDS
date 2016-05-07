@@ -3,9 +3,7 @@ package com.hugoroman.pharmacys.data;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-
 import com.hugoroman.pharmacys.model.Inventory;
-import com.hugoroman.pharmacys.model.Pharmacy;
 
 import java.util.ArrayList;
 import java.util.List;

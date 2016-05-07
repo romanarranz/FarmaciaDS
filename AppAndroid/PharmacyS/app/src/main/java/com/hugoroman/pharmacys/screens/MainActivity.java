@@ -88,6 +88,13 @@ public class MainActivity extends AppCompatActivity {
                                     fragmentTransaction = true;
                                 }
                                 break;
+                            case R.id.navigation_item_4:
+                                if(navMenuItem != R.id.navigation_item_4) {
+                                    fragment = new FragmentBasket();
+
+                                    fragmentTransaction = true;
+                                }
+                                break;
                             case R.id.navigation_item_settings:
                                 return false;
                             case R.id.navigation_item_settings_1:
@@ -269,6 +276,24 @@ public class MainActivity extends AppCompatActivity {
 
             navMenuItem = -1;
             actionBarTittle = "Product Categories";
+        }
+        else if(fragment.getClass() == FragmentProducts.class) {
+            if(navMenuItem > 0)
+                navView.getMenu().findItem(navMenuItem).setChecked(false);
+
+            navMenuItem = -1;
+            actionBarTittle = "Products Catalogue";
+        }
+        else if(fragment.getClass() == FragmentProducts.class) {
+            if(navMenuItem > 0)
+                navView.getMenu().findItem(navMenuItem).setChecked(false);
+
+            navMenuItem = -1;
+            actionBarTittle = "Product Info";
+        }
+        else if(fragment.getClass() == FragmentBasket.class) {
+            navMenuItem = R.id.navigation_item_4;
+            actionBarTittle = "My Basket";
         }
 
         if(navMenuItem > 0)

@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import com.hugoroman.pharmacys.model.Product;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class ProductDao {
 
@@ -14,14 +16,12 @@ public final class ProductDao {
         String selectQuery = "SELECT * FROM " + PharmacySContract.ProductTable.TABLE_NAME + " WHERE "
                 + PharmacySContract.ProductTable._ID + " = " + id;
 
-        //Log.e(LOG, selectQuery);
-
         Cursor c = db.rawQuery(selectQuery, null);
 
         if(c != null)
             c.moveToFirst();
 
-        Product pharmacy = new Product(c.getInt(c.getColumnIndex(PharmacySContract.ProductTable.ID)),
+        Product product = new Product(c.getInt(c.getColumnIndex(PharmacySContract.ProductTable.ID)),
                                         c.getInt(c.getColumnIndex(PharmacySContract.ProductTable.CATEGORY)),
                                         c.getString(c.getColumnIndex(PharmacySContract.ProductTable.NAME)),
                                         c.getString(c.getColumnIndex(PharmacySContract.ProductTable.LABORATORY)),
@@ -31,7 +31,7 @@ public final class ProductDao {
                                         c.getString(c.getColumnIndex(PharmacySContract.ProductTable.LOT)),
                                         c.getString(c.getColumnIndex(PharmacySContract.ProductTable.URL_IMAGE)));
 
-        return pharmacy;
+        return product;
     }
 
     public static String getProductCategoryName(SQLiteDatabase db, int idProduct) {
@@ -55,5 +55,46 @@ public final class ProductDao {
             c.moveToFirst();
 
         return c.getString(c.getColumnIndex(PharmacySContract.CategoryTable.NAME));
+    }
+
+    public static int getProductCategoryId(SQLiteDatabase db, int idProduct) {
+
+        String selectQueryCategoryId = "SELECT " + PharmacySContract.ProductTable.CATEGORY + " FROM " + PharmacySContract.ProductTable.TABLE_NAME + " WHERE "
+                + PharmacySContract.ProductTable.ID + " = " + idProduct;
+
+        Cursor cId = db.rawQuery(selectQueryCategoryId, null);
+
+        if(cId != null)
+            cId.moveToFirst();
+
+        return cId.getInt(cId.getColumnIndex(PharmacySContract.ProductTable.CATEGORY));
+    }
+
+    public static List<Product> getAllProductsByCategoryId(SQLiteDatabase db, int categoryId) {
+
+        String selectQuery = "SELECT * FROM " + PharmacySContract.ProductTable.TABLE_NAME + " WHERE " + PharmacySContract.ProductTable.CATEGORY + " = " + categoryId;
+
+        List<Product> products = new ArrayList<Product>();
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if(c != null && c.moveToFirst()) {
+            do {
+                Product product = new Product(c.getInt(c.getColumnIndex(PharmacySContract.ProductTable.ID)),
+                        c.getInt(c.getColumnIndex(PharmacySContract.ProductTable.CATEGORY)),
+                        c.getString(c.getColumnIndex(PharmacySContract.ProductTable.NAME)),
+                        c.getString(c.getColumnIndex(PharmacySContract.ProductTable.LABORATORY)),
+                        c.getString(c.getColumnIndex(PharmacySContract.ProductTable.UNITS)),
+                        new Date(c.getLong(c.getColumnIndex(PharmacySContract.ProductTable.EXPIRATION_DATE))),
+                        c.getInt(c.getColumnIndex(PharmacySContract.ProductTable.SIZE)),
+                        c.getString(c.getColumnIndex(PharmacySContract.ProductTable.LOT)),
+                        c.getString(c.getColumnIndex(PharmacySContract.ProductTable.URL_IMAGE)));
+
+                products.add(product);
+
+            } while(c.moveToNext());
+        }
+
+        return products;
     }
 }

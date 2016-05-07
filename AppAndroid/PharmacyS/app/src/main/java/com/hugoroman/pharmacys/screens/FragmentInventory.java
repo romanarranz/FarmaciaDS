@@ -9,18 +9,12 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hugoroman.pharmacys.R;
 import com.hugoroman.pharmacys.adapters.ClickListener;
 import com.hugoroman.pharmacys.adapters.InventoryAdapter;
-import com.hugoroman.pharmacys.adapters.PharmaciesAdapter;
 import com.hugoroman.pharmacys.data.DBConnector;
 import com.hugoroman.pharmacys.model.Inventory;
-import com.hugoroman.pharmacys.model.Pharmacy;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -48,9 +42,6 @@ public class FragmentInventory extends Fragment {
 
         pharmacyCif = getArguments().getString("PH_CIF");
 
-        /*TextView tv = (TextView) view.findViewById(R.id.tv);
-        tv.setText(pharmacyCif);*/
-
         DBConnector dbConnector = new DBConnector(this.getContext());
 
         final List<Inventory> inventories = dbConnector.getPharmacyInventory(pharmacyCif);
@@ -69,13 +60,21 @@ public class FragmentInventory extends Fragment {
             public void onItemClick(int position, View v) {
 
                 // Añadir los eventos que tienen que ocurrir cuando se pulse algún CardView del RecyclerView
-                /*FragmentPharmacy fragmentPharmacy = new FragmentPharmacy();
+                FragmentProducts fragmentProducts = new FragmentProducts();
 
-                fragmentPharmacy.setPharmacy(pharmacies.get(position));
+                DBConnector dbConnector = new DBConnector(getContext());
 
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragmentPharmacy).addToBackStack(null).commit();
+                int categoryID = dbConnector.getProductCategoryId(inventories.get(position).getProductID());
 
-                ((MainActivity) getActivity()).setMenuItemCheck(fragmentPharmacy);*/
+                Bundle bundle = new Bundle();
+
+                bundle.putInt("CATEGORY_ID", categoryID);
+
+                fragmentProducts.setArguments(bundle);
+
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragmentProducts).addToBackStack(null).commit();
+
+                ((MainActivity) getActivity()).setMenuItemCheck(fragmentProducts);
             }
         });
 

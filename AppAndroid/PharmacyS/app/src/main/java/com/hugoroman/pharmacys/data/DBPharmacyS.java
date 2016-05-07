@@ -4,7 +4,10 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.hugoroman.pharmacys.data.PharmacySContract.*;
+import com.hugoroman.pharmacys.data.PharmacySContract.CategoryTable;
+import com.hugoroman.pharmacys.data.PharmacySContract.InventoryTable;
+import com.hugoroman.pharmacys.data.PharmacySContract.PharmacyTable;
+import com.hugoroman.pharmacys.data.PharmacySContract.ProductTable;
 import com.hugoroman.pharmacys.model.Inventory;
 import com.hugoroman.pharmacys.model.Pharmacy;
 import com.hugoroman.pharmacys.model.Product;
@@ -62,11 +65,12 @@ public class DBPharmacyS extends SQLiteOpenHelper {
                                                                 " ('98371937A','FARMACIA SANTA MARIA',987381821,'',10,22)" +
                                                                 ";";
 
-    private static final String CREATE_INITIAL_CATEGORY = "INSERT INTO " + CategoryTable.TABLE_NAME + " VALUES (1, 'BABY');";
+    private static final String CREATE_INITIAL_CATEGORY = "INSERT INTO " + CategoryTable.TABLE_NAME + " VALUES (1, 'BABY'), (2, 'BEAUTY');";
 
-    private static final String CREATE_INITIAL_PRODUCT = "INSERT INTO " + ProductTable.TABLE_NAME + " VALUES (1, 1, 'PACIFIER', 'BABY PACIFIER', 'SUAVINEX', 'u', NULL, 1, '12d181BA', NULL);";
+    private static final String CREATE_INITIAL_PRODUCT = "INSERT INTO " + ProductTable.TABLE_NAME + " VALUES (1, 1, 'PACIFIER', 'BABY PACIFIER', 'SUAVINEX', 'u', NULL, 1, '12d181BA', NULL)," +
+                                                        "(2, 2, 'FACE CREAM', 'FACE CREAM FOR BEAUTY', 'NIVEA', 'g', NULL, 100, '12d181BA', NULL);";
 
-    private static final String CREATE_INITIAL_INVENTORY = "INSERT INTO " + InventoryTable.TABLE_NAME + " VALUES ('73890889B', 1, 3.20, 10);";
+    private static final String CREATE_INITIAL_INVENTORY = "INSERT INTO " + InventoryTable.TABLE_NAME + " VALUES ('73890889B', 1, 3.20, 10), ('73890889B', 2, 5.90, 20);";
 
 
     private static final String DELETE_TABLES = "DROP TABLE IF EXISTS " + PharmacyTable.TABLE_NAME + "; " +
@@ -99,6 +103,16 @@ public class DBPharmacyS extends SQLiteOpenHelper {
     public String getProductCategoryName(int idProduct) {
 
         return ProductDao.getProductCategoryName(this.getReadableDatabase(), idProduct);
+    }
+
+    public int getProductCategoryId(int idProduct) {
+
+        return ProductDao.getProductCategoryId(this.getReadableDatabase(), idProduct);
+    }
+
+    public List<Product> getAllProductsByCategoryId(int categoryId) {
+
+        return ProductDao.getAllProductsByCategoryId(this.getReadableDatabase(), categoryId);
     }
 
     @Override

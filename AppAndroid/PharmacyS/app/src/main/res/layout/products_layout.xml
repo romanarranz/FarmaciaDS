@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/pharmacy_cv"
+    android:id="@+id/product_cv"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
     android:layout_marginTop="5dp"
@@ -17,7 +17,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/pharmacy_photo"
+            android:id="@+id/product_photo"
             android:src="@mipmap/logo"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
@@ -26,17 +26,17 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/pharmacy_name"
-            android:layout_toRightOf="@+id/pharmacy_photo"
+            android:id="@+id/product_name"
+            android:layout_toRightOf="@+id/product_photo"
             android:layout_alignParentTop="true"
-            android:textSize="30sp" />
+            android:textSize="30sp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/pharmacy_phone"
-            android:layout_toRightOf="@+id/pharmacy_photo"
-            android:layout_below="@+id/pharmacy_name" />
+            android:id="@+id/product_laboratory"
+            android:layout_toRightOf="@+id/product_photo"
+            android:layout_below="@+id/product_name"/>
 
     </RelativeLayout>
 
