@@ -4,6 +4,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.CardView;
@@ -37,8 +38,7 @@ import java.util.List;
 
 public class FragmentBasket extends Fragment {
 
-    private static final Slide enterAnim = new Slide(Gravity.BOTTOM);
-    private static final Slide exitAnim = new Slide(Gravity.BOTTOM);
+    private boolean anim = false;
 
     private View view;
     private DBConnector dbConnector;
@@ -56,8 +56,12 @@ public class FragmentBasket extends Fragment {
 
     public FragmentBasket() {
         // Required empty public constructor
-        this.setEnterTransition(enterAnim);
-        this.setExitTransition(exitAnim);
+        if(!anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            this.setEnterTransition(new Slide(Gravity.BOTTOM));
+            this.setExitTransition(new Slide(Gravity.BOTTOM));
+
+            anim = false;
+        }
     }
 
     @Override
@@ -101,7 +105,6 @@ public class FragmentBasket extends Fragment {
             frameLayout.removeView(priceLinearLayout);
         }
 
-
         recyclerView = (RecyclerView) view.findViewById(R.id.basket_rv);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext());
@@ -115,14 +118,13 @@ public class FragmentBasket extends Fragment {
             @Override
             public boolean onLongItemClick(int position, View v) {
 
-
-                toggle(position, (CardView) v);
-
                 if(!modeSelection) {
                     ViewCompat.animate(fab).rotation(360f).withLayer().setDuration(300).setInterpolator(interpolator).start();
                     fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_delete));
                     modeSelection = true;
                 }
+
+                toggle(position, (CardView) v);
 
                 return true;
             }
@@ -146,7 +148,10 @@ public class FragmentBasket extends Fragment {
 
                     fragmentProduct.setProduct(product);
 
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragmentProduct).addToBackStack(null).commit();
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragmentProduct).addToBackStack(null).commit();
+                    else
+                        getActivity().getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_frame, fragmentProduct).addToBackStack(null).commit();
 
                     ((MainActivity) getActivity()).setMenuItemCheck(fragmentProduct);
                 }
@@ -200,6 +205,7 @@ public class FragmentBasket extends Fragment {
                 }
                 else {
                     // Procesar el pago
+                    // Por cada una de las farmacias que tengan productos en la cesta, pasar por su pago.
                 }
             }
         });
@@ -212,7 +218,7 @@ public class FragmentBasket extends Fragment {
     public void toggle(int position, CardView cv) {
 
         if(!selections.contains(position)) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
                 cv.setCardBackgroundColor(getResources().getColor(R.color.colorAccent, getActivity().getTheme()));
             else
                 cv.setCardBackgroundColor(getResources().getColor(R.color.colorAccent));
@@ -220,7 +226,7 @@ public class FragmentBasket extends Fragment {
             selections.add(position);
         }
         else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
                 cv.setCardBackgroundColor(getResources().getColor(R.color.colorPrimaryLogin, getActivity().getTheme()));
             else
                 cv.setCardBackgroundColor(getResources().getColor(R.color.colorPrimaryLogin));

@@ -1,7 +1,9 @@
 package com.hugoroman.pharmacys.screens;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.transition.Slide;
 import android.view.Gravity;
@@ -13,8 +15,9 @@ import com.hugoroman.pharmacys.R;
 
 public class FragmentMain extends Fragment implements View.OnClickListener {
 
-    private static final Slide enterAnim = new Slide(Gravity.LEFT);
-    private static final Slide exitAnim = new Slide(Gravity.BOTTOM);
+    //private static final Slide enterAnim = new Slide(Gravity.LEFT);
+    //private static final Slide exitAnim = new Slide(Gravity.BOTTOM);
+    private boolean anim = false;
 
     private View view;
     private CardView pharmaciesCardView;
@@ -25,8 +28,12 @@ public class FragmentMain extends Fragment implements View.OnClickListener {
 
     public FragmentMain() {
         // Required empty public constructor
-        this.setEnterTransition(enterAnim);
-        this.setExitTransition(exitAnim);
+        if(!anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            this.setEnterTransition(new Slide(Gravity.LEFT));
+            this.setExitTransition(new Slide(Gravity.BOTTOM));
+
+            anim = false;
+        }
     }
 
     @Override
@@ -60,7 +67,7 @@ public class FragmentMain extends Fragment implements View.OnClickListener {
                 fragment = new FragmentPharmacies();
                 break;
             case R.id.map_cv:
-
+                fragment = new FragmentMap();
                 break;
             case R.id.basket_cv:
                 fragment = new FragmentBasket();
@@ -74,7 +81,10 @@ public class FragmentMain extends Fragment implements View.OnClickListener {
         }
 
         if(fragment != null) {
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
+            else
+                getActivity().getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_frame, fragment).addToBackStack(null).commit();
 
             ((MainActivity) getActivity()).setMenuItemCheck(fragment);
         }

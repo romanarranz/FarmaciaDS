@@ -2,9 +2,12 @@ package com.hugoroman.pharmacys.screens;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -21,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_LOGIN = 0;
     private static final String NAV_MENU_ITEM = "navItemId";
-    private static final String CURRENT_FRAGMENT = "currentFragment";
     private static final String ACTIONBAR_TITTLE = "actionBarTittle";
 
     private SharedPreferences preferences;
@@ -39,11 +41,11 @@ public class MainActivity extends AppCompatActivity {
 
         preferences = getPreferences(MODE_PRIVATE);
 
-        /*if(!preferences.contains("user-email")) {
+        if(!preferences.contains("user-email")) {
             Toast.makeText(this, "Creating login activity", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivityForResult(intent, REQUEST_LOGIN);
-        }*/
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.appbar);
         setSupportActionBar(toolbar);
@@ -89,8 +91,9 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 break;
                             case R.id.navigation_item_3:
+                                fragment = new FragmentMap();
 
-                                fragmentTransaction = false;
+                                fragmentTransaction = true;
                                 break;
                             case R.id.navigation_item_4:
                                 if(navMenuItem != R.id.navigation_item_4) {
@@ -120,11 +123,19 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         if(fragmentTransaction) {
-                            if(fragmentToStack)
-                                getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(String.valueOf(menuItem.getItemId())).commit();
-                            else
-                                getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
+                            if(fragmentToStack) {
+                                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                                    getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(String.valueOf(menuItem.getItemId())).commit();
+                                else
+                                    getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_frame, fragment).addToBackStack(String.valueOf(menuItem.getItemId())).commit();
+                            }
+                            else {
+                                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                                    getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
+                                else
+                                    getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_frame, fragment).commit();
 
+                            }
                             menuItem.setChecked(true);
                             navMenuItem = menuItem.getItemId();
 
@@ -215,7 +226,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         getSupportActionBar().setTitle(actionBarTittle);
-
     }
 
     @Override
@@ -277,6 +287,10 @@ public class MainActivity extends AppCompatActivity {
         else if(fragment.getClass() == FragmentPharmacies.class) {
             navMenuItem = R.id.navigation_item_2;
             actionBarTittle = "Pharmacies";
+        }
+        else if(fragment.getClass() == FragmentMap.class) {
+            navMenuItem = R.id.navigation_item_3;
+            actionBarTittle = "Pharmacies Map";
         }
         else if(fragment.getClass() == FragmentPharmacy.class) {
             if(navMenuItem > 0)

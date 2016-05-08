@@ -1,8 +1,10 @@
 package com.hugoroman.pharmacys.screens;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.transition.Slide;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,8 +26,7 @@ import java.sql.Date;
 
 public class FragmentProduct extends Fragment implements View.OnClickListener {
 
-    private static final Slide enterAnim = new Slide(Gravity.LEFT);
-    private static final Slide exitAnim = new Slide(Gravity.TOP);
+    private boolean anim = false;
 
     private View view;
     private Product product;
@@ -52,8 +53,12 @@ public class FragmentProduct extends Fragment implements View.OnClickListener {
 
     public FragmentProduct() {
         // Required empty public constructor
-        this.setEnterTransition(enterAnim);
-        this.setExitTransition(exitAnim);
+        if(!anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            this.setEnterTransition(new Slide(Gravity.LEFT));
+            this.setExitTransition(new Slide(Gravity.TOP));
+
+            anim = false;
+        }
     }
 
     public void setProduct(Product product) {
@@ -135,10 +140,14 @@ public class FragmentProduct extends Fragment implements View.OnClickListener {
         addReserveAction.setOnClickListener(this);
 
         if(maxQuantity == 0) {
-
-            fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_reservations, getActivity().getTheme()));
-
-            addReserveAction.setImageDrawable(getResources().getDrawable(R.drawable.ic_reservations, getActivity().getTheme()));
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_reservations, getActivity().getTheme()));
+                addReserveAction.setImageDrawable(getResources().getDrawable(R.drawable.ic_reservations, getActivity().getTheme()));
+            }
+            else {
+                fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_reservations));
+                addReserveAction.setImageDrawable(getResources().getDrawable(R.drawable.ic_reservations));
+            }
         }
 
         substractQuantity.setImageAlpha(0);

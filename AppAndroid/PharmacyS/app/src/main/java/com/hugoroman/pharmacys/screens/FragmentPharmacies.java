@@ -1,7 +1,9 @@
 package com.hugoroman.pharmacys.screens;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.Slide;
@@ -20,15 +22,18 @@ import java.util.List;
 
 public class FragmentPharmacies extends Fragment {
 
-    private static final Slide enterAnim = new Slide(Gravity.RIGHT);
-    private static final Slide exitAnim = new Slide(Gravity.LEFT);
+    private boolean anim = false;
 
     private View view;
 
     public FragmentPharmacies() {
         // Required empty public constructor
-        this.setEnterTransition(enterAnim);
-        this.setExitTransition(exitAnim);
+        if(!anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            this.setEnterTransition(new Slide(Gravity.RIGHT));
+            this.setExitTransition(new Slide(Gravity.LEFT));
+
+            anim = false;
+        }
     }
 
     @Override
@@ -60,7 +65,11 @@ public class FragmentPharmacies extends Fragment {
 
                 fragmentPharmacy.setPharmacy(pharmacies.get(position));
 
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragmentPharmacy).addToBackStack(null).commit();
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragmentPharmacy).addToBackStack(null).commit();
+                else
+                    getActivity().getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_frame, fragmentPharmacy).addToBackStack(null).commit();
+
 
                 ((MainActivity) getActivity()).setMenuItemCheck(fragmentPharmacy);
             }

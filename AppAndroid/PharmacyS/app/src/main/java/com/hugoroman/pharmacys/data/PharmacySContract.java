@@ -10,7 +10,17 @@ public final class PharmacySContract {
 
     public PharmacySContract() {}
 
-    // Clase para la tabla de farmacias con los campos de dicha
+    // Clase estáticas abstractas para la distintas tabla de la BD con los campos de dichas
+
+    public static abstract class UserTable implements BaseColumns {
+
+        public static final String EMAIL = "EMAIL";
+        public static final String NAME = "NAME";
+        public static final String SURNAME = "SURNAME";
+        public static final String PASSWORD = "PASSWORD";
+        public static final String RESETHASH = "RESETHASH";
+    }
+
     public static abstract class PharmacyTable implements BaseColumns {
 
         public static final String TABLE_NAME = "PHARMACY";
@@ -20,6 +30,9 @@ public final class PharmacySContract {
         public static final String DESCRIPTION = "DESCRIPTION";
         public static final String START_SCHEDULE = "START_SCHEDULE";
         public static final String END_SCHEDULE = "END_SCHEDULE";
+        public static final String LATITUDE = "LATITUDE";
+        public static final String LONGITUDE = "LONGITUDE";
+        public static final String ADDRESS = "ADDRESS";
     }
 
     public static abstract class CategoryTable implements BaseColumns {
@@ -27,6 +40,7 @@ public final class PharmacySContract {
         public static final String TABLE_NAME = "CATEGORY";
         public static final String ID = "ID";
         public static final String NAME = "NAME";
+        public static final String IMG = "IMG";
     }
 
     public static abstract class ProductTable implements BaseColumns {
@@ -50,7 +64,8 @@ public final class PharmacySContract {
         public static final String PHARMACY_ID = "PHARMACY_ID";
         public static final String PRODUCT_ID = "PRODUCT_ID";
         public static final String PRICE = "PRICE";
-        public static final String QUANTITY = "QUANTITY";
+        public static final String QUANTITY = "STOCK";
+        public static final String QUERYCOUNT = "QUERYCOUNT";
     }
 
     public static abstract class BasketTable implements BaseColumns {
@@ -67,5 +82,21 @@ public final class PharmacySContract {
         public static final String PHARMACY_ID = "PHARMACY_ID";
         public static final String PRODUCT_ID = "PRODCUT_ID";
         public static final String QUANTITY = "QUANTITY";
+    }
+
+    public static abstract class OrderTable implements  BaseColumns {
+
+        public static final String TABLE_NAME = "ORDER";
+        public static final String ID = "ID";
+        public static final String USER_ID = "USER_ID";
+        public static final String PHARMACY_ID = "PHARMACY_ID";
+        public static final String DATE = "DATE";
+    }
+
+    public static abstract class OrderProductTable implements  BaseColumns {
+
+        public static final String TABLE_NAME = "ORDER_PRODUCT";
+        public static final String ID_ORDER = "ID_ORDER";
+        public static final String PRODUCT_ID = "PRODUCT_ID";
     }
 }

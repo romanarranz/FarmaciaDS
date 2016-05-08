@@ -21,8 +21,8 @@
         android:clickable="true"
         android:src="@drawable/ic_basket"
         android:layout_gravity="bottom|end"
-        app:backgroundTint="@color/colorPrimary"
-        app:rippleColor="@color/colorAccent"
+        app:backgroundTint="@color/colorAccent"
+        app:rippleColor="@color/colorPrimary"
         app:elevation="@dimen/fab_elevation"
         app:borderWidth="0dp" />
 </FrameLayout>

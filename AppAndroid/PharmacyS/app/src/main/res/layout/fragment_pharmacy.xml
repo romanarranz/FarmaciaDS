@@ -54,7 +54,7 @@
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
                 android:textSize="15dp"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -74,7 +74,7 @@
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
                 android:text="@string/pharmacyCatalog"
-                android:backgroundTint="@color/colorPrimary"
+                android:background="@color/colorPrimary"
                 android:textSize="20dp"
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="30dp"

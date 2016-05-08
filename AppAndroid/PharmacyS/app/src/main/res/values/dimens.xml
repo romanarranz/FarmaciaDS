@@ -6,6 +6,6 @@
     <dimen name="content_name">30dp</dimen>
 
     <dimen name="fab_size">60dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="fab_margin">0dp</dimen>
     <dimen name="fab_elevation">8dp</dimen>
 </resources>

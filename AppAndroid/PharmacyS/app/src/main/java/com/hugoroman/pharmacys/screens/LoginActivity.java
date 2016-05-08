@@ -21,6 +21,7 @@ public class LoginActivity extends Activity {
     private EditText iEmail;
     private EditText iPass;
     private Button btnLogin;
+    private TextView linkForgotPassword;
     private TextView linkSignUp;
 
     private Toast exitToast;
@@ -33,6 +34,7 @@ public class LoginActivity extends Activity {
         iEmail = (EditText) findViewById(R.id.input_email);
         iPass = (EditText) findViewById(R.id.input_password);
         btnLogin = (Button) findViewById(R.id.btn_login);
+        linkForgotPassword = (TextView) findViewById(R.id.link_forgot_password);
         linkSignUp = (TextView) findViewById(R.id.link_signup);
 
 
@@ -43,6 +45,13 @@ public class LoginActivity extends Activity {
                 // Loguearse
                 //login();
                 onLoginSuccess();
+            }
+        });
+
+        linkForgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Recuperación de contraseña
             }
         });
 
