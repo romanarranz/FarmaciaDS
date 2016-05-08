@@ -18,6 +18,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hugoroman.pharmacys.R;
@@ -50,6 +51,8 @@ public class FragmentBasket extends Fragment {
     private boolean modeSelection;
     private ArrayList<Integer> selections;
     private PriceVisitor visitor;
+    private LinearLayout priceLinearLayout;
+    private TextView basketPrice;
 
     public FragmentBasket() {
         // Required empty public constructor
@@ -76,21 +79,27 @@ public class FragmentBasket extends Fragment {
 
         visitor = new PriceVisitor();
 
+        priceLinearLayout = (LinearLayout) view.findViewById(R.id.price_linearlayout);
+        basketPrice = (TextView) view.findViewById(R.id.basket_price);
+
         fab = (FloatingActionButton) view.findViewById(R.id.fab_payment_delete);
         Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.simple_grow);
         fab.setAnimation(animation);
 
         interpolator = new OvershootInterpolator();
 
-        if(basket.getProductsPharmaciesQuantities().size() != 0) {
-            FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.frame_basket);
+        FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.frame_basket);
 
+        if(basket.getProductsPharmaciesQuantities().size() != 0) {
             frameLayout.removeView(emptyBasket);
 
             visitorVisit(basket);
         }
-        else
+        else {
             fab.hide();
+
+            frameLayout.removeView(priceLinearLayout);
+        }
 
 
         recyclerView = (RecyclerView) view.findViewById(R.id.basket_rv);
@@ -167,7 +176,7 @@ public class FragmentBasket extends Fragment {
 
                     basket = dbConnector.getBasket();
 
-                    if (basket.getProductsPharmaciesQuantities().size() != 0)
+                    if(basket.getProductsPharmaciesQuantities().size() != 0)
                         visitorVisit(basket);
                     else
                         visitor.resetPrice();
@@ -183,6 +192,7 @@ public class FragmentBasket extends Fragment {
                         FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.frame_basket);
 
                         frameLayout.addView(emptyBasket);
+                        frameLayout.removeView(priceLinearLayout);
                         fab.hide();
                     }
 
@@ -230,6 +240,8 @@ public class FragmentBasket extends Fragment {
 
         Iterator<List<Object>> iterator = basket.getProductsPharmaciesQuantities().iterator();
 
+        visitor.resetPrice();
+
         while(iterator.hasNext()) {
             List<Object> current = iterator.next();
             Pharmacy pharmacy = (Pharmacy) current.get(0);
@@ -240,5 +252,7 @@ public class FragmentBasket extends Fragment {
 
             inventory.acceptVisitor(visitor, quantity);
         }
+
+        basketPrice.setText(getResources().getString(R.string.total_price_basket) + " " + visitor.getBasketPrice() + "€");
     }
 }

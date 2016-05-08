@@ -37,4 +37,25 @@
         app:borderWidth="0dp"
         />
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:id="@+id/price_linearlayout"
+        android:layout_height="45dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:background="@color/colorPrimary">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/basket_price"
+            android:gravity="center"
+            android:text="@string/total_price_basket"
+            android:textSize="30sp"
+            android:textColor="@android:color/white"
+            android:layout_marginRight="75dp"
+            />
+
+    </LinearLayout>
+
 </FrameLayout>

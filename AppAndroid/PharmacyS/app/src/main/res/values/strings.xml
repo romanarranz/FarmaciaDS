@@ -23,8 +23,8 @@
     <!-- Botón de catálogo del fragment Pharmacy -->
     <string name="pharmacyCatalog">Product Catalog</string>
 
-    <!-- Label para reservar procucto -->
-    <string name="reserve">Reserve</string>
+    <!-- Label para el precio total de la cesta -->
+    <string name="total_price_basket">Total price: </string>
 
     <!-- Notificación de cesta vacía -->
     <string name="empty_basket">EMPTY BASKET</string>
