@@ -4,11 +4,9 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.Slide;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,21 +15,17 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hugoroman.pharmacys.R;
-import com.hugoroman.pharmacys.adapters.ReservationAdapter;
 import com.hugoroman.pharmacys.adapters.LongClickListener;
+import com.hugoroman.pharmacys.adapters.ReservationAdapter;
 import com.hugoroman.pharmacys.data.DBConnector;
-import com.hugoroman.pharmacys.model.Reservation;
 import com.hugoroman.pharmacys.model.Pharmacy;
 import com.hugoroman.pharmacys.model.Product;
+import com.hugoroman.pharmacys.model.Reservation;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Objects;
 
 public class FragmentReservation extends Fragment {
 

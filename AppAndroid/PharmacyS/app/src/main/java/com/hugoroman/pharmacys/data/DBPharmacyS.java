@@ -172,6 +172,11 @@ public class DBPharmacyS extends SQLiteOpenHelper {
         ReservationDao.removeFromReservation(this.getWritableDatabase(), pharmacyCif, productId);
     }
 
+    public Inventory getInventory(String pharmacyCif, int productId) {
+
+        return InventoryDao.getInventory(this.getReadableDatabase(), pharmacyCif, productId);
+    }
+
     @Override
     public void onConfigure(SQLiteDatabase db) {
         super.onConfigure(db);

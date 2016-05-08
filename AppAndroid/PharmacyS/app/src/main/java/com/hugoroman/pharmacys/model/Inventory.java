@@ -30,4 +30,9 @@ public class Inventory {
     public int getStock() {
         return stock;
     }
+
+    public void acceptVisitor(Visitor visitor, int quantity) {
+
+        visitor.visitInventory(this, quantity);
+    }
 }

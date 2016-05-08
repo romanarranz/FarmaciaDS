@@ -59,19 +59,6 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.BasketView
         BasketAdapter.clickListener = clickListener;
     }
 
-    public void swap(Basket basket){
-
-        if(this.basket != null) {
-            this.basket.getProductsPharmaciesQuantities().clear();
-            this.basket = basket;
-        }
-        else {
-            this.basket = basket;
-        }
-
-        notifyDataSetChanged();
-    }
-
     @Override
     public BasketViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 

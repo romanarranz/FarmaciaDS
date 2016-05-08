@@ -83,4 +83,9 @@ public class DBConnector {
 
         pharmacyS.removeFromReservation(pharmacyCif, productId);
     }
+
+    public Inventory getInventory(String pharmacyCif, int productId) {
+
+        return pharmacyS.getInventory(pharmacyCif, productId);
+    }
 }
