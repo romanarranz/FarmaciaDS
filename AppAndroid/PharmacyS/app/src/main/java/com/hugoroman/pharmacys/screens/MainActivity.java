@@ -88,9 +88,23 @@ public class MainActivity extends AppCompatActivity {
                                     fragmentTransaction = true;
                                 }
                                 break;
+                            case R.id.navigation_item_3:
+
+                                fragmentTransaction = false;
+                                break;
                             case R.id.navigation_item_4:
                                 if(navMenuItem != R.id.navigation_item_4) {
                                     fragment = new FragmentBasket();
+
+                                    fragmentTransaction = true;
+                                }
+                                break;
+                            case R.id.navigation_item_5:
+                                fragmentTransaction = false;
+                                break;
+                            case R.id.navigation_item_6:
+                                if(navMenuItem != R.id.navigation_item_6) {
+                                    fragment = new FragmentReservation();
 
                                     fragmentTransaction = true;
                                 }
@@ -296,6 +310,10 @@ public class MainActivity extends AppCompatActivity {
             navMenuItem = R.id.navigation_item_4;
             actionBarTittle = "My Basket";
         }
+        else if(fragment.getClass() == FragmentReservation.class) {
+            navMenuItem = R.id.navigation_item_6;
+            actionBarTittle = "My Reservation";
+        }
 
         if(navMenuItem > 0)
             navView.getMenu().findItem(navMenuItem).setChecked(true);
@@ -306,6 +324,7 @@ public class MainActivity extends AppCompatActivity {
     private void cleanFragmentStack() {
 
         int count = getSupportFragmentManager().getBackStackEntryCount();
+
         if(count > 0) {
             for (int i = 0; i < count; i++) {
                 getSupportFragmentManager().popBackStack();

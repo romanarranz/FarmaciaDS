@@ -5,22 +5,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/frame_basket"
+    android:id="@+id/frame_reservation"
     tools:context=".screens.FragmentPharmacies">
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/basket_rv">
+        android:id="@+id/reservation_rv">
     </android.support.v7.widget.RecyclerView>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/basket_empty"
+        android:id="@+id/reservation_empty"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="@string/empty_basket"
+        android:text="@string/no_reservation"
         android:textSize="30dp"/>
 
     <android.support.design.widget.FloatingActionButton

@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.Slide;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,31 +20,34 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hugoroman.pharmacys.R;
-import com.hugoroman.pharmacys.adapters.BasketAdapter;
+import com.hugoroman.pharmacys.adapters.ReservationAdapter;
 import com.hugoroman.pharmacys.adapters.LongClickListener;
 import com.hugoroman.pharmacys.data.DBConnector;
-import com.hugoroman.pharmacys.model.Basket;
+import com.hugoroman.pharmacys.model.Reservation;
 import com.hugoroman.pharmacys.model.Pharmacy;
 import com.hugoroman.pharmacys.model.Product;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Objects;
 
-public class FragmentBasket extends Fragment {
+public class FragmentReservation extends Fragment {
 
-    private static final Slide enterAnim = new Slide(Gravity.BOTTOM);
-    private static final Slide exitAnim = new Slide(Gravity.BOTTOM);
+    private static final Slide enterAnim = new Slide(Gravity.TOP);
+    private static final Slide exitAnim = new Slide(Gravity.LEFT);
 
     private View view;
-    private TextView emptyBasket;
-    private BasketAdapter basketAdapter;
+    private TextView emptyReservation;
     private RecyclerView recyclerView;
-    private Basket basket;
+    private ReservationAdapter reservationAdapter;
+    private Reservation reservation;
     private FloatingActionButton fab;
     private boolean modeSelection;
     private ArrayList<Integer> selections;
 
-    public FragmentBasket() {
+    public FragmentReservation() {
         // Required empty public constructor
         this.setEnterTransition(enterAnim);
         this.setExitTransition(exitAnim);
@@ -56,19 +61,19 @@ public class FragmentBasket extends Fragment {
         // Mantener el Fragment y los datos a cambios de orientación de pantalla
         setRetainInstance(true);
 
-        view = inflater.inflate(R.layout.fragment_basket, container, false);
+        view = inflater.inflate(R.layout.fragment_reservation, container, false);
 
         final DBConnector dbConnector = new DBConnector(this.getContext());
 
-        basket = dbConnector.getBasket();
-        emptyBasket = (TextView) view.findViewById(R.id.basket_empty);
+        reservation = dbConnector.getReservation();
+        emptyReservation = (TextView) view.findViewById(R.id.reservation_empty);
         modeSelection = false;
         selections = new ArrayList<Integer>();
 
-        if(basket.getProductsPharmaciesQuantities().size() != 0) {
-            FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.frame_basket);
+        if(reservation.getProductsPharmaciesQuantities().size() != 0) {
+            FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.frame_reservation);
 
-            frameLayout.removeView(emptyBasket);
+            frameLayout.removeView(emptyReservation);
         }
 
         fab = (FloatingActionButton) view.findViewById(R.id.fab_delete);
@@ -76,24 +81,22 @@ public class FragmentBasket extends Fragment {
         fab.setAnimation(animation);
         fab.hide();
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.basket_rv);
+        recyclerView = (RecyclerView) view.findViewById(R.id.reservation_rv);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext());
 
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        basketAdapter = new BasketAdapter(basket);
+        reservationAdapter = new ReservationAdapter(reservation);
 
-        basketAdapter.setOnItemClickListener(new LongClickListener() {
+        reservationAdapter.setOnItemClickListener(new LongClickListener() {
 
             @Override
             public boolean onLongItemClick(int position, View v) {
 
-                if(!modeSelection) {
-                    toggle(position, (CardView) v);
+                toggle(position, (CardView) v);
 
-                    fab.show();
-                }
+                fab.show();
 
                 modeSelection = true;
 
@@ -109,13 +112,13 @@ public class FragmentBasket extends Fragment {
 
                     Bundle bundle = new Bundle();
 
-                    Pharmacy pharmacy = (Pharmacy) basket.getProductsPharmaciesQuantities().get(position).get(0);
+                    Pharmacy pharmacy = (Pharmacy) reservation.getProductsPharmaciesQuantities().get(position).get(0);
 
                     bundle.putString("PH_CIF", pharmacy.getCif());
 
                     fragmentProduct.setArguments(bundle);
 
-                    Product product = (Product) basket.getProductsPharmaciesQuantities().get(position).get(1);
+                    Product product = (Product) reservation.getProductsPharmaciesQuantities().get(position).get(1);
 
                     fragmentProduct.setProduct(product);
 
@@ -139,31 +142,31 @@ public class FragmentBasket extends Fragment {
                 while(listIterator.hasNext()) {
                     Integer position = listIterator.next();
 
-                    Pharmacy pharmacy = (Pharmacy) basket.getProductsPharmaciesQuantities().get(position).get(0);
-                    Product product = (Product) basket.getProductsPharmaciesQuantities().get(position).get(1);
+                    Pharmacy pharmacy = (Pharmacy) reservation.getProductsPharmaciesQuantities().get(position).get(0);
+                    Product product = (Product) reservation.getProductsPharmaciesQuantities().get(position).get(1);
 
-                    dbConnector.removeFromBasket(pharmacy.getCif(), product.getId());
+                    dbConnector.removeFromReservation(pharmacy.getCif(), product.getId());
                 }
 
-                basket = dbConnector.getBasket();
+                reservation = dbConnector.getReservation();
 
-                basketAdapter = new BasketAdapter(basket);
-                recyclerView.setAdapter(basketAdapter);
+                reservationAdapter = new ReservationAdapter(reservation);
+                recyclerView.setAdapter(reservationAdapter);
 
                 fab.hide();
                 modeSelection = false;
 
-                if(basket.getProductsPharmaciesQuantities().size() == 0) {
-                    FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.frame_basket);
+                if(reservation.getProductsPharmaciesQuantities().size() == 0) {
+                    FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.frame_reservation);
 
-                    frameLayout.addView(emptyBasket);
+                    frameLayout.addView(emptyReservation);
                 }
 
                 selections.clear();
             }
         });
 
-        recyclerView.setAdapter(basketAdapter);
+        recyclerView.setAdapter(reservationAdapter);
 
         return view;
     }

@@ -125,10 +125,7 @@ public class FragmentProduct extends Fragment implements View.OnClickListener {
 
         fab.setOnClickListener(this);
 
-        if(maxQuantity > 0)
-            quantity = 1;
-        else
-            quantity = 0;
+        quantity = 1;
 
         substractQuantity = (ImageView) view.findViewById(R.id.substract_count);
         quantitySelector = (TextView) view.findViewById(R.id.count);
@@ -139,24 +136,15 @@ public class FragmentProduct extends Fragment implements View.OnClickListener {
         addQuantity.setOnClickListener(this);
         addReserveAction.setOnClickListener(this);
 
-        if(quantity != 0) {
-            substractQuantity.setImageAlpha(0);
-            quantitySelector.setText("1");
-        }
-        else {
+        if(maxQuantity == 0) {
+
             fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_reservations, getActivity().getTheme()));
-
-            substractQuantity.setImageAlpha(0);
-            addQuantity.setImageAlpha(0);
-
-            ((LinearLayout) view.findViewById(R.id.fabtoolbar_toolbar)).removeView(substractQuantity);
-            ((LinearLayout) view.findViewById(R.id.fabtoolbar_toolbar)).removeView(addQuantity);
-
-            quantitySelector.setTextSize(30.0f);
-            quantitySelector.setText(R.string.reserve);
 
             addReserveAction.setImageDrawable(getResources().getDrawable(R.drawable.ic_reservations, getActivity().getTheme()));
         }
+
+        substractQuantity.setImageAlpha(0);
+        quantitySelector.setText("1");
 
         return view;
     }
@@ -184,17 +172,25 @@ public class FragmentProduct extends Fragment implements View.OnClickListener {
 
                     quantitySelector.setText(String.valueOf(quantity));
                 }
+
                 addQuantity.setImageAlpha(1000);
                 break;
             case R.id.add_count:
                 // Cambiar el número de unidades que se puede tramitar sumando 1
-                if(quantity < maxQuantity) {
-                    quantity++;
+                if(maxQuantity != 0) {
+                    if (quantity < maxQuantity) {
+                        quantity++;
 
-                    if(quantity == maxQuantity)
-                        addQuantity.setImageAlpha(0);
-                    else
-                        addQuantity.setImageAlpha(1000);
+                        if(quantity == maxQuantity)
+                            addQuantity.setImageAlpha(0);
+                        else
+                            addQuantity.setImageAlpha(1000);
+
+                        quantitySelector.setText(String.valueOf(quantity));
+                    }
+                }
+                else {
+                    quantity++;
 
                     quantitySelector.setText(String.valueOf(quantity));
                 }
@@ -202,7 +198,7 @@ public class FragmentProduct extends Fragment implements View.OnClickListener {
                 substractQuantity.setImageAlpha(1000);
                 break;
             case R.id.add_reserve:
-                if(quantity > 0) {
+                if(maxQuantity > 0) {
                     // Añadirlo con toda la cantidad a la base de datos de la cesta
                     DBConnector dbConnector = new DBConnector(getContext());
 
@@ -213,11 +209,13 @@ public class FragmentProduct extends Fragment implements View.OnClickListener {
                 }
                 else {
                     // Procesar la reserva
+                    DBConnector dbConnector = new DBConnector(getContext());
+
+                    dbConnector.addToReservation(pharmacyCif, product.getId(), quantity);
 
                     // Notificar al usuario que ha sido, o no, correctamente añadido como reserva
                     Toast.makeText(getContext(), getResources().getString(R.string.insert_reservations), Toast.LENGTH_LONG).show();
                 }
-
                 break;
         }
     }

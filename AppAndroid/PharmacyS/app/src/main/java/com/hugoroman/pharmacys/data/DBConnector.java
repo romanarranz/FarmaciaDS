@@ -6,6 +6,7 @@ import com.hugoroman.pharmacys.model.Basket;
 import com.hugoroman.pharmacys.model.Inventory;
 import com.hugoroman.pharmacys.model.Pharmacy;
 import com.hugoroman.pharmacys.model.Product;
+import com.hugoroman.pharmacys.model.Reservation;
 
 import java.util.List;
 
@@ -66,5 +67,20 @@ public class DBConnector {
     public void removeFromBasket(String pharmacyCif, int productId) {
 
         pharmacyS.removeFromBasket(pharmacyCif, productId);
+    }
+
+    public Reservation getReservation() {
+
+        return pharmacyS.getReservation();
+    }
+
+    public void addToReservation(String pharmacyCif, int productId, int quantity) {
+
+        pharmacyS.addToReservation(pharmacyCif, productId, quantity);
+    }
+
+    public void removeFromReservation(String pharmacyCif, int productId) {
+
+        pharmacyS.removeFromReservation(pharmacyCif, productId);
     }
 }

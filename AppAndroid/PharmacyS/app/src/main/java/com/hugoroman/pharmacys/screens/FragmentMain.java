@@ -69,7 +69,7 @@ public class FragmentMain extends Fragment implements View.OnClickListener {
 
                 break;
             case R.id.reservations_cv:
-
+                fragment = new FragmentReservation();
                 break;
         }
 

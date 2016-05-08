@@ -26,6 +26,12 @@
     <!-- Label para reservar procucto -->
     <string name="reserve">Reserve</string>
 
+    <!-- Notificación de cesta vacía -->
+    <string name="empty_basket">EMPTY BASKET</string>
+
+    <!-- Notificación de no reservas -->
+    <string name="no_reservation">NO RESERVATIONS</string>
+
     <!-- Notificación al usuario de añadir a cesta -->
     <string name="insert_basket">Product correctly added to basket</string>
     <string name="insert_reservations">Product correctly reserved</string>

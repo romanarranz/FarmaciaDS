@@ -9,10 +9,12 @@ import com.hugoroman.pharmacys.data.PharmacySContract.CategoryTable;
 import com.hugoroman.pharmacys.data.PharmacySContract.InventoryTable;
 import com.hugoroman.pharmacys.data.PharmacySContract.PharmacyTable;
 import com.hugoroman.pharmacys.data.PharmacySContract.ProductTable;
+import com.hugoroman.pharmacys.data.PharmacySContract.ReservationTable;
 import com.hugoroman.pharmacys.model.Basket;
 import com.hugoroman.pharmacys.model.Inventory;
 import com.hugoroman.pharmacys.model.Pharmacy;
 import com.hugoroman.pharmacys.model.Product;
+import com.hugoroman.pharmacys.model.Reservation;
 
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -65,6 +67,13 @@ public class DBPharmacyS extends SQLiteOpenHelper {
                                                 "PRIMARY KEY("+ BasketTable.PHARMACY_ID + "," + BasketTable.PRODUCT_ID +")" +
                                                 ");";
 
+    public static final String CREATE_RESERVATION = "CREATE TABLE " + ReservationTable.TABLE_NAME + " ( " +
+                                                    ReservationTable.PHARMACY_ID + " varchar(9) REFERENCES " + PharmacyTable.TABLE_NAME + "(" + PharmacyTable.CIF_ID + ")" + " NOT NULL," +
+                                                    ReservationTable.PRODUCT_ID + " int(11) REFERENCES " + ProductTable.TABLE_NAME + "(" + ProductTable.ID + ")" + " NOT NULL," +
+                                                    ReservationTable.QUANTITY + " int(5) NOT NULL," +
+                                                    "PRIMARY KEY("+ ReservationTable.PHARMACY_ID + "," + ReservationTable.PRODUCT_ID +")" +
+                                                    ");";
+
     // Variables estáticas para la inserción inicial de la base de datos - PRUEBAS
     private static final String CREATE_INITIAL_PHARMACY_DATA = "INSERT INTO " + PharmacyTable.TABLE_NAME + " VALUES ('73890889B','farmaciaa',891308843,'',10,22)," +
                                                                 " ('89899878H','FARMACIA PEPELUIS',987678392,NULL,10,22)," +
@@ -83,6 +92,8 @@ public class DBPharmacyS extends SQLiteOpenHelper {
     private static final String CREATE_INITIAL_INVENTORY = "INSERT INTO " + InventoryTable.TABLE_NAME + " VALUES ('73890889B', 1, 3.20, 10), ('73890889B', 2, 5.90, 0);";
 
     private static final String CREATE_INITIAL_BASKET = "INSERT INTO " + BasketTable.TABLE_NAME + " VALUES ('73890889B', 2, 5);";
+
+    private static final String CREATE_INITIAL_RESERVATION = "INSERT INTO " + ReservationTable.TABLE_NAME + " VALUES ('73890889B', 1, 2);";
 
 
     private static final String DELETE_TABLES = "DROP TABLE IF EXISTS " + BasketTable.TABLE_NAME + ";" +
@@ -146,6 +157,21 @@ public class DBPharmacyS extends SQLiteOpenHelper {
         BasketDao.removeFromBasket(this.getWritableDatabase(), pharmacyCif, productId);
     }
 
+    public Reservation getReservation() {
+
+        return ReservationDao.getReservation(this.getReadableDatabase());
+    }
+
+    public void addToReservation(String pharmacyCif, int productId, int quantity) {
+
+        ReservationDao.addToReservation(this.getWritableDatabase(), pharmacyCif, productId, quantity);
+    }
+
+    public void removeFromReservation(String pharmacyCif, int productId) {
+
+        ReservationDao.removeFromReservation(this.getWritableDatabase(), pharmacyCif, productId);
+    }
+
     @Override
     public void onConfigure(SQLiteDatabase db) {
         super.onConfigure(db);
@@ -162,12 +188,14 @@ public class DBPharmacyS extends SQLiteOpenHelper {
         db.execSQL(CREATE_PRODUCT);
         db.execSQL(CREATE_INVENTORY);
         db.execSQL(CREATE_BASKET);
+        db.execSQL(CREATE_RESERVATION);
 
         db.execSQL(CREATE_INITIAL_PHARMACY_DATA);
         db.execSQL(CREATE_INITIAL_CATEGORY);
         db.execSQL(CREATE_INITIAL_PRODUCT);
         db.execSQL(CREATE_INITIAL_INVENTORY);
         db.execSQL(CREATE_INITIAL_BASKET);
+        db.execSQL(CREATE_INITIAL_RESERVATION);
     }
 
     @Override
