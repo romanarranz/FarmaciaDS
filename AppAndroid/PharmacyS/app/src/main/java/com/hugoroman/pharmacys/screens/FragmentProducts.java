@@ -95,6 +95,12 @@ public class FragmentProducts extends Fragment {
 
                 FragmentBasket fragmentBasket = new FragmentBasket();
 
+                Bundle bundle = new Bundle();
+
+                bundle.putString("PH_CIF", pharmacyCif);
+
+                fragmentBasket.setArguments(bundle);
+
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragmentBasket).addToBackStack(null).commit();
 
                 ((MainActivity) getActivity()).setMenuItemCheck(fragmentBasket);

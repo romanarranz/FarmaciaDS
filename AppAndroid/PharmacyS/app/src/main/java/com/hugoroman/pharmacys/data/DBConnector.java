@@ -2,6 +2,7 @@ package com.hugoroman.pharmacys.data;
 
 import android.content.Context;
 
+import com.hugoroman.pharmacys.model.Basket;
 import com.hugoroman.pharmacys.model.Inventory;
 import com.hugoroman.pharmacys.model.Pharmacy;
 import com.hugoroman.pharmacys.model.Product;
@@ -50,5 +51,20 @@ public class DBConnector {
     public int getInventoryQuantity(String pharmacyCif, int productId) {
 
         return pharmacyS.getInventoryQuantity(pharmacyCif, productId);
+    }
+
+    public Basket getBasket() {
+
+        return pharmacyS.getBasket();
+    }
+
+    public void addToBasket(String pharmacyCif, int productId, int quantity) {
+
+        pharmacyS.addToBasket(pharmacyCif, productId, quantity);
+    }
+
+    public void removeFromBasket(String pharmacyCif, int productId) {
+
+        pharmacyS.removeFromBasket(pharmacyCif, productId);
     }
 }

@@ -14,7 +14,7 @@ public final class ProductDao {
     public static Product getProduct(SQLiteDatabase db, int id) {
 
         String selectQuery = "SELECT * FROM " + PharmacySContract.ProductTable.TABLE_NAME + " WHERE "
-                + PharmacySContract.ProductTable._ID + " = " + id;
+                + PharmacySContract.ProductTable.ID + " = " + id;
 
         Cursor c = db.rawQuery(selectQuery, null);
 
@@ -32,6 +32,9 @@ public final class ProductDao {
                                         c.getString(c.getColumnIndex(PharmacySContract.ProductTable.LOT)),
                                         c.getString(c.getColumnIndex(PharmacySContract.ProductTable.URL_IMAGE)));
 
+        if(c != null)
+            c.close();
+
         return product;
     }
 
@@ -47,6 +50,8 @@ public final class ProductDao {
 
         int categoryID = cId.getInt(cId.getColumnIndex(PharmacySContract.ProductTable.CATEGORY));
 
+        cId.close();
+
         String selectQueryCategoryName = "SELECT " + PharmacySContract.CategoryTable.NAME + " FROM " + PharmacySContract.CategoryTable.TABLE_NAME + " WHERE " +
                 PharmacySContract.CategoryTable.ID + " = '" + categoryID + "'";
 
@@ -55,7 +60,11 @@ public final class ProductDao {
         if(c != null)
             c.moveToFirst();
 
-        return c.getString(c.getColumnIndex(PharmacySContract.CategoryTable.NAME));
+        String categoryName = c.getString(c.getColumnIndex(PharmacySContract.CategoryTable.NAME));
+
+        c.close();
+
+        return categoryName;
     }
 
     public static int getProductCategoryId(SQLiteDatabase db, int idProduct) {
@@ -68,7 +77,11 @@ public final class ProductDao {
         if(cId != null)
             cId.moveToFirst();
 
-        return cId.getInt(cId.getColumnIndex(PharmacySContract.ProductTable.CATEGORY));
+        int categoryId = cId.getInt(cId.getColumnIndex(PharmacySContract.ProductTable.CATEGORY));
+
+        cId.close();
+
+        return categoryId;
     }
 
     public static List<Product> getAllProductsByCategoryId(SQLiteDatabase db, int categoryId) {
@@ -96,6 +109,9 @@ public final class ProductDao {
 
             } while(c.moveToNext());
         }
+
+        if(c != null)
+            c.close();
 
         return products;
     }

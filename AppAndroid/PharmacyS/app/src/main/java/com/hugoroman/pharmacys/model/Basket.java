@@ -4,14 +4,15 @@ import java.util.List;
 
 public class Basket {
 
-    private List<Product> products;
+    private List<List<Object>> productsPharmaciesQuantities;
 
-    public Basket(List<Product> products) {
+    public Basket(List<List<Object>> productsPharmaciesQuantities) {
 
-        this.products = products;
+        this.productsPharmaciesQuantities = productsPharmaciesQuantities;
     }
 
-    public List<Product> getProducts() {
-        return products;
+    public List<List<Object>> getProductsPharmaciesQuantities() {
+
+        return productsPharmaciesQuantities;
     }
 }

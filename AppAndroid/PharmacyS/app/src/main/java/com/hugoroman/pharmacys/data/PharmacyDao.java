@@ -16,7 +16,7 @@ public final class PharmacyDao {
 
         // Coge los datos de la base de datos y los mete en un objeto Pharmacy y lo devuelve
         String selectQuery = "SELECT * FROM " + PharmacyTable.TABLE_NAME + " WHERE "
-                + PharmacyTable._ID + " = " + cif;
+                + PharmacyTable.CIF_ID + " = '" + cif + "'";
 
         //Log.e(LOG, selectQuery);
 
@@ -31,6 +31,8 @@ public final class PharmacyDao {
                                         c.getString(c.getColumnIndex(PharmacyTable.DESCRIPTION)),
                                         c.getInt(c.getColumnIndex(PharmacyTable.START_SCHEDULE)),
                                         c.getInt(c.getColumnIndex(PharmacyTable.END_SCHEDULE)));
+
+        c.close();
 
         return pharmacy;
     }
@@ -57,6 +59,9 @@ public final class PharmacyDao {
                 pharmacies.add(pharmacy);
             } while(c.moveToNext());
         }
+
+        if(c != null)
+            c.close();
 
         return pharmacies;
     }

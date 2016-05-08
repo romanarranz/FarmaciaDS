@@ -17,7 +17,11 @@ public class FragmentMain extends Fragment implements View.OnClickListener {
     private static final Slide exitAnim = new Slide(Gravity.BOTTOM);
 
     private View view;
-    private CardView cardView1;
+    private CardView pharmaciesCardView;
+    private CardView mapCardView;
+    private CardView basketCardView;
+    private CardView ordersCardView;
+    private CardView reservationsCardView;
 
     public FragmentMain() {
         // Required empty public constructor
@@ -31,9 +35,17 @@ public class FragmentMain extends Fragment implements View.OnClickListener {
 
         view = inflater.inflate(R.layout.fragment_main, container, false);
 
-        cardView1 = (CardView) view.findViewById(R.id.cv1);
+        pharmaciesCardView = (CardView) view.findViewById(R.id.pharmacies_cv);
+        mapCardView = (CardView) view.findViewById(R.id.map_cv);
+        basketCardView = (CardView) view.findViewById(R.id.basket_cv);
+        ordersCardView = (CardView) view.findViewById(R.id.orders_cv);
+        reservationsCardView = (CardView) view.findViewById(R.id.reservations_cv);
 
-        cardView1.setOnClickListener(this);
+        pharmaciesCardView.setOnClickListener(this);
+        mapCardView.setOnClickListener(this);
+        basketCardView.setOnClickListener(this);
+        ordersCardView.setOnClickListener(this);
+        reservationsCardView.setOnClickListener(this);
 
         return view;
     }
@@ -44,13 +56,27 @@ public class FragmentMain extends Fragment implements View.OnClickListener {
         Fragment fragment = null;
 
         switch(v.getId()) {
-            case R.id.cv1:
+            case R.id.pharmacies_cv:
                 fragment = new FragmentPharmacies();
+                break;
+            case R.id.map_cv:
+
+                break;
+            case R.id.basket_cv:
+                fragment = new FragmentBasket();
+                break;
+            case R.id.orders_cv:
+
+                break;
+            case R.id.reservations_cv:
+
                 break;
         }
 
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
+        if(fragment != null) {
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
 
-        ((MainActivity) getActivity()).setMenuItemCheck(fragment);
+            ((MainActivity) getActivity()).setMenuItemCheck(fragment);
+        }
     }
 }

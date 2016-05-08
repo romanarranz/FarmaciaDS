@@ -9,6 +9,7 @@ import com.hugoroman.pharmacys.data.PharmacySContract.CategoryTable;
 import com.hugoroman.pharmacys.data.PharmacySContract.InventoryTable;
 import com.hugoroman.pharmacys.data.PharmacySContract.PharmacyTable;
 import com.hugoroman.pharmacys.data.PharmacySContract.ProductTable;
+import com.hugoroman.pharmacys.model.Basket;
 import com.hugoroman.pharmacys.model.Inventory;
 import com.hugoroman.pharmacys.model.Pharmacy;
 import com.hugoroman.pharmacys.model.Product;
@@ -60,7 +61,7 @@ public class DBPharmacyS extends SQLiteOpenHelper {
     public static final String CREATE_BASKET = "CREATE TABLE " + BasketTable.TABLE_NAME + " ( " +
                                                 BasketTable.PHARMACY_ID + " varchar(9) REFERENCES " + PharmacyTable.TABLE_NAME + "(" + PharmacyTable.CIF_ID + ")" + " NOT NULL," +
                                                 BasketTable.PRODUCT_ID + " int(11) REFERENCES " + ProductTable.TABLE_NAME + "(" + ProductTable.ID + ")" + " NOT NULL," +
-                                                BasketTable.QUANTITY + " int(5) NOT NULL" +
+                                                BasketTable.QUANTITY + " int(5) NOT NULL," +
                                                 "PRIMARY KEY("+ BasketTable.PHARMACY_ID + "," + BasketTable.PRODUCT_ID +")" +
                                                 ");";
 
@@ -80,6 +81,8 @@ public class DBPharmacyS extends SQLiteOpenHelper {
                                                         "(NULL, 2, 'FACE CREAM', 'FACE CREAM FOR BEAUTY', 'NIVEA', 'g', " + new GregorianCalendar(2017, 0, 15).getTimeInMillis() +" , 100, '12d181BA', NULL);";
 
     private static final String CREATE_INITIAL_INVENTORY = "INSERT INTO " + InventoryTable.TABLE_NAME + " VALUES ('73890889B', 1, 3.20, 10), ('73890889B', 2, 5.90, 0);";
+
+    private static final String CREATE_INITIAL_BASKET = "INSERT INTO " + BasketTable.TABLE_NAME + " VALUES ('73890889B', 2, 5);";
 
 
     private static final String DELETE_TABLES = "DROP TABLE IF EXISTS " + BasketTable.TABLE_NAME + ";" +
@@ -128,6 +131,21 @@ public class DBPharmacyS extends SQLiteOpenHelper {
         return InventoryDao.getInventoryQuantity(this.getReadableDatabase(), pharmacyCif, productId);
     }
 
+    public Basket getBasket() {
+
+        return BasketDao.getBasket(this.getReadableDatabase());
+    }
+
+    public void addToBasket(String pharmacyCif, int productId, int quantity) {
+
+        BasketDao.addToBasket(this.getWritableDatabase(), pharmacyCif, productId, quantity);
+    }
+
+    public void removeFromBasket(String pharmacyCif, int productId) {
+
+        BasketDao.removeFromBasket(this.getWritableDatabase(), pharmacyCif, productId);
+    }
+
     @Override
     public void onConfigure(SQLiteDatabase db) {
         super.onConfigure(db);
@@ -149,6 +167,7 @@ public class DBPharmacyS extends SQLiteOpenHelper {
         db.execSQL(CREATE_INITIAL_CATEGORY);
         db.execSQL(CREATE_INITIAL_PRODUCT);
         db.execSQL(CREATE_INITIAL_INVENTORY);
+        db.execSQL(CREATE_INITIAL_BASKET);
     }
 
     @Override

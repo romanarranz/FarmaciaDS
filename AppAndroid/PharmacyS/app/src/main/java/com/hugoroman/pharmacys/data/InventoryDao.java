@@ -32,6 +32,9 @@ public final class InventoryDao {
             } while(c.moveToNext());
         }
 
+        if(c != null)
+            c.close();
+
         return inventories;
     }
 
@@ -46,6 +49,9 @@ public final class InventoryDao {
 
         if(c.moveToFirst())
             quantity = c.getInt(c.getColumnIndex(PharmacySContract.InventoryTable.QUANTITY));
+
+
+        c.close();
 
         return quantity;
     }

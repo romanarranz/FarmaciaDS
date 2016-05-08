@@ -20,17 +20,13 @@
     <string name="settings">Settings</string>
     <string name="logout">Log out</string>
 
-    <!-- Contenido del fragment Main -->
-    <string name="contentMain1">Pharmacies</string>
-    <string name="contentMain2">map</string>
-    <string name="contentMain3">Products</string>
-    <string name="contentMain4">Basket</string>
-    <string name="contentMain5">Orders</string>
-    <string name="contentMain6">Reservations</string>
-
     <!-- Botón de catálogo del fragment Pharmacy -->
     <string name="pharmacyCatalog">Product Catalog</string>
 
     <!-- Label para reservar procucto -->
     <string name="reserve">Reserve</string>
+
+    <!-- Notificación al usuario de añadir a cesta -->
+    <string name="insert_basket">Product correctly added to basket</string>
+    <string name="insert_reservations">Product correctly reserved</string>
 </resources>

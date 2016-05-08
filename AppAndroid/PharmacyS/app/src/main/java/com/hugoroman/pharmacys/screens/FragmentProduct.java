@@ -1,6 +1,7 @@
 package com.hugoroman.pharmacys.screens;
 
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.transition.Slide;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
 import com.hugoroman.pharmacys.R;
@@ -135,6 +137,7 @@ public class FragmentProduct extends Fragment implements View.OnClickListener {
 
         substractQuantity.setOnClickListener(this);
         addQuantity.setOnClickListener(this);
+        addReserveAction.setOnClickListener(this);
 
         if(quantity != 0) {
             substractQuantity.setImageAlpha(0);
@@ -199,15 +202,20 @@ public class FragmentProduct extends Fragment implements View.OnClickListener {
                 substractQuantity.setImageAlpha(1000);
                 break;
             case R.id.add_reserve:
-                if (quantity > 0) {
-                    // Añadirlo toda la cantidad a la base de datos de la cesta
+                if(quantity > 0) {
+                    // Añadirlo con toda la cantidad a la base de datos de la cesta
+                    DBConnector dbConnector = new DBConnector(getContext());
+
+                    dbConnector.addToBasket(pharmacyCif, product.getId(), quantity);
 
                     // Notificar al usuario que ha sido, o no, correctamente añadido a la cesta
+                    Toast.makeText(getContext(), getResources().getString(R.string.insert_basket), Toast.LENGTH_LONG).show();
                 }
                 else {
                     // Procesar la reserva
 
                     // Notificar al usuario que ha sido, o no, correctamente añadido como reserva
+                    Toast.makeText(getContext(), getResources().getString(R.string.insert_reservations), Toast.LENGTH_LONG).show();
                 }
 
                 break;
