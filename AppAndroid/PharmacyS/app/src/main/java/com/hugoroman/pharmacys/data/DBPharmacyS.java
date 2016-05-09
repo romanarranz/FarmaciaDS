@@ -12,9 +12,11 @@ import com.hugoroman.pharmacys.data.PharmacySContract.ProductTable;
 import com.hugoroman.pharmacys.data.PharmacySContract.ReservationTable;
 import com.hugoroman.pharmacys.model.Basket;
 import com.hugoroman.pharmacys.model.Inventory;
+import com.hugoroman.pharmacys.model.Order;
 import com.hugoroman.pharmacys.model.Pharmacy;
 import com.hugoroman.pharmacys.model.Product;
 import com.hugoroman.pharmacys.model.Reservation;
+import com.hugoroman.pharmacys.model.User;
 
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -33,7 +35,7 @@ public class DBPharmacyS extends SQLiteOpenHelper {
                                                 ")";
 
     private static final String CREATE_PHARMACY = "CREATE TABLE " + PharmacyTable.TABLE_NAME + " (" +
-                                                    PharmacyTable.CIF_ID + " varchar(9) PRIMARY KEY," +
+                                                    PharmacyTable.ID + " varchar(9) PRIMARY KEY," +
                                                     PharmacyTable.NAME + " varchar(120) NOT NULL," +
                                                     PharmacyTable.PHONE_NUMBER + " int(11) NOT NULL," +
                                                     PharmacyTable.DESCRIPTION + " varchar(500) DEFAULT NULL," +
@@ -65,7 +67,7 @@ public class DBPharmacyS extends SQLiteOpenHelper {
                                                     ");";
 
     private static final String CREATE_INVENTORY = "CREATE TABLE " + InventoryTable.TABLE_NAME + "( " +
-                                                    InventoryTable.PHARMACY_ID + " varchar(9) REFERENCES " + PharmacyTable.TABLE_NAME + "(" + PharmacyTable.CIF_ID + ")" + " NOT NULL, " +
+                                                    InventoryTable.PHARMACY_ID + " varchar(9) REFERENCES " + PharmacyTable.TABLE_NAME + "(" + PharmacyTable.ID + ")" + " NOT NULL, " +
                                                     InventoryTable.PRODUCT_ID + " int(11) REFERENCES " + ProductTable.TABLE_NAME + "(" + ProductTable.ID + ")" + " NOT NULL, " +
                                                     InventoryTable.PRICE + " decimal(3,2) NOT NULL DEFAULT '0.00',"+
                                                     InventoryTable.QUANTITY + " int(11) NOT NULL DEFAULT '0'," +
@@ -73,14 +75,14 @@ public class DBPharmacyS extends SQLiteOpenHelper {
                                                     ");";
 
     public static final String CREATE_BASKET = "CREATE TABLE " + BasketTable.TABLE_NAME + " ( " +
-                                                BasketTable.PHARMACY_ID + " varchar(9) REFERENCES " + PharmacyTable.TABLE_NAME + "(" + PharmacyTable.CIF_ID + ")" + " NOT NULL," +
+                                                BasketTable.PHARMACY_ID + " varchar(9) REFERENCES " + PharmacyTable.TABLE_NAME + "(" + PharmacyTable.ID + ")" + " NOT NULL," +
                                                 BasketTable.PRODUCT_ID + " int(11) REFERENCES " + ProductTable.TABLE_NAME + "(" + ProductTable.ID + ")" + " NOT NULL," +
                                                 BasketTable.QUANTITY + " int(5) NOT NULL," +
                                                 "PRIMARY KEY("+ BasketTable.PHARMACY_ID + "," + BasketTable.PRODUCT_ID +")" +
                                                 ");";
 
     public static final String CREATE_RESERVATION = "CREATE TABLE " + ReservationTable.TABLE_NAME + " ( " +
-                                                    ReservationTable.PHARMACY_ID + " varchar(9) REFERENCES " + PharmacyTable.TABLE_NAME + "(" + PharmacyTable.CIF_ID + ") NOT NULL," +
+                                                    ReservationTable.PHARMACY_ID + " varchar(9) REFERENCES " + PharmacyTable.TABLE_NAME + "(" + PharmacyTable.ID + ") NOT NULL," +
                                                     ReservationTable.PRODUCT_ID + " int(11) REFERENCES " + ProductTable.TABLE_NAME + "(" + ProductTable.ID + ")" + " NOT NULL," +
                                                     ReservationTable.QUANTITY + " int(5) NOT NULL," +
                                                     "PRIMARY KEY("+ ReservationTable.PHARMACY_ID + "," + ReservationTable.PRODUCT_ID + ")" +
@@ -89,12 +91,12 @@ public class DBPharmacyS extends SQLiteOpenHelper {
     public static final String CREATE_ORDER = "CREATE TABLE " + PharmacySContract.OrderTable.TABLE_NAME + " ( " +
                                                 PharmacySContract.OrderTable.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                                                 PharmacySContract.OrderTable.USER_ID + " varchar(100) REFERENCES " + PharmacySContract.UserTable.TABLE_NAME + "(" + PharmacySContract.UserTable.EMAIL + ") NOT NULL, " +
-                                                PharmacySContract.OrderTable.PHARMACY_ID + " varchar(9) REFERENCES " + PharmacyTable.TABLE_NAME + "(" + PharmacyTable.CIF_ID + ") NOT NULL, " +
+                                                PharmacySContract.OrderTable.PHARMACY_ID + " varchar(9) REFERENCES " + PharmacyTable.TABLE_NAME + "(" + PharmacyTable.ID + ") NOT NULL, " +
                                                 PharmacySContract.OrderTable.DATE + " date NOT NULL " +
                                                 ");";
 
     public static final String CREATE_ORDER_PRODUCT = "CREATE TABLE " + PharmacySContract.OrderProductTable.TABLE_NAME + " ( " +
-                                                        PharmacySContract.OrderProductTable.ID_ORDER + " INTEGER REFERENCES " + PharmacySContract.OrderTable.TABLE_NAME + "(" + PharmacySContract.OrderTable.USER_ID + ") NOT NULL, " +
+                                                        PharmacySContract.OrderProductTable.ID_ORDER + " INTEGER REFERENCES " + PharmacySContract.OrderTable.TABLE_NAME + "(" + PharmacySContract.OrderTable.ID + ") NOT NULL, " +
                                                         PharmacySContract.OrderProductTable.PRODUCT_ID + " INTEGER REFERENCES " + ProductTable.TABLE_NAME + "(" + ProductTable.ID + ") NOT NULL, " +
                                                         PharmacySContract.OrderProductTable.QUANTITY + " INTEGER NOT NULL, " +
                                                         "PRIMARY KEY(" + PharmacySContract.OrderProductTable.ID_ORDER + "," + PharmacySContract.OrderProductTable.PRODUCT_ID + ")" +
@@ -124,6 +126,10 @@ public class DBPharmacyS extends SQLiteOpenHelper {
 
     private static final String CREATE_INITIAL_RESERVATION = "INSERT INTO " + ReservationTable.TABLE_NAME + " VALUES ('73890889B', 1, 2);";
 
+    private static final String CREATE_INITIAL_ORDERS = "INSERT INTO " + PharmacySContract.OrderTable.TABLE_NAME + " VALUES (1, 'hugomc92@gmail.com', '73890889B', " + new GregorianCalendar(2015, 3, 13).getTimeInMillis() + "), (NULL, 'hugomc92@gmail.com', '73890889B', " + new GregorianCalendar(2015, 4, 23).getTimeInMillis() + ");";
+
+    private static final String CREATE_INITIAL_ORDERS_PRODUCT = "INSERT INTO " + PharmacySContract.OrderProductTable.TABLE_NAME + " VALUES (1, 1, 5), (1, 2, 1), (2, 2, 1);";
+
 
     private static final String DELETE_TABLES = "DROP TABLE IF EXISTS " + BasketTable.TABLE_NAME + ";" +
                                                 "DROP TABLE IF EXISTS " + InventoryTable.TABLE_NAME + "; " +
@@ -136,14 +142,19 @@ public class DBPharmacyS extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public Pharmacy getPharmacy(String cif) {
+    public Pharmacy getPharmacy(String pharmacyId) {
 
-        return PharmacyDao.getPharmacy(this.getReadableDatabase(), cif);
+        return PharmacyDao.getPharmacy(this.getReadableDatabase(), pharmacyId);
     }
 
     public List<Pharmacy> getAllPharmacies() {
 
         return PharmacyDao.getAllPharmacies(this.getReadableDatabase());
+    }
+
+    public String getPharmacyName(String pharmacyId) {
+
+        return PharmacyDao.getPharmacyName(this.getReadableDatabase(), pharmacyId);
     }
 
     public List<Inventory> getPharmacyInventory(String pharmacyId) {
@@ -171,9 +182,9 @@ public class DBPharmacyS extends SQLiteOpenHelper {
         return ProductDao.getAllProductsByCategoryId(this.getReadableDatabase(), categoryId);
     }
 
-    public int getInventoryQuantity(String pharmacyCif, int productId) {
+    public int getInventoryQuantity(String pharmacyId, int productId) {
 
-        return InventoryDao.getInventoryQuantity(this.getReadableDatabase(), pharmacyCif, productId);
+        return InventoryDao.getInventoryQuantity(this.getReadableDatabase(), pharmacyId, productId);
     }
 
     public Basket getBasket() {
@@ -181,14 +192,14 @@ public class DBPharmacyS extends SQLiteOpenHelper {
         return BasketDao.getBasket(this.getReadableDatabase());
     }
 
-    public void addToBasket(String pharmacyCif, int productId, int quantity) {
+    public void addToBasket(String pharmacyId, int productId, int quantity) {
 
-        BasketDao.addToBasket(this.getWritableDatabase(), pharmacyCif, productId, quantity);
+        BasketDao.addToBasket(this.getWritableDatabase(), pharmacyId, productId, quantity);
     }
 
-    public void removeFromBasket(String pharmacyCif, int productId) {
+    public void removeFromBasket(String pharmacyId, int productId) {
 
-        BasketDao.removeFromBasket(this.getWritableDatabase(), pharmacyCif, productId);
+        BasketDao.removeFromBasket(this.getWritableDatabase(), pharmacyId, productId);
     }
 
     public Reservation getReservation() {
@@ -196,19 +207,19 @@ public class DBPharmacyS extends SQLiteOpenHelper {
         return ReservationDao.getReservation(this.getReadableDatabase());
     }
 
-    public void addToReservation(String pharmacyCif, int productId, int quantity) {
+    public void addToReservation(String pharmacyId, int productId, int quantity) {
 
-        ReservationDao.addToReservation(this.getWritableDatabase(), pharmacyCif, productId, quantity);
+        ReservationDao.addToReservation(this.getWritableDatabase(), pharmacyId, productId, quantity);
     }
 
-    public void removeFromReservation(String pharmacyCif, int productId) {
+    public void removeFromReservation(String pharmacyId, int productId) {
 
-        ReservationDao.removeFromReservation(this.getWritableDatabase(), pharmacyCif, productId);
+        ReservationDao.removeFromReservation(this.getWritableDatabase(), pharmacyId, productId);
     }
 
-    public Inventory getInventory(String pharmacyCif, int productId) {
+    public Inventory getInventory(String pharmacyId, int productId) {
 
-        return InventoryDao.getInventory(this.getReadableDatabase(), pharmacyCif, productId);
+        return InventoryDao.getInventory(this.getReadableDatabase(), pharmacyId, productId);
     }
 
     public String getCategoryName(int categoryId) {
@@ -216,9 +227,29 @@ public class DBPharmacyS extends SQLiteOpenHelper {
         return ProductDao.getCategoryName(this.getReadableDatabase(), categoryId);
     }
 
-    public String getUserName(String userEmail) {
+    public User getUser(String userEmail) {
 
-        return UserDao.getUserName(this.getReadableDatabase(), userEmail);
+        return UserDao.getUser(this.getReadableDatabase(), userEmail);
+    }
+
+    public List<Order> getAllOrders(String userEmail) {
+
+        return OrderDao.getAllOrders(this.getReadableDatabase(), userEmail);
+    }
+
+    public List<List<String>> getOrderInfo(int orderId) {
+
+        return OrderDao.getOrderInfo(this.getReadableDatabase(), orderId);
+    }
+
+    public String getOrderPharmacyId(int orderId) {
+
+        return OrderDao.getOrderPharmacyId(this.getReadableDatabase(), orderId);
+    }
+
+    public List<Product> getAllOrderProducts(int orderId) {
+
+        return OrderDao.getAllOrderProducts(this.getReadableDatabase(), orderId);
     }
 
     @Override
@@ -249,6 +280,8 @@ public class DBPharmacyS extends SQLiteOpenHelper {
         db.execSQL(CREATE_INITIAL_INVENTORY);
         db.execSQL(CREATE_INITIAL_BASKET);
         db.execSQL(CREATE_INITIAL_RESERVATION);
+        db.execSQL(CREATE_INITIAL_ORDERS);
+        db.execSQL(CREATE_INITIAL_ORDERS_PRODUCT);
     }
 
     @Override

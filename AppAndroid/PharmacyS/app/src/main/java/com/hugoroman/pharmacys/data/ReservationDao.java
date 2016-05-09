@@ -56,21 +56,21 @@ public final class ReservationDao {
 
         ContentValues contentValues = new ContentValues();
 
-        boolean update = false;
+        if(c != null) {
+            boolean update = c.moveToFirst();
 
-        if(c != null)
-            update = c.moveToFirst();
+            c.close();
 
-        if(!update) {
-            contentValues.put(PharmacySContract.ReservationTable.PHARMACY_ID, pharmacyCif);
-            contentValues.put(PharmacySContract.ReservationTable.PRODUCT_ID, productId);
-            contentValues.put(PharmacySContract.ReservationTable.QUANTITY, quantity);
-            db.insert(PharmacySContract.ReservationTable.TABLE_NAME, null, contentValues);
-        }
-        else {
-            contentValues.put(PharmacySContract.ReservationTable.QUANTITY, quantity);
-            db.update(PharmacySContract.ReservationTable.TABLE_NAME, contentValues,
-                    PharmacySContract.ReservationTable.PHARMACY_ID + " = ? AND " + PharmacySContract.ReservationTable.PRODUCT_ID + " = ?", new String[] { pharmacyCif, String.valueOf(productId) });
+            if (!update) {
+                contentValues.put(PharmacySContract.ReservationTable.PHARMACY_ID, pharmacyCif);
+                contentValues.put(PharmacySContract.ReservationTable.PRODUCT_ID, productId);
+                contentValues.put(PharmacySContract.ReservationTable.QUANTITY, quantity);
+                db.insert(PharmacySContract.ReservationTable.TABLE_NAME, null, contentValues);
+            } else {
+                contentValues.put(PharmacySContract.ReservationTable.QUANTITY, quantity);
+                db.update(PharmacySContract.ReservationTable.TABLE_NAME, contentValues,
+                        PharmacySContract.ReservationTable.PHARMACY_ID + " = ? AND " + PharmacySContract.ReservationTable.PRODUCT_ID + " = ?", new String[]{pharmacyCif, String.valueOf(productId)});
+            }
         }
     }
 

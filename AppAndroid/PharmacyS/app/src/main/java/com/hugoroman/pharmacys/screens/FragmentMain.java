@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hugoroman.pharmacys.R;
+import com.hugoroman.pharmacys.model.User;
 
 public class FragmentMain extends Fragment implements View.OnClickListener {
 
@@ -20,6 +21,7 @@ public class FragmentMain extends Fragment implements View.OnClickListener {
     private boolean anim = false;
 
     private View view;
+    private User user;
     private CardView pharmaciesCardView;
     private CardView mapCardView;
     private CardView basketCardView;
@@ -39,6 +41,9 @@ public class FragmentMain extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+
+        // Mantener el Fragment y los datos a cambios de orientación de pantalla
+        setRetainInstance(true);
 
         view = inflater.inflate(R.layout.fragment_main, container, false);
 
@@ -73,6 +78,9 @@ public class FragmentMain extends Fragment implements View.OnClickListener {
                 fragment = new FragmentBasket();
                 break;
             case R.id.orders_cv:
+                fragment = new FragmentOrders();
+
+                ((FragmentOrders) fragment).setUser(user);
 
                 break;
             case R.id.reservations_cv:
@@ -88,5 +96,10 @@ public class FragmentMain extends Fragment implements View.OnClickListener {
 
             ((MainActivity) getActivity()).setMenuItemCheck(fragment);
         }
+    }
+
+    public void setUser(User user) {
+
+        this.user = user;
     }
 }

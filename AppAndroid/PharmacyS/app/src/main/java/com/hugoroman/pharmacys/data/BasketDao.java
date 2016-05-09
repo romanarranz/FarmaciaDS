@@ -56,21 +56,21 @@ public final class BasketDao {
 
         ContentValues contentValues = new ContentValues();
 
-        boolean update = false;
+        if(c != null) {
+            boolean update = c.moveToFirst();
 
-        if(c != null)
-            update = c.moveToFirst();
+            c.close();
 
-        if(!update) {
-            contentValues.put(PharmacySContract.BasketTable.PHARMACY_ID, pharmacyCif);
-            contentValues.put(PharmacySContract.BasketTable.PRODUCT_ID, productId);
-            contentValues.put(PharmacySContract.BasketTable.QUANTITY, quantity);
-            db.insert(PharmacySContract.BasketTable.TABLE_NAME, null, contentValues);
-        }
-        else {
-            contentValues.put(PharmacySContract.BasketTable.QUANTITY, quantity);
-            db.update(PharmacySContract.BasketTable.TABLE_NAME, contentValues,
-                    PharmacySContract.BasketTable.PHARMACY_ID + " = ? AND " + PharmacySContract.BasketTable.PRODUCT_ID + " = ?", new String[] { pharmacyCif, String.valueOf(productId) });
+            if (!update) {
+                contentValues.put(PharmacySContract.BasketTable.PHARMACY_ID, pharmacyCif);
+                contentValues.put(PharmacySContract.BasketTable.PRODUCT_ID, productId);
+                contentValues.put(PharmacySContract.BasketTable.QUANTITY, quantity);
+                db.insert(PharmacySContract.BasketTable.TABLE_NAME, null, contentValues);
+            } else {
+                contentValues.put(PharmacySContract.BasketTable.QUANTITY, quantity);
+                db.update(PharmacySContract.BasketTable.TABLE_NAME, contentValues,
+                        PharmacySContract.BasketTable.PHARMACY_ID + " = ? AND " + PharmacySContract.BasketTable.PRODUCT_ID + " = ?", new String[]{pharmacyCif, String.valueOf(productId)});
+            }
         }
     }
 

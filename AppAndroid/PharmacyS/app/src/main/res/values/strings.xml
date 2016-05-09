@@ -40,4 +40,7 @@
     <!-- Notificación al usuario de añadir a cesta -->
     <string name="insert_basket">Product correctly added to basket</string>
     <string name="insert_reservations">Product correctly reserved</string>
+
+    <!-- Notificación al usuario de pedidos vacíos-->
+    <string name="empty_orders">NO PREVIOUS ORDERS</string>
 </resources>

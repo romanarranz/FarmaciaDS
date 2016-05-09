@@ -4,23 +4,29 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.hugoroman.pharmacys.data.PharmacySContract.UserTable;
+import com.hugoroman.pharmacys.model.User;
 
 public final class UserDao {
 
-    public static String getUserName(SQLiteDatabase db, String userEmail) {
+    public static User getUser(SQLiteDatabase db, String userEmail) {
 
-        String selectQuery = "SELECT " + UserTable.NAME + " FROM " + UserTable.TABLE_NAME + " WHERE " +
+        String selectQuery = "SELECT * FROM " + UserTable.TABLE_NAME + " WHERE " +
                 UserTable.EMAIL + " = '" + userEmail + "'";
 
         Cursor c = db.rawQuery(selectQuery, null);
 
-        if(c != null)
+        User user = null;
+
+        if(c != null) {
             c.moveToFirst();
 
-        String userName = c.getString(c.getColumnIndex(UserTable.NAME));
+            user = new User(c.getString(c.getColumnIndex(UserTable.EMAIL)),
+                    c.getString(c.getColumnIndex(UserTable.NAME)),
+                    c.getString(c.getColumnIndex(UserTable.SURNAME)));
 
-        c.close();
+            c.close();
+        }
 
-        return userName;
+        return user;
     }
 }

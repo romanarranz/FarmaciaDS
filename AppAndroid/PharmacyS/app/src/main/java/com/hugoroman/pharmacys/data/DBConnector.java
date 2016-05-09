@@ -4,9 +4,11 @@ import android.content.Context;
 
 import com.hugoroman.pharmacys.model.Basket;
 import com.hugoroman.pharmacys.model.Inventory;
+import com.hugoroman.pharmacys.model.Order;
 import com.hugoroman.pharmacys.model.Pharmacy;
 import com.hugoroman.pharmacys.model.Product;
 import com.hugoroman.pharmacys.model.Reservation;
+import com.hugoroman.pharmacys.model.User;
 
 import java.util.List;
 
@@ -19,14 +21,19 @@ public class DBConnector {
         this.pharmacyS = new DBPharmacyS(context);
     }
 
-    public Pharmacy getPharmacy(String cif) {
+    public Pharmacy getPharmacy(String pharmacyId) {
 
-        return pharmacyS.getPharmacy(cif);
+        return pharmacyS.getPharmacy(pharmacyId);
     }
 
     public List<Pharmacy> getAllPharmacies() {
 
         return pharmacyS.getAllPharmacies();
+    }
+
+    public String getPharmacyName(String pharmacyId) {
+
+        return pharmacyS.getPharmacyName(pharmacyId);
     }
 
     public List<Inventory> getPharmacyInventory(String pharmacyId) {
@@ -54,9 +61,9 @@ public class DBConnector {
         return pharmacyS.getAllProductsByCategoryId(categoryId);
     }
 
-    public int getInventoryQuantity(String pharmacyCif, int productId) {
+    public int getInventoryQuantity(String pharmacyId, int productId) {
 
-        return pharmacyS.getInventoryQuantity(pharmacyCif, productId);
+        return pharmacyS.getInventoryQuantity(pharmacyId, productId);
     }
 
     public Basket getBasket() {
@@ -64,14 +71,14 @@ public class DBConnector {
         return pharmacyS.getBasket();
     }
 
-    public void addToBasket(String pharmacyCif, int productId, int quantity) {
+    public void addToBasket(String pharmacyId, int productId, int quantity) {
 
-        pharmacyS.addToBasket(pharmacyCif, productId, quantity);
+        pharmacyS.addToBasket(pharmacyId, productId, quantity);
     }
 
-    public void removeFromBasket(String pharmacyCif, int productId) {
+    public void removeFromBasket(String pharmacyId, int productId) {
 
-        pharmacyS.removeFromBasket(pharmacyCif, productId);
+        pharmacyS.removeFromBasket(pharmacyId, productId);
     }
 
     public Reservation getReservation() {
@@ -79,19 +86,19 @@ public class DBConnector {
         return pharmacyS.getReservation();
     }
 
-    public void addToReservation(String pharmacyCif, int productId, int quantity) {
+    public void addToReservation(String pharmacyId, int productId, int quantity) {
 
-        pharmacyS.addToReservation(pharmacyCif, productId, quantity);
+        pharmacyS.addToReservation(pharmacyId, productId, quantity);
     }
 
-    public void removeFromReservation(String pharmacyCif, int productId) {
+    public void removeFromReservation(String pharmacyId, int productId) {
 
-        pharmacyS.removeFromReservation(pharmacyCif, productId);
+        pharmacyS.removeFromReservation(pharmacyId, productId);
     }
 
-    public Inventory getInventory(String pharmacyCif, int productId) {
+    public Inventory getInventory(String pharmacyId, int productId) {
 
-        return pharmacyS.getInventory(pharmacyCif, productId);
+        return pharmacyS.getInventory(pharmacyId, productId);
     }
 
     public String getCategoryName(int categoryId) {
@@ -99,8 +106,28 @@ public class DBConnector {
         return pharmacyS.getCategoryName(categoryId);
     }
 
-    public String getUserName(String userEmail) {
+    public User getUser(String userEmail) {
 
-        return pharmacyS.getUserName(userEmail);
+        return pharmacyS.getUser(userEmail);
+    }
+
+    public List<Order> getAllOrders(String userEmail) {
+
+        return pharmacyS.getAllOrders(userEmail);
+    }
+
+    public List<List<String>> getOrderInfo(int orderId) {
+
+        return pharmacyS.getOrderInfo(orderId);
+    }
+
+    public String getOrderPharmacyId(int orderId) {
+
+        return pharmacyS.getOrderPharmacyId(orderId);
+    }
+
+    public List<Product> getAllOrderProducts(int orderId) {
+
+        return pharmacyS.getAllOrderProducts(orderId);
     }
 }

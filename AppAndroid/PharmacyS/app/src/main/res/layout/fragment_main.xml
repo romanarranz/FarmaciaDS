@@ -23,7 +23,7 @@
                 android:layout_height="150dp"
                 android:id="@+id/pharmacies_cv"
                 card_view:cardElevation="4dp"
-                card_view:cardBackgroundColor="@color/selectedOptionMenu"
+                card_view:cardBackgroundColor="@color/colorAccent"
                 android:layout_margin="5dp">
 
                 <LinearLayout
@@ -57,7 +57,7 @@
                 android:layout_height="150dp"
                 android:id="@+id/map_cv"
                 card_view:cardElevation="4dp"
-                card_view:cardBackgroundColor="@color/selectedOptionMenu"
+                card_view:cardBackgroundColor="@color/colorAccent"
                 android:layout_margin="5dp">
 
                 <LinearLayout
@@ -90,7 +90,7 @@
                 android:layout_height="150dp"
                 android:id="@+id/basket_cv"
                 card_view:cardElevation="4dp"
-                card_view:cardBackgroundColor="@color/selectedOptionMenu"
+                card_view:cardBackgroundColor="@color/colorAccent"
                 android:layout_margin="5dp">
 
                 <LinearLayout
@@ -123,7 +123,7 @@
                 android:layout_height="150dp"
                 android:id="@+id/orders_cv"
                 card_view:cardElevation="4dp"
-                card_view:cardBackgroundColor="@color/selectedOptionMenu"
+                card_view:cardBackgroundColor="@color/colorAccent"
                 android:layout_margin="5dp">
 
                 <LinearLayout
@@ -156,7 +156,7 @@
                 android:layout_height="150dp"
                 android:id="@+id/reservations_cv"
                 card_view:cardElevation="4dp"
-                card_view:cardBackgroundColor="@color/selectedOptionMenu"
+                card_view:cardBackgroundColor="@color/colorAccent"
                 android:layout_margin="5dp">
 
                 <LinearLayout

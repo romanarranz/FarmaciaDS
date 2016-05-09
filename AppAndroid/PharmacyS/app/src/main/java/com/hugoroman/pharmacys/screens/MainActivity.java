@@ -24,17 +24,24 @@ import android.widget.Toast;
 import com.hugoroman.pharmacys.R;
 import com.hugoroman.pharmacys.data.DBConnector;
 import com.hugoroman.pharmacys.data.DBPharmacyS;
+import com.hugoroman.pharmacys.model.User;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String SYSPRE = "PHARMACYS";
+    private static final String USER_EMAIL = "USER_EMAIL";
+    private static final String NOT_USER_EMAIL = "NOT_USER_EMAIL";
     private static final int REQUEST_LOGIN = 0;
     private static final String NAV_MENU_ITEM = "navItemId";
     private static final String ACTIONBAR_TITTLE = "actionBarTittle";
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 0;
 
     private SharedPreferences preferences;
+    private String userEmail;
+    private TextView userName;
+    private User user;
     private DrawerLayout drawerLayout;
     private NavigationView navView;
     private int navMenuItem;
@@ -46,15 +53,29 @@ public class MainActivity extends AppCompatActivity {
         
         setContentView(R.layout.activity_main);
 
+        // Sólo para pruebas -> Borra toda la BD
         this.getApplicationContext().deleteDatabase(DBPharmacyS.DATABASE_NAME);
 
-        //DBPharmacyS dbPharmacyS = new DBPharmacyS(getApplicationContext());
-        preferences = getPreferences(MODE_PRIVATE);
+        Log.e("MAIN ACTIVITY", "ON CREATE");
 
-        /*if(!preferences.contains("user-email")) {
+        preferences = getSharedPreferences(SYSPRE, MODE_PRIVATE);
+
+        /*if(!preferences.contains(USER_EMAIL)) {
             Toast.makeText(this, "Creating login activity", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivityForResult(intent, REQUEST_LOGIN);
+        }
+        else {
+            userEmail = preferences.getString(USER_EMAIL, NOT_USER_EMAIL);
+
+            if(!userEmail.equals(NOT_USER_EMAIL))
+                user = new DBConnector(getApplicationContext()).getUser(userEmail);
+            else {
+                Log.e("SHARED PREFERENCES", "ERROR RECOVERING USER ID FROM SHARED PREFERENCES");
+
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivityForResult(intent, REQUEST_LOGIN);
+            }
         }*/
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.appbar);
@@ -65,9 +86,13 @@ public class MainActivity extends AppCompatActivity {
 
         View header = navView.getHeaderView(0);
 
-        TextView userName = (TextView) header.findViewById(R.id.user_name);
+        // SÓLO PARA PRUEBAS
+        user = new DBConnector(getApplicationContext()).getUser("hugomc92@gmail.com");
 
-        userName.setText(new DBConnector(getApplicationContext()).getUserName("hugomc92@gmail.com"));
+        userName = (TextView) header.findViewById(R.id.user_name);
+
+        if(user != null)
+            userName.setText(user.getName() + " " + user.getSurname());
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_nav_menu);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -90,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
                             case R.id.navigation_item_1:
                                 if(navMenuItem != R.id.navigation_item_1) {
                                     fragment = new FragmentMain();
+
+                                    ((FragmentMain) fragment).setUser(user);
 
                                     fragmentTransaction = true;
 
@@ -119,7 +146,13 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 break;
                             case R.id.navigation_item_5:
-                                fragmentTransaction = false;
+                                if(navMenuItem != R.id.navigation_item_5) {
+                                    fragment = new FragmentOrders();
+
+                                    ((FragmentOrders) fragment).setUser(user);
+
+                                    fragmentTransaction = true;
+                                }
                                 break;
                             case R.id.navigation_item_6:
                                 if(navMenuItem != R.id.navigation_item_6) {
@@ -187,8 +220,19 @@ public class MainActivity extends AppCompatActivity {
     // Capturar el evento cuando se loguee el usuario
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         if(requestCode == REQUEST_LOGIN) {
             if(resultCode == RESULT_OK) {
+
+                Log.e("MAIN ACTIVITY", "ON ACTIVITY RESULT");
+
+                // SÓLO PARA PRUEBAS - Reemplazar por el id del shared preferences
+                user = new DBConnector(getApplicationContext()).getUser("hugomc92@gmail.com");
+
+                if(user != null)
+                    userName.setText(user.getName() + " " + user.getSurname());
+
+                Log.e("USER", user.getName() + " " + user.getSurname());
 
                 // Solicitar permisos Localización dinámicamente para Android Marshallow y N
                 if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
@@ -221,6 +265,8 @@ public class MainActivity extends AppCompatActivity {
             actionBarTittle = "PharmacyS";
 
             fragment = new FragmentMain();
+
+            ((FragmentMain) fragment).setUser(user);
         }
         else {
             super.onRestoreInstanceState(savedInstanceState);
@@ -349,6 +395,17 @@ public class MainActivity extends AppCompatActivity {
         else if(fragment.getClass() == FragmentReservation.class) {
             navMenuItem = R.id.navigation_item_6;
             actionBarTittle = "My Reservation";
+        }
+        else if(fragment.getClass() == FragmentOrders.class) {
+            navMenuItem = R.id.navigation_item_5;
+            actionBarTittle = "My Orders";
+        }
+        else if(fragment.getClass() == FragmentOrder.class) {
+            if(navMenuItem > 0)
+                navView.getMenu().findItem(navMenuItem).setChecked(false);
+
+            navMenuItem = -1;
+            actionBarTittle = "Order: " + ((FragmentOrder) fragment).getOrderId();
         }
 
         if(navMenuItem > 0)

@@ -22,6 +22,7 @@ import com.hugoroman.pharmacys.data.DBConnector;
 import com.hugoroman.pharmacys.model.Product;
 
 import java.sql.Date;
+import java.text.DateFormat;
 
 public class FragmentProduct extends Fragment implements View.OnClickListener {
 
@@ -99,8 +100,10 @@ public class FragmentProduct extends Fragment implements View.OnClickListener {
             productSizeUnit.setText(product.getSizeUnits() + " " + product.getUnits());
 
             Date expDate = product.getExpiration_date();
-            if(expDate.getTime() != 0)
-                productExpDate.setText("Expiration date: " + expDate.toString());
+            if(expDate.getTime() != 0) {
+                DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getContext());
+                productExpDate.setText("Expiration date: " + dateFormat.format(expDate));
+            }
             else {
                 relativeLayout.removeView(productExpDate);
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
