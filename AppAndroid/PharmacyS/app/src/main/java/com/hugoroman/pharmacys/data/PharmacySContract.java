@@ -14,11 +14,11 @@ public final class PharmacySContract {
 
     public static abstract class UserTable implements BaseColumns {
 
+        public static final String TABLE_NAME = "USER";
         public static final String EMAIL = "EMAIL";
         public static final String NAME = "NAME";
         public static final String SURNAME = "SURNAME";
         public static final String PASSWORD = "PASSWORD";
-        public static final String RESETHASH = "RESETHASH";
     }
 
     public static abstract class PharmacyTable implements BaseColumns {
@@ -87,11 +87,11 @@ public final class PharmacySContract {
 
     public static abstract class OrderTable implements  BaseColumns {
 
-        public static final String TABLE_NAME = "ORDER";
+        public static final String TABLE_NAME = "USER_ORDER";
         public static final String ID = "ID";
         public static final String USER_ID = "USER_ID";
         public static final String PHARMACY_ID = "PHARMACY_ID";
-        public static final String DATE = "DATE";
+        public static final String DATE = "ORDER_DATE";
     }
 
     public static abstract class OrderProductTable implements  BaseColumns {
@@ -99,5 +99,6 @@ public final class PharmacySContract {
         public static final String TABLE_NAME = "ORDER_PRODUCT";
         public static final String ID_ORDER = "ID_ORDER";
         public static final String PRODUCT_ID = "PRODUCT_ID";
+        public static final String QUANTITY = "QUANTITY";
     }
 }

@@ -98,4 +98,9 @@ public class DBConnector {
 
         return pharmacyS.getCategoryName(categoryId);
     }
+
+    public String getUserName(String userEmail) {
+
+        return pharmacyS.getUserName(userEmail);
+    }
 }

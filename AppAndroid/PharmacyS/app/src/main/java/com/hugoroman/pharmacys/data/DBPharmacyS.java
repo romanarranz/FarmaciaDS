@@ -25,13 +25,20 @@ public class DBPharmacyS extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
 
     // Variables staticas finales para la creación de la base de datos
+    private static final String CREATE_USER = "CREATE TABLE " + PharmacySContract.UserTable.TABLE_NAME + " (" +
+                                                PharmacySContract.UserTable.EMAIL + " varchar(100) PRIMARY KEY, " +
+                                                PharmacySContract.UserTable.NAME + " varchar(80) NOT NULL, " +
+                                                PharmacySContract.UserTable.SURNAME + " varchar(180) NOT NULL, " +
+                                                PharmacySContract.UserTable.PASSWORD + " TEXT NOT NULL " +
+                                                ")";
+
     private static final String CREATE_PHARMACY = "CREATE TABLE " + PharmacyTable.TABLE_NAME + " (" +
-                                                    PharmacyTable.CIF_ID + " varchar(9) NOT NULL PRIMARY KEY," +
+                                                    PharmacyTable.CIF_ID + " varchar(9) PRIMARY KEY," +
                                                     PharmacyTable.NAME + " varchar(120) NOT NULL," +
                                                     PharmacyTable.PHONE_NUMBER + " int(11) NOT NULL," +
                                                     PharmacyTable.DESCRIPTION + " varchar(500) DEFAULT NULL," +
-                                                    PharmacyTable.START_SCHEDULE + " int(11) DEFAULT '0'," +
-                                                    PharmacyTable.END_SCHEDULE + " int(11) DEFAULT '0'," +
+                                                    PharmacyTable.START_SCHEDULE + " int(2) DEFAULT '0'," +
+                                                    PharmacyTable.END_SCHEDULE + " int(2) DEFAULT '0'," +
                                                     PharmacyTable.LATITUDE + " DOUBLE NOT NULL DEFAULT '0'," +
                                                     PharmacyTable.LONGITUDE + " DOUBLE NOT NULL DEFAULT '0'," +
                                                     PharmacyTable.ADDRESS + " varchar(200) NOT NULL DEFAULT ''," +
@@ -39,13 +46,13 @@ public class DBPharmacyS extends SQLiteOpenHelper {
                                                     ");";
 
     private static final String CREATE_CATEGORY = "CREATE TABLE " + CategoryTable.TABLE_NAME + " (" +
-                                                    CategoryTable.ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
+                                                    CategoryTable.ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                                                     CategoryTable.NAME + " varchar(20) NOT NULL," +
                                                     CategoryTable.IMG + " INTEGER DEFAULT 0" +
                                                     ");";
 
     private static final String CREATE_PRODUCT = "CREATE TABLE " + ProductTable.TABLE_NAME + " (" +
-                                                    ProductTable.ID + "  INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
+                                                    ProductTable.ID + "  INTEGER PRIMARY KEY AUTOINCREMENT," +
                                                     ProductTable.CATEGORY + " int(11) REFERENCES " + CategoryTable.TABLE_NAME + " (" + CategoryTable.ID + ")" + " NOT NULL," +
                                                     ProductTable.NAME + " varchar(160) NOT NULL," +
                                                     ProductTable.DESCRIPTION + " varchar(600) NOT NULL," +
@@ -58,8 +65,8 @@ public class DBPharmacyS extends SQLiteOpenHelper {
                                                     ");";
 
     private static final String CREATE_INVENTORY = "CREATE TABLE " + InventoryTable.TABLE_NAME + "( " +
-                                                    InventoryTable.PHARMACY_ID + " varchar(9) REFERENCES " + PharmacyTable.TABLE_NAME + "(" + PharmacyTable.CIF_ID + ")" + " NOT NULL," +
-                                                    InventoryTable.PRODUCT_ID + " int(11) REFERENCES " + ProductTable.TABLE_NAME + "(" + ProductTable.ID + ")" + " NOT NULL," +
+                                                    InventoryTable.PHARMACY_ID + " varchar(9) REFERENCES " + PharmacyTable.TABLE_NAME + "(" + PharmacyTable.CIF_ID + ")" + " NOT NULL, " +
+                                                    InventoryTable.PRODUCT_ID + " int(11) REFERENCES " + ProductTable.TABLE_NAME + "(" + ProductTable.ID + ")" + " NOT NULL, " +
                                                     InventoryTable.PRICE + " decimal(3,2) NOT NULL DEFAULT '0.00',"+
                                                     InventoryTable.QUANTITY + " int(11) NOT NULL DEFAULT '0'," +
                                                     "PRIMARY KEY("+ InventoryTable.PHARMACY_ID + "," + InventoryTable.PRODUCT_ID +")" +
@@ -73,13 +80,30 @@ public class DBPharmacyS extends SQLiteOpenHelper {
                                                 ");";
 
     public static final String CREATE_RESERVATION = "CREATE TABLE " + ReservationTable.TABLE_NAME + " ( " +
-                                                    ReservationTable.PHARMACY_ID + " varchar(9) REFERENCES " + PharmacyTable.TABLE_NAME + "(" + PharmacyTable.CIF_ID + ")" + " NOT NULL," +
+                                                    ReservationTable.PHARMACY_ID + " varchar(9) REFERENCES " + PharmacyTable.TABLE_NAME + "(" + PharmacyTable.CIF_ID + ") NOT NULL," +
                                                     ReservationTable.PRODUCT_ID + " int(11) REFERENCES " + ProductTable.TABLE_NAME + "(" + ProductTable.ID + ")" + " NOT NULL," +
                                                     ReservationTable.QUANTITY + " int(5) NOT NULL," +
-                                                    "PRIMARY KEY("+ ReservationTable.PHARMACY_ID + "," + ReservationTable.PRODUCT_ID +")" +
+                                                    "PRIMARY KEY("+ ReservationTable.PHARMACY_ID + "," + ReservationTable.PRODUCT_ID + ")" +
                                                     ");";
 
+    public static final String CREATE_ORDER = "CREATE TABLE " + PharmacySContract.OrderTable.TABLE_NAME + " ( " +
+                                                PharmacySContract.OrderTable.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                                                PharmacySContract.OrderTable.USER_ID + " varchar(100) REFERENCES " + PharmacySContract.UserTable.TABLE_NAME + "(" + PharmacySContract.UserTable.EMAIL + ") NOT NULL, " +
+                                                PharmacySContract.OrderTable.PHARMACY_ID + " varchar(9) REFERENCES " + PharmacyTable.TABLE_NAME + "(" + PharmacyTable.CIF_ID + ") NOT NULL, " +
+                                                PharmacySContract.OrderTable.DATE + " date NOT NULL " +
+                                                ");";
+
+    public static final String CREATE_ORDER_PRODUCT = "CREATE TABLE " + PharmacySContract.OrderProductTable.TABLE_NAME + " ( " +
+                                                        PharmacySContract.OrderProductTable.ID_ORDER + " INTEGER REFERENCES " + PharmacySContract.OrderTable.TABLE_NAME + "(" + PharmacySContract.OrderTable.USER_ID + ") NOT NULL, " +
+                                                        PharmacySContract.OrderProductTable.PRODUCT_ID + " INTEGER REFERENCES " + ProductTable.TABLE_NAME + "(" + ProductTable.ID + ") NOT NULL, " +
+                                                        PharmacySContract.OrderProductTable.QUANTITY + " INTEGER NOT NULL, " +
+                                                        "PRIMARY KEY(" + PharmacySContract.OrderProductTable.ID_ORDER + "," + PharmacySContract.OrderProductTable.PRODUCT_ID + ")" +
+                                                        ")";
+
+
     // Variables estáticas para la inserción inicial de la base de datos -> PRUEBAS
+    private static final String CREATE_INITIAL_USER = "INSERT INTO " + PharmacySContract.UserTable.TABLE_NAME + " VALUES ('hugomc92@gmail.com', 'Hugo', 'Maldonado', 'holahola123');";
+
     private static final String CREATE_INITIAL_PHARMACY_DATA = "INSERT INTO " + PharmacyTable.TABLE_NAME + " VALUES ('73890889B','farmaciaa',891308843,'',10,22, 37.1356, -3.5583, 'DIRECCIÓN 1', 'http://farmaciamariadelcarmen.es/wp-content/uploads/2016/04/farmacia_cover_L.jpg')," +
                                                                 " ('89899878H','FARMACIA PEPELUIS',987678392,NULL,10,22, 37.1946133, 37.1946133, 'DIRECCIÓN 2', 'http://www.farmaciamerino.com/files/0001/merino8835058v683902y5927p12936/web.system/assets/contents/articles/farmacias_de_guardia.jpg')," +
                                                                 " ('90889932G','FARMACIA ISABEL',987654321,'farmacia situada en el centro de granada en la calle valencia 14 asesasdsa',11,21, 0, 0, 'DIRECCIÓN', 'http://farmaciamariadelcarmen.es/wp-content/uploads/2016/04/farmacia_cover_L.jpg')," +
@@ -192,6 +216,11 @@ public class DBPharmacyS extends SQLiteOpenHelper {
         return ProductDao.getCategoryName(this.getReadableDatabase(), categoryId);
     }
 
+    public String getUserName(String userEmail) {
+
+        return UserDao.getUserName(this.getReadableDatabase(), userEmail);
+    }
+
     @Override
     public void onConfigure(SQLiteDatabase db) {
         super.onConfigure(db);
@@ -209,7 +238,11 @@ public class DBPharmacyS extends SQLiteOpenHelper {
         db.execSQL(CREATE_INVENTORY);
         db.execSQL(CREATE_BASKET);
         db.execSQL(CREATE_RESERVATION);
+        db.execSQL(CREATE_USER);
+        db.execSQL(CREATE_ORDER);
+        db.execSQL(CREATE_ORDER_PRODUCT);
 
+        db.execSQL(CREATE_INITIAL_USER);
         db.execSQL(CREATE_INITIAL_PHARMACY_DATA);
         db.execSQL(CREATE_INITIAL_CATEGORY);
         db.execSQL(CREATE_INITIAL_PRODUCT);

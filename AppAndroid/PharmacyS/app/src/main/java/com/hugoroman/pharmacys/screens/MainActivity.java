@@ -17,9 +17,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hugoroman.pharmacys.R;
+import com.hugoroman.pharmacys.data.DBConnector;
 import com.hugoroman.pharmacys.data.DBPharmacyS;
 
 import java.util.List;
@@ -45,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
         this.getApplicationContext().deleteDatabase(DBPharmacyS.DATABASE_NAME);
 
+        //DBPharmacyS dbPharmacyS = new DBPharmacyS(getApplicationContext());
         preferences = getPreferences(MODE_PRIVATE);
 
         /*if(!preferences.contains("user-email")) {
@@ -58,6 +62,12 @@ public class MainActivity extends AppCompatActivity {
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navView = (NavigationView) findViewById(R.id.drawer_nav);
+
+        View header = navView.getHeaderView(0);
+
+        TextView userName = (TextView) header.findViewById(R.id.user_name);
+
+        userName.setText(new DBConnector(getApplicationContext()).getUserName("hugomc92@gmail.com"));
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_nav_menu);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
