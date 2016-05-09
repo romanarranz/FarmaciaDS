@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -17,7 +19,6 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name="product")
 @XmlType(propOrder={
 		"id",
-		"category",
 		"name",
 		"description",
 		"laboratory",		
@@ -25,17 +26,15 @@ import javax.xml.bind.annotation.XmlType;
 		"expirationDate",
 		"size",
 		"lot",
-		"urlImg"
+		"urlImg",
+		"category"
 })
 public class Product {
-	
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="ID")
 	private int id;
-	
-	@Column(name="CATEGORY")
-	private String category;
 
 	@Column(name="NAME")
 	private String name;
@@ -61,6 +60,11 @@ public class Product {
 	@Column(name="URL_IMG")
 	private String urlImg;
 	
+	// foraign key, le indicamos que la referencia de clave está dentro del objeto Category y en la columna ID
+	@ManyToOne
+	@JoinColumn(name="CATEGORYID")
+	private Category category;
+	
 	// ID
 	@XmlElement(required=true)
 	public int getId(){
@@ -70,15 +74,6 @@ public class Product {
 		this.id = id;
 	}
 	
-	// CATEGORY
-	@XmlElement(required=true)
-	public String getCategory(){
-		return this.category;
-	}
-	public void setCategory(String newCategory){
-		this.category = newCategory;
-	}
-		
 	// NAME
 	@XmlElement(required=true)
 	public String getName(){
@@ -149,5 +144,14 @@ public class Product {
 	}
 	public void setUrlImg(String uri){
 		this.urlImg = uri;
+	}
+	
+	// CATEGORYID
+	@XmlElement(required=true)
+	public Category getCategory(){
+		return this.category;
+	}
+	public void setCategory(Category c){
+		this.category = c;
 	}
 }

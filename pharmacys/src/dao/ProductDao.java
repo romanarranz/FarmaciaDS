@@ -35,34 +35,6 @@ public class ProductDao {
 		return product;
 	}
 	
-	@SuppressWarnings("unchecked")
-	protected List<Product> getProductByIdsList(List<Long> ids){
-		List<Product> products = null;
-		Session session = null;
-		
-		try {						
-			session = sessionFactory.openSession();
-			session.beginTransaction();
-		
-			System.out.println("me llega "+ids.get(0));
-			products = session.createQuery("FROM Product p WHERE p.id IN :ids")
-					.setParameter("ids", ids)
-					.list();
-			session.getTransaction().commit();
-						
-		}
-		catch(Exception e){
-			if(session != null)
-				session.getTransaction().rollback();
-		}
-		finally {
-			if(session != null)
-				session.close();
-		}
-		
-		return products;
-	}
-	
 	protected Product getProductById(int id){
 		Product product = null;
 		Session session = null;

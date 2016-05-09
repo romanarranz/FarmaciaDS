@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.io.*,java.util.*" %>
 
 <jsp:include page="management/include/heads/login.jsp" />
@@ -11,29 +10,36 @@
    		<div class="inner-bg">
    			<div class="container">
    			<%
-   				// mostrar todos los atributos definidos en la sesion
-				/*for (Enumeration e = session.getAttributeNames(); e.hasMoreElements(); ) {     
-					String attribName = (String) e.nextElement();
-					Object attribValue = session.getAttribute(attribName);
-					System.out.println(attribName + " - " + attribValue);
-				}*/			 			
-				
 				// si la sesion es nueva o el atributo user no esta definido
 				if(session.isNew()||session.getAttribute("user") == null){ 	
 			%>
 				<div class="row">
                 <div class="col-sm-8 col-sm-offset-2 text">
-                	<%
-                	if(session.getAttribute("error") != null){                		
-                	%>
-                	<div class="alert alert-danger" role="alert">
-  						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-  						<span class="sr-only">Error:</span>
-  						Incorrect email or password
-					</div>
-                	<%} 
-                	session.removeAttribute("error");
-                	%>
+                <%  
+			    List<String> msg = (ArrayList<String>) session.getAttribute("msg");
+			    List<String> errors = (ArrayList<String>) session.getAttribute("errors");
+			    if(msg != null && !msg.isEmpty()){
+			    	
+			    	out.println("<div class=\"alert alert-success\" role=\"alert\">");
+			    	out.println("<p class=\"glyphicon glyphicon-ok\" aria-hidden=\"true\">");
+			  		for(String s : msg)
+			  			out.println(s);
+			  		out.println("</p>");    	
+					out.println("</div>");	
+			    }
+			    session.removeAttribute("msg");
+			    		
+			    if(errors != null && !errors.isEmpty()){
+			       	out.println("<div class=\"alert alert-danger\" role=\"alert\">");
+			    	out.println("<p class=\"glyphicon glyphicon-exclamation-sign\" aria-hidden=\"true\">");   		        	
+			    	for(String s : errors)
+			      		out.println(s);
+			      	out.println("</span>");
+			        	
+			    	out.println("</div>");    	
+			    }
+			    session.removeAttribute("errors");
+			    %>
                     <h1><strong>PharmacyS</strong> Login Form</h1>
                     <div class="description">
 	                    <p>

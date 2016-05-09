@@ -1,5 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.util.*" %>
+<%@ page import="dao.DBConnector, model.Category" %>
+
 <!-- Insert Products Modal -->
 <div id="insert" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
 	<div class="modal-dialog" role="document">
@@ -18,16 +20,26 @@
       	<div class="modal-body">
         	<div class="row">		         	
         		<div class="col-md-5">
-        			<img id="insertImgViewer" src="http://10.211.55.6/img/products/img_no_aviable.png" style="width: 100%; height: 300px;" alt=""/>
+        			<img id="insertImgViewer" src="http://localhost:8080/pharmacys/img/img_no_aviable.png" style="width: 100%; height: 300px;" alt=""/>
         			<label for="insertImg"  class="control-label">Asignar Imagen</label>    
                     <input type="file" id="insertImg" name="insertImg" />
         		</div>
           		<div class="col-md-7">          			          			
           			<!-- Category -->
   					<div class="form-group row">
-    					<label for="insertCategory" class="col-sm-4 form-control-label">Category</label>
+    					<label for="insertCategory" class="col-sm-4 form-control-label">Category</label>					
     					<div class="col-sm-8">
-      						<input type="text" class="form-control" name="insertCategory" id="insertCategory">
+    						<select name="insertCategory" id="insertCategory" class="form-control" required>
+    							<%
+    							DBConnector dbc = new DBConnector();
+    							List<Category> categories = dbc.getAllCategories();
+    							
+    							if(categories != null){
+    								for(Category c : categories)
+    									out.println("<option value=\""+c.getId()+"\">"+c.getName()+"</option>");
+    							}
+    							%>
+    						</select>
     					</div>
   					</div>
   					<!-- Name -->
@@ -48,7 +60,13 @@
   					<div class="form-group row">
     					<label for="insertUnits" class="col-sm-4">Units</label>
    						<div class="col-sm-8">
-   							<input type="text" class="form-control" name="insertUnits" id="insertUnits" placeholder="kg, gr, ml, l, units...">
+   							<select name="insertUnits" id="insertUnits" class="form-control" required>
+   								<option value="gr">gr</option>
+   								<option value="ml">ml</option>
+   								<option value="cl">cl</option>
+   								<option value="l">l</option>
+   								<option value="units">units</option>
+   							</select>
    						</div>
   					</div>
   					<!-- Expiration Date -->
@@ -83,7 +101,7 @@
   					<div class="form-group row">
     					<label for="insertLot" class="col-sm-4">Stock</label>
    						<div class="col-sm-8">
-      						<input type="number" class="form-control" name="insertStock" id="insertStock" placeholder="Stock...">
+      						<input type="number" min="1" max="1000" class="form-control" name="insertStock" id="insertStock" placeholder="Stock...">
     					</div>
   					</div>
           		</div>

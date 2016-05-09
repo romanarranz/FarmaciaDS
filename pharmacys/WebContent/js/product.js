@@ -5,7 +5,8 @@ $('#edit').on('show.bs.modal', function (event) {
   
 	// get data via api rest of the selected row
 	var id = childrens[0].innerHTML;
-	var url = "http://localhost:8080/pharmacys/rest/product/getByIdJSON/"+id;
+	var cif = document.getElementById("editCif").value;
+	var url = "http://localhost:8080/pharmacys/rest/inventory/getByIdJSON/"+cif+"/"+id;
 	var modal = $(this)
 	$.ajax({
 		type: "GET",
@@ -15,10 +16,16 @@ $('#edit').on('show.bs.modal', function (event) {
 			// update #edit inputs values	
 			modal.find('#editId').val(jsondata.id);
 			modal.find('#editQueryCount').val(jsondata.queryCount);
+		
+			// loop through options in editCategory select
+			for (var i = 0; i < document.getElementById("editCategory").length; ++i){
+	            if (document.getElementById("editCategory").options[i].value == jsondata.category.id){
+	               document.getElementById("editCategory").options[i].selected = true;
+	            }
+	        }
 			
 			modal.find('#editName').val(parse(jsondata.name));
-			modal.find('#editLaboratory').val(parse(jsondata.laboratory));
-			modal.find('#editCategory').val(parse(jsondata.category));
+			modal.find('#editLaboratory').val(parse(jsondata.laboratory));			
 			modal.find('#editUnits').val(jsondata.units);
 			
 			modal.find('#editImgViewer').attr('src',jsondata.urlImg);
@@ -27,9 +34,13 @@ $('#edit').on('show.bs.modal', function (event) {
 			modal.find('#editExpDate').val(jsondata.expirationDate);
 			modal.find('#editLot').val(jsondata.lot);
 			modal.find('#editDescr').val(parse(jsondata.description));
+			modal.find('#editStock').val(jsondata.stock);
+			modal.find('#editPrice').val(jsondata.price);
 		},
 		error : function(xhr, status) {
 	        alert('Se ha producido un problema');
+	        console.log(xhr);
+	        console.log(status);
 	    }
 	});			
 });

@@ -10,7 +10,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import dao.DBConnector;
+import model.Product;
 import model.UserRefinedAbstraction;
+import util.DateUtil;
+import util.SHA512;
+import util.SendEmailUsingGMAILSMTP;
 
 @Path("/user")
 public class UserService {
@@ -44,6 +48,50 @@ public class UserService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<UserRefinedAbstraction> getAllInJSON(){
 		return dbc.getAllUsers();
+	}
+	
+	@GET
+	@Path("/resetPassword/{email}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String resetPassword(@PathParam("email") String email){
+		String result = "{\"status\":\"not ok\"}";						
+		
+		String currentDate = DateUtil.getCurrentDateTime();
+		String resetHash = "";
+		try {
+        	resetHash = SHA512.hashText(currentDate);
+        }
+        catch(Exception e) {
+        	e.getStackTrace();
+        }
+		
+		resetHash = resetHash.substring(0, 20);
+		
+		if(resetHash != null && !resetHash.equals(null) && resetHash != ""){
+			UserRefinedAbstraction user = dbc.getUserById(email);
+			
+			if(user != null){
+				user.setResetHash(resetHash);
+				
+				if(!dbc.updateUser(user)){
+					System.out.println(email+" requested to reset his password");
+					
+					SendEmailUsingGMAILSMTP smtp = new SendEmailUsingGMAILSMTP();
+					
+					String link = "http://localhost:8080/pharmacys/login?action=resetPassword&hash="+resetHash;
+					String msgContent = "Please clic on the next link to reset your password: "+link;
+					smtp.setContent(msgContent);
+					smtp.setRecipient(email);
+					smtp.send();
+					
+					result = "{\"status\":\"ok\"}";
+				}
+				else
+					System.out.println(email+" requested to reset his password but failed");
+			}			
+		}
+		
+		return result;	
 	}
 	
 	@PUT

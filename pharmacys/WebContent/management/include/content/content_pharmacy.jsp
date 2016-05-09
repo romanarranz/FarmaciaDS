@@ -1,5 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.io.*,java.util.*" %>
+<%@ page import="dao.DBConnector, model.Pharmacy" %>
+
  <!-- Bloque central que ocupa un 75% de la pantalla, 100% en responsive movil -->
  <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" style="min-height: 100%; height: 100vh;">
   
@@ -30,12 +32,10 @@
     session.removeAttribute("errors");
     %>
  	<!-- Cuadro de amdinistracion de mi cuenta que ocupa un 58% de la pantalla -->
-    <div class="col-md-7 text-center" style="height: auto; padding: 20px; background: #ebeff2; margin: 0 20%; margin-top: 50px;">
-    	
-    	<%@ page import="dao.DBConnector, java.util.*, model.Pharmacy" %>
+    <div class="col-md-7 text-center" style="height: auto; padding: 20px; background: #ebeff2; margin: 0 20%; margin-top: 50px;">    	
     	<%
-    	String cif = session.getAttribute("cif").toString();
-    	if(cif == null || cif == ""){
+    	String cif = (String) session.getAttribute("cif");
+    	if(cif == null || cif == "" || cif.equals(null)){
     	%>
     	<h1 style="font-size:40px;">Insert your pharmacy below</h1>
     	<hr style="border-top: 1px dashed #cccccc">
@@ -135,6 +135,7 @@
 		<button type="submit" class="btn btn-success" name="action" value="edit" style="margin-top: 10px">Accept</button>
 		</form>
 		<%} %>
+    	
 	</div>
 </div>
 </div>

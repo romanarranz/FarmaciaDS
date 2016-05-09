@@ -40,15 +40,14 @@ public class Pharmacy {
 	@Column(name="END_SCHEDULE")
 	private int endtShedule; 
 	
-	public Pharmacy(){}
-	public Pharmacy(String cif, String name, int phoneNumber, String descr, int startSch, int endSch){
-		this.cif = cif;
-		this.name = name;
-		this.phoneNumber = phoneNumber;
-		this.description = descr;
-		this.startShedule = startSch;
-		this.endtShedule = endSch;
-	}
+	@Column(name="LATITUDE")
+	private double latitude;
+	
+	@Column(name="LONGITUDE")
+	private double longitude;
+	
+	@Column(name="ADDRESS")
+	private String address;
 	
 	// CIF
 	@XmlElement(required=true)
@@ -104,4 +103,30 @@ public class Pharmacy {
 		this.endtShedule = h;
 	}
 	
+	// LATITUDE
+	@XmlElement(required=true)
+	public double getLatitude(){
+		return this.latitude;
+	}
+	public void setLatitude(double lat){
+		this.latitude = lat;
+	}
+	
+	// LONGITUDE
+	@XmlElement(required=true)
+	public double getLongitude(){
+		return this.longitude;
+	}
+	public void setLongitude(double lng){
+		this.longitude = lng;
+	}
+	 
+	// ADDRESS
+	@XmlElement(required=true)
+	public String getAddress(){
+		return this.address;
+	}
+	public void setAddress(String address){
+		this.address = address;
+	}
 }

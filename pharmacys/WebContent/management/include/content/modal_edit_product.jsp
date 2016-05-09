@@ -1,5 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.util.*" %>
+<%@ page import="dao.DBConnector, model.Category" %>
 <!-- Edit Products Modal -->
 <div id="edit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
 	<div class="modal-dialog" role="document">
@@ -14,13 +15,13 @@
       	<!-- Form Edit Parameters --> 
       	<form method="post" action="http://localhost:8080/pharmacys/product" role="form" enctype="multipart/form-data">
       	<input type="hidden" name="editId" id="editId" />
-      	<input type="hidden" name="editQueryCount" id="editQueryCount" />
+      	<input type="hidden" name="editCif" id="editCif" value="<%out.print(session.getAttribute("cif")); %>" />
       	
       	<!-- Modal Body -->
       	<div class="modal-body">
         	<div class="row">		         	
         		<div class="col-md-5">
-        			<img id="editImgViewer" src="http://10.211.55.6/img/products/img_no_aviable.png" style="width: 100%; height: 300px;" alt=""/>
+        			<img id="editImgViewer" src="http://localhost:8080/pharmacys/img/img_no_aviable.png" style="width: 100%; height: 300px;" alt=""/>
         			<label for="editImg"  class="control-label">Cambiar Imagen</label>    
                     <input type="file" id="editImg" name="editImg" />
         		</div>
@@ -29,7 +30,17 @@
   					<div class="form-group row">
     					<label for="editCategory" class="col-sm-4 form-control-label">Category</label>
     					<div class="col-sm-8">
-      						<input type="text" class="form-control" id="editCategory" name="editCategory">
+    						<select name="editCategory" id="editCategory" class="form-control" required>
+    							<%
+    							DBConnector dbc = new DBConnector();
+    							List<Category> categories = dbc.getAllCategories();
+    							
+    							if(categories != null){
+    								for(Category c : categories)
+    									out.println("<option value=\""+c.getId()+"\">"+c.getName()+"</option>");
+    							}
+    							%>
+    						</select>
     					</div>
   					</div>
   					<!-- Name -->
