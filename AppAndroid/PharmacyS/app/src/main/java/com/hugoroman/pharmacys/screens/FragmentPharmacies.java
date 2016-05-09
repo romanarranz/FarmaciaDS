@@ -32,7 +32,7 @@ public class FragmentPharmacies extends Fragment {
             this.setEnterTransition(new Slide(Gravity.RIGHT));
             this.setExitTransition(new Slide(Gravity.LEFT));
 
-            anim = false;
+            anim = true;
         }
     }
 

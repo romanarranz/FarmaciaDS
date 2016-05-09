@@ -67,6 +67,35 @@ public final class ProductDao {
         return categoryName;
     }
 
+    public static int getProductCategoryPhoto(SQLiteDatabase db, int idProduct) {
+
+        String selectQueryCategoryId = "SELECT " + PharmacySContract.ProductTable.CATEGORY + " FROM " + PharmacySContract.ProductTable.TABLE_NAME + " WHERE "
+                + PharmacySContract.ProductTable.ID + " = " + idProduct;
+
+        Cursor cId = db.rawQuery(selectQueryCategoryId, null);
+
+        if(cId!= null)
+            cId.moveToFirst();
+
+        int categoryID = cId.getInt(cId.getColumnIndex(PharmacySContract.ProductTable.CATEGORY));
+
+        cId.close();
+
+        String selectQueryCategoryPhoto = "SELECT " + PharmacySContract.CategoryTable.IMG + " FROM " + PharmacySContract.CategoryTable.TABLE_NAME + " WHERE " +
+                PharmacySContract.CategoryTable.ID + " = '" + categoryID + "'";
+
+        Cursor c = db.rawQuery(selectQueryCategoryPhoto, null);
+
+        if(c != null)
+            c.moveToFirst();
+
+        int categoryPhoto = c.getInt(c.getColumnIndex(PharmacySContract.CategoryTable.IMG));
+
+        c.close();
+
+        return categoryPhoto;
+    }
+
     public static int getProductCategoryId(SQLiteDatabase db, int idProduct) {
 
         String selectQueryCategoryId = "SELECT " + PharmacySContract.ProductTable.CATEGORY + " FROM " + PharmacySContract.ProductTable.TABLE_NAME + " WHERE "
@@ -114,5 +143,22 @@ public final class ProductDao {
             c.close();
 
         return products;
+    }
+
+    public static String getCategoryName(SQLiteDatabase db, int categoryId) {
+
+        String selectQuery = "SELECT " + PharmacySContract.CategoryTable.NAME + " FROM " + PharmacySContract.CategoryTable.TABLE_NAME + " WHERE " +
+                PharmacySContract.CategoryTable.ID + " = " + categoryId;
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if(c != null)
+            c.moveToFirst();
+
+        String categoryName = c.getString(c.getColumnIndex(PharmacySContract.CategoryTable.NAME));
+
+        c.close();
+
+        return categoryName;
     }
 }

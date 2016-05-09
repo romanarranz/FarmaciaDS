@@ -71,6 +71,8 @@ public final class InventoryDao {
                                             c.getFloat(c.getColumnIndex(PharmacySContract.InventoryTable.PRICE)),
                                             c.getInt(c.getColumnIndex(PharmacySContract.InventoryTable.QUANTITY)));
 
+        c.close();
+
         return inventory;
     }
 }

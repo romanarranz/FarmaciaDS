@@ -1,10 +1,12 @@
 package com.hugoroman.pharmacys.adapters;
 
+import android.content.Context;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import com.hugoroman.pharmacys.R;
 import com.hugoroman.pharmacys.data.DBConnector;
@@ -16,21 +18,23 @@ import java.util.List;
 public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.InventoryViewHolder> {
 
     private List<Inventory> inventories;
+    private Context context;
     private static ClickListener clickListener;
 
-    public InventoryAdapter(List<Inventory> inventories) {
+    public InventoryAdapter(List<Inventory> inventories, Context context) {
 
         this.inventories = inventories;
+        this.context = context;
     }
 
     public static class InventoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public TextView categoryName;
+        public ImageView categoryPhoto;
 
         public InventoryViewHolder(View itemView) {
             super(itemView);
 
-            categoryName = (TextView) itemView.findViewById(R.id.category_name);
+            categoryPhoto = (ImageView) itemView.findViewById(R.id.category_photo);
 
             itemView.setOnClickListener(this);
         }
@@ -60,9 +64,12 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.Inve
 
         DBConnector dbConnector = new DBConnector(holder.itemView.getContext());
 
-        String categoryName = dbConnector.getProductCategoryName(inventories.get(position).getProductID());
+        int categoryPicture = dbConnector.getProductCategoryPhoto(inventories.get(position).getProductID());
 
-        holder.categoryName.setText(categoryName);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            holder.categoryPhoto.setImageDrawable(context.getDrawable(categoryPicture));
+        else
+            holder.categoryPhoto.setImageDrawable(context.getResources().getDrawable(categoryPicture));
     }
 
     @Override

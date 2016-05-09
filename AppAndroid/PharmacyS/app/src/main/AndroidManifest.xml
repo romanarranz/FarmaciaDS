@@ -12,13 +12,16 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- Permisos de localización -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
     <!-- Permisos para recibir el Google Map -->
     <permission
-        android:name="com.arshad.map.permission.MAPS_RECEIVE"
+        android:name="com.hugoroman.map.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.arshad.map.permission.MAPS_RECEIVE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.hugoroman.map.permission.MAPS_RECEIVE" />
 
     <!-- La API de Google Maps necesita OpenGL ES 2.0. -->
     <uses-feature

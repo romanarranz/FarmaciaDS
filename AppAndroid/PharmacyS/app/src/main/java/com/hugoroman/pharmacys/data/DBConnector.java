@@ -39,6 +39,11 @@ public class DBConnector {
         return pharmacyS.getProductCategoryName(idProduct);
     }
 
+    public int getProductCategoryPhoto(int idProduct) {
+
+        return pharmacyS.getProductCategoryPhoto(idProduct);
+    }
+
     public int getProductCategoryId(int idProduct) {
 
         return pharmacyS.getProductCategoryId(idProduct);
@@ -87,5 +92,10 @@ public class DBConnector {
     public Inventory getInventory(String pharmacyCif, int productId) {
 
         return pharmacyS.getInventory(pharmacyCif, productId);
+    }
+
+    public String getCategoryName(int categoryId) {
+
+        return pharmacyS.getCategoryName(categoryId);
     }
 }

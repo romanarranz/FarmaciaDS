@@ -60,7 +60,7 @@ public class FragmentBasket extends Fragment {
             this.setEnterTransition(new Slide(Gravity.BOTTOM));
             this.setExitTransition(new Slide(Gravity.BOTTOM));
 
-            anim = false;
+            anim = true;
         }
     }
 

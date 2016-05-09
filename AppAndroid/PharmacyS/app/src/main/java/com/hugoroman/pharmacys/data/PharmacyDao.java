@@ -30,7 +30,11 @@ public final class PharmacyDao {
                                         c.getInt(c.getColumnIndex(PharmacyTable.PHONE_NUMBER)),
                                         c.getString(c.getColumnIndex(PharmacyTable.DESCRIPTION)),
                                         c.getInt(c.getColumnIndex(PharmacyTable.START_SCHEDULE)),
-                                        c.getInt(c.getColumnIndex(PharmacyTable.END_SCHEDULE)));
+                                        c.getInt(c.getColumnIndex(PharmacyTable.END_SCHEDULE)),
+                                        c.getDouble(c.getColumnIndex(PharmacyTable.LATITUDE)),
+                                        c.getDouble(c.getColumnIndex(PharmacyTable.LONGITUDE)),
+                                        c.getString(c.getColumnIndex(PharmacyTable.ADDRESS)),
+                                        c.getString(c.getColumnIndex(PharmacyTable.LOGO)));
 
         c.close();
 
@@ -54,7 +58,11 @@ public final class PharmacyDao {
                         c.getInt(c.getColumnIndex(PharmacyTable.PHONE_NUMBER)),
                         c.getString(c.getColumnIndex(PharmacyTable.DESCRIPTION)),
                         c.getInt(c.getColumnIndex(PharmacyTable.START_SCHEDULE)),
-                        c.getInt(c.getColumnIndex(PharmacyTable.END_SCHEDULE)));
+                        c.getInt(c.getColumnIndex(PharmacyTable.END_SCHEDULE)),
+                        c.getDouble(c.getColumnIndex(PharmacyTable.LATITUDE)),
+                        c.getDouble(c.getColumnIndex(PharmacyTable.LONGITUDE)),
+                        c.getString(c.getColumnIndex(PharmacyTable.ADDRESS)),
+                        c.getString(c.getColumnIndex(PharmacyTable.LOGO)));
 
                 pharmacies.add(pharmacy);
             } while(c.moveToNext());

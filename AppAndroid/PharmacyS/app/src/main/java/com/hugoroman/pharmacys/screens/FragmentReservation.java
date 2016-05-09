@@ -48,7 +48,7 @@ public class FragmentReservation extends Fragment {
             this.setEnterTransition(new Slide(Gravity.TOP));
             this.setExitTransition(new Slide(Gravity.LEFT));
 
-            anim = false;
+            anim = true;
         }
     }
 

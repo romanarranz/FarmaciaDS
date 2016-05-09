@@ -33,6 +33,7 @@ public final class PharmacySContract {
         public static final String LATITUDE = "LATITUDE";
         public static final String LONGITUDE = "LONGITUDE";
         public static final String ADDRESS = "ADDRESS";
+        public static final String LOGO = "LOGO";
     }
 
     public static abstract class CategoryTable implements BaseColumns {

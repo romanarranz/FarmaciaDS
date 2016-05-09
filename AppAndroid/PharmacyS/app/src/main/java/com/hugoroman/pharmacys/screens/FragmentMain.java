@@ -32,7 +32,7 @@ public class FragmentMain extends Fragment implements View.OnClickListener {
             this.setEnterTransition(new Slide(Gravity.LEFT));
             this.setExitTransition(new Slide(Gravity.BOTTOM));
 
-            anim = false;
+            anim = true;
         }
     }
 

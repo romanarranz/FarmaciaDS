@@ -31,6 +31,7 @@ public class FragmentProducts extends Fragment {
 
     private View view;
     private int categoryID;
+    private String categoryName;
     private String pharmacyCif;
 
     public FragmentProducts() {
@@ -39,7 +40,7 @@ public class FragmentProducts extends Fragment {
             this.setEnterTransition(new Slide(Gravity.RIGHT));
             this.setExitTransition(new Slide(Gravity.RIGHT));
 
-            anim = false;
+            anim = true;
         }
     }
 
@@ -48,12 +49,17 @@ public class FragmentProducts extends Fragment {
         // Inflar el layout para este Fragment
         super.onCreateView(inflater, container, savedInstanceState);
 
+        // Mantener el Fragment y los datos a cambios de orientación de pantalla
+        setRetainInstance(true);
+
         view = inflater.inflate(R.layout.fragment_products, container, false);
 
         categoryID = getArguments().getInt("CATEGORY_ID");
         pharmacyCif = getArguments().getString("PH_CIF");
 
         DBConnector dbConnector = new DBConnector(this.getContext());
+
+        categoryName = dbConnector.getCategoryName(categoryID);
 
         final List<Product> products = dbConnector.getAllProductsByCategoryId(categoryID);
 
@@ -120,7 +126,14 @@ public class FragmentProducts extends Fragment {
             }
         });
 
+        ((MainActivity) getActivity()).setMenuItemCheck(this);
+
         return view;
+    }
+
+    public String getCategoryName() {
+
+        return categoryName;
     }
 }
 

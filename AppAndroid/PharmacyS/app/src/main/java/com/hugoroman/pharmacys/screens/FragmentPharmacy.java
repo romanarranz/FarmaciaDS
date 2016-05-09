@@ -34,13 +34,8 @@ public class FragmentPharmacy extends Fragment {
             this.setEnterTransition(new Slide(Gravity.RIGHT));
             this.setExitTransition(new Slide(Gravity.TOP));
 
-            anim = false;
+            anim = true;
         }
-    }
-
-    public void setPharmacy(Pharmacy pharmacy) {
-
-        this.pharmacy = pharmacy;
     }
 
     @Override
@@ -90,5 +85,15 @@ public class FragmentPharmacy extends Fragment {
         });
 
         return view;
+    }
+
+    public void setPharmacy(Pharmacy pharmacy) {
+
+        this.pharmacy = pharmacy;
+    }
+
+    public String getPharmacyName() {
+
+        return pharmacy.getName();
     }
 }

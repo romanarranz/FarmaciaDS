@@ -1,17 +1,21 @@
 package com.hugoroman.pharmacys.screens;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -25,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_LOGIN = 0;
     private static final String NAV_MENU_ITEM = "navItemId";
     private static final String ACTIONBAR_TITTLE = "actionBarTittle";
+    private static final int MY_PERMISSIONS_REQUEST_LOCATION = 0;
 
     private SharedPreferences preferences;
     private DrawerLayout drawerLayout;
@@ -35,17 +40,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
         setContentView(R.layout.activity_main);
 
         this.getApplicationContext().deleteDatabase(DBPharmacyS.DATABASE_NAME);
 
         preferences = getPreferences(MODE_PRIVATE);
 
-        if(!preferences.contains("user-email")) {
+        /*if(!preferences.contains("user-email")) {
             Toast.makeText(this, "Creating login activity", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivityForResult(intent, REQUEST_LOGIN);
-        }
+        }*/
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.appbar);
         setSupportActionBar(toolbar);
@@ -168,14 +174,15 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // Capturar el evento cuando se loguee el usuario. NO ESTOY SEGURO SI ES REALMENTE NECESARIO
+    // Capturar el evento cuando se loguee el usuario
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_LOGIN) {
-            if (resultCode == RESULT_OK) {
+        if(requestCode == REQUEST_LOGIN) {
+            if(resultCode == RESULT_OK) {
 
-                //TextView t = (TextView) findViewById(R.id.textView1);
-                //t.setText("De vuelta al fragment");
+                // Solicitar permisos Localización dinámicamente para Android Marshallow y N
+                if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
             }
         }
     }
@@ -277,6 +284,11 @@ public class MainActivity extends AppCompatActivity {
         if(fragment == null)
             fragment = getVisibleFragment();
 
+        if(fragment != null)
+            Log.e("SET ON ITEM CHECKED", "fragment" + fragment.getClass().toString());
+        else
+            Log.e("SET ON ITEM CHECKED", "fragment null");
+
         if(fragment.getClass() == FragmentMain.class) {
             navMenuItem = R.id.navigation_item_1;
             actionBarTittle = "PharmacyS";
@@ -297,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
                 navView.getMenu().findItem(navMenuItem).setChecked(false);
 
             navMenuItem = -1;
-            actionBarTittle = "Pharmacy";
+            actionBarTittle = ((FragmentPharmacy)fragment).getPharmacyName();
         }
         else if(fragment.getClass() == FragmentInventory.class) {
             if(navMenuItem > 0)
@@ -311,14 +323,14 @@ public class MainActivity extends AppCompatActivity {
                 navView.getMenu().findItem(navMenuItem).setChecked(false);
 
             navMenuItem = -1;
-            actionBarTittle = "Products Catalogue";
+            actionBarTittle = "Catalogue of " + ((FragmentProducts)fragment).getCategoryName();
         }
         else if(fragment.getClass() == FragmentProduct.class) {
             if(navMenuItem > 0)
                 navView.getMenu().findItem(navMenuItem).setChecked(false);
 
             navMenuItem = -1;
-            actionBarTittle = "Product Info";
+            actionBarTittle = ((FragmentProduct) fragment).getProductName();
         }
         else if(fragment.getClass() == FragmentBasket.class) {
             navMenuItem = R.id.navigation_item_4;

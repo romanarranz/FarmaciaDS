@@ -32,7 +32,7 @@ public class FragmentInventory extends Fragment {
             this.setEnterTransition(new Slide(Gravity.BOTTOM));
             this.setExitTransition(new Slide(Gravity.TOP));
 
-            anim = false;
+            anim = true;
         }
     }
 
@@ -56,7 +56,7 @@ public class FragmentInventory extends Fragment {
 
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        InventoryAdapter inventoryAdapter = new InventoryAdapter(inventories);
+        InventoryAdapter inventoryAdapter = new InventoryAdapter(inventories, getContext());
 
         inventoryAdapter.setOnItemClickListener(new ClickListener() {
 
@@ -75,14 +75,14 @@ public class FragmentInventory extends Fragment {
                 bundle.putInt("CATEGORY_ID", categoryID);
                 bundle.putString("PH_CIF", pharmacyCif);
 
-                fragmentProducts.setArguments(bundle);
+                                fragmentProducts.setArguments(bundle);
 
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragmentProducts).addToBackStack(null).commit();
                 else
                     getActivity().getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_frame, fragmentProducts).addToBackStack(null).commit();
 
-                ((MainActivity) getActivity()).setMenuItemCheck(fragmentProducts);
+
             }
         });
 

@@ -4,7 +4,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.transition.Slide;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -57,13 +56,8 @@ public class FragmentProduct extends Fragment implements View.OnClickListener {
             this.setEnterTransition(new Slide(Gravity.LEFT));
             this.setExitTransition(new Slide(Gravity.TOP));
 
-            anim = false;
+            anim = true;
         }
-    }
-
-    public void setProduct(Product product) {
-
-        this.product = product;
     }
 
     @Override
@@ -225,5 +219,15 @@ public class FragmentProduct extends Fragment implements View.OnClickListener {
                 }
                 break;
         }
+    }
+
+    public void setProduct(Product product) {
+
+        this.product = product;
+    }
+
+    public String getProductName() {
+
+        return product.getName();
     }
 }

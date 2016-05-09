@@ -9,8 +9,12 @@ public class Pharmacy {
     private String description;
     private Integer startSchedule;
     private Integer endSchedule;
+    private double latitude;
+    private double longitude;
+    private String address;
+    private String logo;
 
-    public Pharmacy(String cif, String name, Integer phoneNumber, String description, Integer startSchedule, Integer endSchedule) {
+    public Pharmacy(String cif, String name, Integer phoneNumber, String description, Integer startSchedule, Integer endSchedule, double latitude, double longitude, String address, String logo) {
 
         this.cif = cif;
         this.name = name;
@@ -18,6 +22,10 @@ public class Pharmacy {
         this.description = description;
         this.startSchedule = startSchedule;
         this.endSchedule = endSchedule;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.address = address;
+        this.logo = logo;
     }
 
     public String getCif() {
@@ -26,10 +34,6 @@ public class Pharmacy {
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Integer getPhoneNumber() {
@@ -46,5 +50,21 @@ public class Pharmacy {
 
     public Integer getEndSchedule() {
         return endSchedule;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getLogo() {
+        return logo;
     }
 }
