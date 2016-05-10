@@ -1,10 +1,7 @@
 package servlets;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -15,19 +12,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import dao.DBConnector;
-import model.PharmacyProduct;
+import model.Category;
+import model.Inventory;
 import model.Product;
+import util.DateUtil;
 import util.TextParser;
 import util.UploadFile;
 
 @WebServlet("/product")
 @MultipartConfig
 public class SProduct extends HttpServlet {
-	private static final long serialVersionUID = 1L;	
-    
+	private static final long serialVersionUID = 1L;
+      
 	private DBConnector dbc;
 	private List<String> msg;
 	private List<String> errors;
+	private String redirect;
 	
     public SProduct() {
         super();
@@ -37,150 +37,178 @@ public class SProduct extends HttpServlet {
     }
     
     private void insert(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	int size;
-		String category, name, laboratory, units, expirationDate, lot, description;
-		SimpleDateFormat formatter;
-		Date date = null;
-		java.sql.Date sqlDate;
+    	int category, size;
+		String name, laboratory, units, expirationDate, lot, description;
 		
 		Product product;
 		
-        category = request.getParameter("insertCategory");
+		// get the input data
         name = request.getParameter("insertName");
+        description = request.getParameter("insertDescr");
         laboratory = request.getParameter("insertLaboratory");
         units = request.getParameter("insertUnits"); 
         expirationDate = request.getParameter("insertExpDate");               
         size = Integer.parseInt(request.getParameter("insertSize"));
-        lot = request.getParameter("insertLot");
-        description = request.getParameter("insertDescr");
+        lot = request.getParameter("insertLot");        
+        category = Integer.parseInt(request.getParameter("insertCategory"));
         
         product = new Product();
-        product.setCategory(TextParser.parseLatinToHTML(category));
 		product.setName(TextParser.parseLatinToHTML(name));
 		product.setDescription(TextParser.parseLatinToHTML(description));
 		product.setLaboratory(TextParser.parseLatinToHTML(laboratory));
 		product.setUnits(units);
-		
-        // expiration date
-     	formatter = new SimpleDateFormat("dd-MM-yyyy");
-     	date = null;
-     	try {
-     		date = formatter.parse(expirationDate);
-     	}
-     	catch (ParseException e) {
-     		e.printStackTrace();
-     	}
-     	sqlDate = new java.sql.Date(date.getTime());
-     	product.setExpirationDate(sqlDate);
+		        
+		// PARSE EXPIRATION_DATE
+     	java.sql.Date sqlDate = DateUtil.toSQLDate(expirationDate);
+     	if(sqlDate != null)
+     		product.setExpirationDate(sqlDate);
+     	else
+     		this.errors.add("Cant insert your expiration date");
      	
      	product.setSize(size);
 		product.setLot(lot);
 		
-		// subir la imagen
+		// UPLOAD IMAGE
 		String resultUploadImg = UploadFile.upload(request, response, "insertImg");
-		if(resultUploadImg == "")
-			System.out.println("error de subida de imagen");
+		if(resultUploadImg == ""){
+			this.errors.add("Cant upload your image");
+			product.setUrlImg("http://localhost:8080/pharmacys/img/img_no_aviable.png");
+		}
 		else{
-			System.out.println("EXITO de subida de imagen");
+			this.msg.add("Image uploaded successfully");
 			product.setUrlImg(resultUploadImg.replace("/Users/roman/Documents/workspace/pharmacys/WebContent/", "http://localhost:8080/pharmacys/"));
+		}
+		
+		Category c = dbc.getCategoryById(category);		
+		if(c != null){
+			System.out.println(c.getName());
+			product.setCategory(c);
+		}
+		else {
+			this.errors.add("Cant get the category data");
 		}
 		
 		if(!dbc.insertProduct(product)){
 			this.msg.add("Product inserted successfully");
 			
-			// Una vez que el producto se ha insertado bien, procedemos a insertar su precio y vinculamos el producto a la farmacia
-			float price = Float.parseFloat(request.getParameter("insertPrice"));
-			int stock = Integer.parseInt(request.getParameter("insertStock"));
-			String pharmacyId = (String) request.getSession().getAttribute("cif");
-			
-			PharmacyProduct pp = new PharmacyProduct();
-			pp.setPharmacyId(pharmacyId);
-			pp.setProductId(dbc.getLastProductInserted().getId());
-			pp.setStock(stock);
-			pp.setPrice(price);
-			pp.setQueryCount(0);
-			
-			if(!dbc.insertPharmacyProduct(pp))
-				this.msg.add("Product linked to your pharmacy successfully");
-			else
-				this.errors.add("Error when product tried to link to your pharmacy");
+			//	INSERT PRODUCT TO INVENTORY TABLE			
+			Product lastProduct = dbc.getLastProductInserted();			
+			if(lastProduct != null){
+				Integer idProduct = lastProduct.getId();
+				String cif = (String) request.getSession().getAttribute("cif");
+				
+				if(idProduct != null && cif != null){
+					float price = Float.parseFloat(request.getParameter("insertPrice"));
+					Integer stock = Integer.parseInt(request.getParameter("insertStock"));
+					
+					if(price > 0 && stock != null){
+						Inventory i = new Inventory();						
+						i.setPharmacyId(cif);
+						i.setProductId(idProduct);
+						i.setPrice(price);
+						i.setStock(stock);
+						i.setQueryCount(0);
+						
+						if(!dbc.insertInventory(i))
+							this.msg.add("Product linked to your pharmacy successfully");
+						else
+							this.errors.add("Error when product tried to link to your pharmacy");
+					}					
+				}
+			}			
 		}
 		else
 			this.errors.add("The product cannot be inserted");
     }
-    
-    private void edit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	int id, size;
-		String category, name, laboratory, units, expirationDate, lot, description;
-		SimpleDateFormat formatter;
-		Date date = null;
-		java.sql.Date sqlDate;
-		
-		Product product;
-		
-    	id = Integer.parseInt(request.getParameter("editId"));
-        category = request.getParameter("editCategory");
-        name = request.getParameter("editName");
-        laboratory = request.getParameter("editLaboratory");
-        units = request.getParameter("editUnits");
-        expirationDate = request.getParameter("editExpDate");
-        size = Integer.parseInt(request.getParameter("editSize"));
-        lot = request.getParameter("editLot");
-        description = request.getParameter("editDescr");
-        
-        product = dbc.getProductById(id);
-        product.setCategory(TextParser.parseLatinToHTML(category));
-        product.setName(TextParser.parseLatinToHTML(name));
-        product.setLaboratory(TextParser.parseLatinToHTML(laboratory));
-        product.setUnits(units);        
-
-        // expiration date
-		formatter = new SimpleDateFormat("dd-MM-yyyy");
-		date = null;
-		try {
-			date = formatter.parse(expirationDate);
-		}
-		catch (ParseException e) {
-			e.printStackTrace();
-		}
-		sqlDate = new java.sql.Date(date.getTime());
-		product.setExpirationDate(sqlDate);
-        
-		product.setSize(size);
-		product.setLot(lot);
-		product.setDescription(TextParser.parseLatinToHTML(description));
-		
-		// subir la imagen
-		String resultUploadImg = UploadFile.upload(request, response, "editImg");
-		if(resultUploadImg == "")
-			System.out.println("error de subida de imagen");
-		else{
-			System.out.println("EXITO de subida de imagen");
-			product.setUrlImg(resultUploadImg.replace("/Users/roman/Documents/workspace/pharmacys/WebContent/", "http://localhost:8080/pharmacys/"));
-		}
-		
-		// actualizar el precio del producto y el contador de consultas
-		
-        if(!dbc.updateProduct(product)){
-        	this.msg.add("Product updated successfully");
+       
+    protected void edit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	int productId;
+    	productId = Integer.parseInt(request.getParameter("editId"));
+    	
+    	Product product = dbc.getProductById(productId);    	
+    	if(product != null){
+    		int size, categoryId;
+        	String name, description, expirationDate, laboratory, units, lot;
         	
-        	// Una vez que el producto se ha editado bien, procedemos a insertar su precio y vinculamos el producto a la farmacia
-        	float price = Float.parseFloat(request.getParameter("editPrice"));
-        	int stock = Integer.parseInt(request.getParameter("editStock"));
-        	String pharmacyId = (String) request.getSession().getAttribute("cif");
-        				
-        	PharmacyProduct pp = dbc.getByPharmacyProduct(pharmacyId, id);
-        	pp.setStock(stock);
-        	pp.setPrice(price);
-        	pp.setQueryCount(pp.getQueryCount()+1);
-        				
-        	if(!dbc.updatePharmacyProduct(pp))
-        		this.msg.add("Price, stock and queryCount updated succesfully");
-        	else
-        		this.errors.add("Error updating stock, price...");
-        }
-        else 
-        	this.errors.add("The product cannot be updated");    	
+        	name = request.getParameter("editName");
+        	description = request.getParameter("editDescr");        	     
+        	laboratory = request.getParameter("editLaboratory");
+        	units = request.getParameter("editUnits");
+        	lot = request.getParameter("editLot");
+        	size = Integer.parseInt(request.getParameter("editSize"));
+        	expirationDate = request.getParameter("editExpDate");        	
+        	categoryId = Integer.parseInt(request.getParameter("editCategory"));
+        	
+        	product.setName(name);
+        	product.setDescription(description);
+        	product.setLaboratory(laboratory);
+        	product.setUnits(units);
+        	product.setLot(lot);
+        	product.setSize(size);
+        	
+        	// UPLOAD IMAGE
+        	long imgSize = request.getPart("editImg").getSize(); 
+        	if( imgSize > 0){
+	    		String resultUploadImg = UploadFile.upload(request, response, "editImg");
+	    		if(resultUploadImg == ""){
+	    			this.errors.add("Cant upload your image");
+	    			product.setUrlImg("http://localhost:8080/pharmacys/img/img_no_aviable.png");
+	    		}
+	    		else{
+	    			this.msg.add("Image uploaded successfully");
+	    			product.setUrlImg(resultUploadImg.replace("/Users/roman/Documents/workspace/pharmacys/WebContent/", "http://localhost:8080/pharmacys/"));
+	    		}
+        	}
+        	else {
+        		this.msg.add("No image selected");
+        	}
+
+    		// PARSE EXPIRATION_DATE
+         	java.sql.Date sqlDate = DateUtil.toSQLDate(expirationDate);
+         	if(sqlDate != null)
+         		product.setExpirationDate(sqlDate);
+         	else
+         		this.errors.add("Cant insert your expiration date");
+    		
+        	Category c = dbc.getCategoryById(categoryId);		
+    		if(c != null){
+    			System.out.println(c.getName());
+    			product.setCategory(c);
+    		}
+    		else {
+    			this.errors.add("Cant get the category data");
+    		}
+    		
+    		if(!dbc.updateProduct(product)){
+    			this.msg.add("Product updated successfully");
+    			
+    			String cif = (String) request.getSession().getAttribute("cif");
+    			if(cif != null){
+    				float price = Float.parseFloat(request.getParameter("editPrice"));
+        			Integer stock = Integer.parseInt(request.getParameter("editStock"));
+        			
+        			if(price > 0 && stock != null){
+						Inventory i = dbc.getInventoryById(cif, productId);
+						i.setPrice(price);
+						i.setStock(stock);
+						i.setQueryCount(i.getQueryCount()+1);
+						
+						if(!dbc.updateInventory(i)){
+							this.msg.add("Inventory updated successfully");
+							
+							// COMPROBAR STOCK DE LOS USUARIOS QUE TENGAN PRODUCTOS RESERVADOS PARA ENVIARLES UN CORREO
+							// INDICANDOLES QUE YA TIENEN LOS PRODUCTOS DISPONIBLES
+						}
+						else
+							this.errors.add("Has failed to update the inventory");
+					}
+    			}    			    			
+    		}
+    		
+    	}
+    	else {
+    		this.errors.add("The selected product dont exist");
+    	}    	
     }
     
     private void delete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -191,32 +219,37 @@ public class SProduct extends HttpServlet {
 		if(option.equals("yes")){
 			product = dbc.getProductById(id);
 			
-			// primero borro el registro de la tabla PHARMACY_PRODUCT
-			String pharmacyId = request.getSession().getAttribute("cif").toString();
-			PharmacyProduct pp = dbc.getByPharmacyProduct(pharmacyId, id);
-			
-			if(!dbc.deletePharmacyProduct(pp)){
-				this.msg.add("Link beetween product and pharmacy deleted");
+			if(product != null){
+				// primero borro el registro de la tabla PHARMACY_PRODUCT
+				String cif = (String) request.getSession().getAttribute("cif");
+				Inventory inventory = dbc.getInventoryById(cif, id);
 				
-				// si todo ha ido bien procedo a eliminar el producto de esa farmacia
-				if(!dbc.deleteProduct(product)){
-					this.msg.add("Product deleted successfully");
-				}	
-				else
-					this.errors.add("The product cannot be deleted");
-			}	
-			else {
-				this.errors.add("Link beetween product and pharmacy couldnt be deleted");
+				if(inventory != null){
+					if(!dbc.deleteInventory(inventory)){
+						this.msg.add("Link beetween product and pharmacy deleted");
+						
+						// si todo ha ido bien procedo a eliminar el producto de esa farmacia
+						if(!dbc.deleteProduct(product)){
+							this.msg.add("Product deleted successfully");
+						}	
+						else
+							this.errors.add("The product cannot be deleted");
+					}	
+					else {
+						this.errors.add("Link beetween product and pharmacy couldnt be deleted");
+					}
+				}
 			}
 		}
     }
     
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html;charset=iso-8859-1");
-		
+
 		// Limpiar los mensajes que hubiera anteriormente
 		if(!this.msg.isEmpty()) 	this.msg.clear();
 		if(!this.errors.isEmpty()) 	this.errors.clear();
+		
+		redirect = "";
 		
 		String submit = request.getParameter("actionProduct");
 				
@@ -235,9 +268,9 @@ public class SProduct extends HttpServlet {
 				this.msg.add("Something was wrong");
 				break;
 		}
-		
+		this.redirect = "/pharmacys/management/product.jsp";
 		request.getSession().setAttribute("msg", this.msg);
-		request.getSession().setAttribute("errors", this.errors);	
-		response.sendRedirect("/pharmacys/management/product.jsp");
+		request.getSession().setAttribute("errors", this.errors);
+		response.sendRedirect(this.redirect);
 	}
 }

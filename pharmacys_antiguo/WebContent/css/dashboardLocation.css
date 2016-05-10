@@ -4,11 +4,12 @@
 
 .map-holder {
 	height: 100vh;
-	padding: 0
+	padding: 0;
+	background: #fff;
 }
 
 .info-map {
-	background: #428bca;
+	background: #dedede;
 	min-height: 100%;
     height: 100vh;
 }

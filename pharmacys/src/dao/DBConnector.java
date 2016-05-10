@@ -5,8 +5,10 @@ import java.util.List;
 
 import model.Category;
 import model.Inventory;
+import model.Order;
 import model.Pharmacy;
 import model.Product;
+import model.Reservation;
 import model.UserAbstraction;
 import model.UserRefinedAbstraction;
 
@@ -16,6 +18,9 @@ public class DBConnector {
 	private final CategoryDao categorydao;
 	private final ProductDao productdao;
 	private final InventoryDao inventorydao;
+	private final OrderDao orderdao;
+	private final ReservationDao reservationdao;
+	private final SizeTableUtil sizeTable;
 	
 	public DBConnector(){
 		userdao = new UserDao();
@@ -23,6 +28,9 @@ public class DBConnector {
 		categorydao = new CategoryDao();
 		productdao = new ProductDao();
 		inventorydao = new InventoryDao();
+		orderdao = new OrderDao();
+		reservationdao = new ReservationDao();
+		sizeTable = new SizeTableUtil();		
 	}
 	
 	// CATEGORYDAO
@@ -49,6 +57,9 @@ public class DBConnector {
 	public boolean deletePharmacy(Pharmacy p){
 		return this.pharmacydao.deletePharmacy(p);
 	}	
+	public float getPharmacySize(){
+		return this.sizeTable.getSizeinBytes("PHARMACY");
+	}
 		
 	// PRODUCTDAO
 	public Product getProductById(int id){
@@ -68,6 +79,9 @@ public class DBConnector {
 	}	
 	public Product getLastProductInserted(){
 		return this.productdao.getLastInserted();
+	}
+	public float getProductSize(){
+		return this.sizeTable.getSizeinBytes("PRODUCT");
 	}
 	
 	// INVENTORYDAO
@@ -117,6 +131,19 @@ public class DBConnector {
 		}
 		
 		return products;
+	}
+	public float getInventorySize(){
+		return this.sizeTable.getSizeinBytes("INVENTORY");
+	}
+	
+	// ORDERDAO
+	public List<Order> getAllOrdersByCIF(String cif){
+		return this.orderdao.getAllOrdersByCIF(cif);
+	}
+	
+	// RESERVATIONDAO
+	public List<Reservation> getAllReservationByCIF(String cif){
+		return this.reservationdao.getAllReservationByCIF(cif);
 	}
 	
 	// USERDAO

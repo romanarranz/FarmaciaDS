@@ -53,6 +53,31 @@ public class UserDao {
 		return uAbstraction;
 	}
 	
+	protected UserRefinedAbstraction getUserByResetHash(String hash){
+		UserRefinedAbstraction user = null;
+		Session session = null;
+		
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			user = (UserRefinedAbstraction) session
+					.createQuery("from UserRefinedAbstraction u where u.resetHash = :HASH")
+					.setParameter("HASH", hash)
+					.uniqueResult();
+			session.getTransaction().commit();
+		}
+		catch(Exception e){
+			if(session != null)
+				session.getTransaction().rollback();
+		}
+		finally {
+			if(session != null)
+				session.close();
+		}
+		
+		return user;
+	}
+	
 	protected UserRefinedAbstraction getUserById(String email){
 		UserRefinedAbstraction user = null;
 		Session session = null;

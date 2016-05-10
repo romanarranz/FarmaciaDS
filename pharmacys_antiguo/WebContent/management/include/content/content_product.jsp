@@ -1,4 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.io.*,java.util.*" %>
+<%@ page import="dao.DBConnector, model.Product, model.Inventory" %>
+
+<jsp:include page="modal_insert_product.jsp" />
+<jsp:include page="modal_edit_product.jsp" />
+<jsp:include page="modal_delete_product.jsp" />
 
 <!-- Bloque central que ocupa un 75% de la pantalla, 100% en responsive movil -->
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">	
@@ -28,25 +34,30 @@
     	out.println("</div>");    	
     }
     session.removeAttribute("errors");
-    %>
-	<div class="row placeholders" style="padding:0 20px">
-    	<h1 class="page-header text-left">Últimas consultas</h1>
+    %>            
+    
+    <div class="row placeholders" style="padding:0 20px">
+    	<h1 class="page-header text-left">Top Products</h1>
     	<%
     	DBConnector dbc = new DBConnector();
-    	String cif = session.getAttribute("cif").toString();    	
-    	List<Product> topProducts = dbc.getTopProducts(4, cif);
-    	for(int i = 0; i<topProducts.size(); i++){
-    		out.println("<div class=\"col-xs-6 col-sm-3 placeholder\">");
-	    	out.println("<img src=\""+topProducts.get(i).getUrlImg()+"\" width=\"200\" height=\"200\" class=\"img-responsive\" alt=\"Generic placeholder thumbnail\">");
-	        out.println("<h4>"+topProducts.get(i).getName()+"</h4>");
-	        out.println("<span class=\"text-muted\">"+topProducts.get(i).getCategory()+"</span>");
-	    	out.println("</div>");    
-	    } 
-	    %>
-	    
+    	String cif = (String) session.getAttribute("cif");
+    	
+    	if(cif != null && !cif.equals(null) && cif != ""){
+	    	List<Product> topProducts = dbc.getTopProducts(4, cif);
+	    	if(topProducts != null){
+		    	for(Product p : topProducts){
+		    		out.println("<div class=\"col-xs-6 col-sm-3 placeholder\">");
+			    	out.println("<img src=\""+p.getUrlImg()+"\" width=\"200\" height=\"200\" class=\"img-responsive\" alt=\"Generic placeholder thumbnail\">");
+			        out.println("<h4>"+p.getName()+"</h4>");
+			        out.println("<span class=\"text-muted\">"+p.getCategory().getName()+"</span>");
+			    	out.println("</div>");    
+			    }
+	    	}
+    	}
+	    %> 
 	</div>
-    
-    <script>
+	
+	<script>
     function idSorter(a, b) {
         if (a > b) return 1;
         if (a < b) return -1;
@@ -54,7 +65,7 @@
     }
 	</script>
 	<div class="table-responsive" style="background-color: #eee; border-radius: 20px; padding: 20px;">          	
-    	<h2 class="sub-header">Listado de productos</h2>
+    	<h2 class="sub-header">Product List</h2>
     	
     	<!-- Add product -->
     	<button type="button" class="btn btn-primary" style="position:relative; top: 45px" data-toggle="modal" data-target="#insert">Añadir</button>
@@ -66,10 +77,10 @@
        		<thead>
            		<tr>
                 	<th data-field="id" data-sortable="true" data-switchable="false">#</th>
-                  	<th data-field="name" data-sortable="true" data-switchable="false">Nombre</th>
-                  	<th data-field="laboratory" data-sortable="true" data-visible="false">Laboratorio</th>
-                  	<th data-field="category" data-sortable="true">Categoria</th>
-                  	<th data-field="subcategory" data-sortable="true" data-visible="false">Subcategoria</th>
+                  	<th data-field="name" data-sortable="true" data-switchable="false">Name</th>
+                  	<th data-field="category" data-sortable="true">Category</th>
+                  	<th data-field="stock" data-sortable="true" data-visible="true">Stock</th>
+                  	<th data-field="price" data-sortable="true" data-visible="false">Price</th>                  	
                   	<th data-sortable="false" data-switchable="false">Edit</th>
                   	<th data-sortable="false" data-switchable="false">Delete</th>
                 </tr>
@@ -77,17 +88,28 @@
           	<tbody>
             <%@ page import="dao.DBConnector, java.util.*, model.Product" %>
           	<%          		
-          		List<Product> productlist = dbc.getAllProductsByPharmacy(cif);
-          		for(Product p : productlist){
-          			out.println("<tr>");
-          			out.println("<td>"+p.getId()+"</td>");
-          			out.println("<td>"+p.getName()+"</td>");
-          			out.println("<td>"+p.getLaboratory()+"</td>");          			
-          			out.println("<td>"+p.getCategory()+"</td>");
-          			out.println("<td>"+p.getUnits()+"</td>");
-          			out.println("<td><i class=\"fa fa-pencil\" aria-hidden=\"true\" data-toggle=\"modal\" data-target=\"#edit\"></i></td>");
-          			out.println("<td><i class=\"fa fa-trash\" aria-hidden=\"true\" data-toggle=\"modal\" data-target=\"#delete\"></i></td>");
-          			out.println("</tr>");
+          		List<Product> productlist = dbc.getProductsListByCif(cif);
+          		if(productlist != null){
+	          		for(Product p : productlist){
+	          			out.println("<tr>");
+	          			out.println("<td>"+p.getId()+"</td>");
+	          			out.println("<td>"+p.getName()+"</td>");          			
+	          			out.println("<td>"+p.getCategory().getName()+"</td>");
+	          			
+	          			Inventory i = dbc.getInventoryById(cif, p.getId());
+	          			if(i != null){
+	          				out.println("<td>"+i.getStock()+"</td>");
+	          				out.println("<td>"+i.getPrice()+"</td>");
+	          			}
+	          			else {
+	          				out.println("<td>NaN</td>");
+	          				out.println("<td>Nan</td>");
+	          			}
+	          			
+	          			out.println("<td><i class=\"fa fa-pencil\" aria-hidden=\"true\" data-toggle=\"modal\" data-target=\"#edit\"></i></td>");
+	          			out.println("<td><i class=\"fa fa-trash\" aria-hidden=\"true\" data-toggle=\"modal\" data-target=\"#delete\"></i></td>");
+	          			out.println("</tr>");
+	          		}
           		}
         	%>          
             </tbody>
@@ -114,6 +136,6 @@
 			</ul>
 		</nav>
  	</div><!-- table-responsive -->
-            
+	
 	</div><!-- row -->
 </div> <!-- main -->

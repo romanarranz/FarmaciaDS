@@ -47,6 +47,19 @@ public class PharmacyService {
 		return dbc.getAllPharmacies();
 	}
 	
+	@GET
+	@Path("/getTableBytes")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getTableBytes(){
+		String result = "{\"status\":\"not ok\"}";
+		float size = dbc.getPharmacySize();
+		
+		if(size > 0.0f)
+			result = "{\"size\":\""+size+"\"}";
+		
+		return result;
+	}
+	
 	@POST
 	@Path("/insert/{cif}/{name}/{phone}/{startSchedule}/{endSchedule}")
 	@Produces(MediaType.APPLICATION_JSON)

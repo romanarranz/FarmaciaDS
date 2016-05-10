@@ -22,8 +22,8 @@
           
           <!-- Botones de menu principal -->
           <ul class="nav navbar-nav navbar-right">
-            <li><a class="btn btn-default btn-sm" href="#"><i class="fa fa-clock-o" aria-hidden="true"></i><span>Reservation</span></a></li>
-            <li><a class="btn btn-default btn-sm" href="#"><i class="fa fa-th-list" aria-hidden="true"></i><span>Orders</span></a></li>
+            <li><a class="btn btn-default btn-sm" href="reservation.jsp"><i class="fa fa-clock-o" aria-hidden="true"></i><span>Reservation</span></a></li>
+            <li><a class="btn btn-default btn-sm" href="order.jsp"><i class="fa fa-th-list" aria-hidden="true"></i><span>Orders</span></a></li>
             
             <!-- Dropdown Usuario -->
             <li class="dropdown">

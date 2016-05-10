@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">  
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
   <display-name>pharmacys</display-name>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
@@ -9,9 +9,6 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
-  <session-config>
-    <session-timeout>15</session-timeout>
-  </session-config>
   <servlet>
     <servlet-name>Jersey Web Application</servlet-name>
     <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
@@ -31,21 +28,21 @@
     <url-pattern>/login/*</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>SProduct</servlet-name>
-    <servlet-class>servlets.SProduct</servlet-class>
-    <load-on-startup>3</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>SProduct</servlet-name>
-    <url-pattern>/product/*</url-pattern>
-  </servlet-mapping>
-  <servlet>
     <servlet-name>SPharmacy</servlet-name>
     <servlet-class>servlets.SPharmacy</servlet-class>
-    <load-on-startup>4</load-on-startup>
+    <load-on-startup>3</load-on-startup>
   </servlet>
   <servlet-mapping>
     <servlet-name>SPharmacy</servlet-name>
     <url-pattern>/pharmacy/*</url-pattern>
+  </servlet-mapping>
+    <servlet>
+    <servlet-name>SProduct</servlet-name>
+    <servlet-class>servlets.SProduct</servlet-class>
+    <load-on-startup>4</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SProduct</servlet-name>
+    <url-pattern>/product/*</url-pattern>
   </servlet-mapping>
 </web-app>

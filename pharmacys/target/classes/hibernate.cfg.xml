@@ -6,9 +6,16 @@
 		
 		<!-- Database Connection Settings -->
 		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+		
+		<!-- Local 
 		<property name="hibernate.connection.url">jdbc:mysql://10.211.55.6:3306/pharmacys</property>
 		<property name="hibernate.connection.username">roman</property>
-		<property name="hibernate.connection.password">o5WKxJkRXw</property>
+		<property name="hibernate.connection.password">o5WKxJkRxw</property>
+		-->
+		<!-- Remoto -->
+		<property name="hibernate.connection.url">jdbc:mysql://hugomaldonado.ddns.net:3306/pharmacys</property>
+		<property name="hibernate.connection.username">pharmacys</property>
+		<property name="hibernate.connection.password">pharmacys</property>
 		
 		<!-- SQL Dialect -->
 		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
@@ -22,6 +29,11 @@
 		<mapping class="model.Product"/>
 		<mapping class="model.InventoryPK"/>
 		<mapping class="model.Inventory"/>
+		<mapping class="model.Order"/>
+		<mapping class="model.OrderProduct"/>
+		<mapping class="model.OrderProductPK"/>
+		<mapping class="model.Reservation"/>
+		<mapping class="model.ReservationPK"/>
 		<mapping class="model.UserRefinedAbstraction"/>
 		
 	</session-factory>

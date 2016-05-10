@@ -1,26 +1,36 @@
 package dao;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import model.Category;
+import model.Inventory;
 import model.Pharmacy;
-import model.PharmacyProduct;
 import model.Product;
 import model.UserAbstraction;
 import model.UserRefinedAbstraction;
 
 public class DBConnector {
-	private final PharmacyDao pharmacydao;
-	private final ProductDao productdao;
 	private final UserDao userdao;
-	private final PharmacyProductDao pharmacyproductdao;
+	private final PharmacyDao pharmacydao;
+	private final CategoryDao categorydao;
+	private final ProductDao productdao;
+	private final InventoryDao inventorydao;
 	
 	public DBConnector(){
-		pharmacydao = new PharmacyDao();
-		productdao = new ProductDao();
 		userdao = new UserDao();
-		pharmacyproductdao = new PharmacyProductDao();
+		pharmacydao = new PharmacyDao();
+		categorydao = new CategoryDao();
+		productdao = new ProductDao();
+		inventorydao = new InventoryDao();
+	}
+	
+	// CATEGORYDAO
+	public List<Category> getAllCategories(){
+		return this.categorydao.getAllCategories();
+	}
+	public Category getCategoryById(int id){
+		return this.categorydao.getCategoryById(id);
 	}
 	
 	// PHARMACYDAO
@@ -39,7 +49,7 @@ public class DBConnector {
 	public boolean deletePharmacy(Pharmacy p){
 		return this.pharmacydao.deletePharmacy(p);
 	}	
-	
+		
 	// PRODUCTDAO
 	public Product getProductById(int id){
 		return this.productdao.getProductById(id);
@@ -58,6 +68,55 @@ public class DBConnector {
 	}	
 	public Product getLastProductInserted(){
 		return this.productdao.getLastInserted();
+	}
+	
+	// INVENTORYDAO
+	public List<Product> getProductsListByCif(String cif){
+		List<Integer> productIds =  inventorydao.getAllProductsIdsByCif(cif);
+		List<Product> products = new ArrayList<Product>();
+	
+		if(productIds != null){
+			Product p;
+			for(Integer i : productIds){
+				p = this.getProductById(i);
+				
+				if(p != null){
+					products.add(p);
+				}
+			}
+		}
+		
+		return products;
+	}
+	public boolean insertInventory(Inventory i){
+		return this.inventorydao.insertInventory(i);
+	}
+	public boolean updateInventory(Inventory i){
+		return this.inventorydao.updateInventory(i);
+	}
+	public boolean deleteInventory(Inventory i){
+		return this.inventorydao.deleteInventory(i);
+	}
+	public Inventory getInventoryById(String cif, Integer productId){
+		return this.inventorydao.getInventoryById(cif, productId);
+	}	
+	public List<Product> getTopProducts(int n, String cif){
+		List<Inventory> filterProducts = inventorydao.getTopProducts(n, cif);
+		List<Product> products = new ArrayList<Product>();
+		
+		if(filterProducts != null){
+		
+			Product p;
+			for(Inventory i : filterProducts){
+				p = this.getProductById(i.getProductId());
+				
+				if(p != null){
+					products.add(p);
+				}
+			}
+		}
+		
+		return products;
 	}
 	
 	// USERDAO
@@ -79,44 +138,7 @@ public class DBConnector {
 	public boolean updateUser(UserRefinedAbstraction user){
 		return this.userdao.updateUser(user);
 	}
-	
-	//PHARMACYPRODUCTDAO
-	public PharmacyProduct getById(int id){
-		return this.pharmacyproductdao.getById(id);
-	}
-	public List<Product> getAllProductsByPharmacy(String cif){
-		List<PharmacyProduct> pp = this.pharmacyproductdao.getAllProductsByPharmacy(cif);
-		Long[] arrayIds = new Long[pp.size()];
-					
-		for(int i = 0; i<pp.size(); i++){
-			arrayIds[i] = (long) pp.get(i).getProductId();
-			System.out.println(arrayIds[i]);
-		}		
-		
-		List<Long> listProductsIds = Arrays.asList(arrayIds);
-		return this.productdao.getProductByIdsList(listProductsIds);
-	}
-	public List<Product> getTopProducts(int n, String cif){
-		List<PharmacyProduct> pp = this.pharmacyproductdao.getTopProducts(n, cif);
-		List<Product> products = new ArrayList<Product>();
-		
-		for(int i = 0; i<pp.size(); i++){
-			products.add(this.productdao.getProductById(pp.get(i).getProductId()));
-		}
-		
-		return products;
-	}
-	// por si el farmaceutico le quiere cambiar el precio al producto
-	public PharmacyProduct getByPharmacyProduct(String pharmacyId, int productId){
-		return this.pharmacyproductdao.getByPharmacyProduct(pharmacyId, productId);
-	}
-	public boolean insertPharmacyProduct(PharmacyProduct p){
-		return this.pharmacyproductdao.insertPharmacyProduct(p);
-	}
-	public boolean updatePharmacyProduct(PharmacyProduct p){
-		return this.pharmacyproductdao.updatePharmacyProduct(p);
-	}	
-	public boolean deletePharmacyProduct(PharmacyProduct p){
-		return this.pharmacyproductdao.deletePharmacyProduct(p);
+	public UserRefinedAbstraction getUserByResetHash(String hash){
+		return this.userdao.getUserByResetHash(hash);
 	}
 }

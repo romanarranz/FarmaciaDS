@@ -73,7 +73,7 @@ public class PharmacyDao {
 		catch (Exception e){
 			if(session != null)
 				session.getTransaction().rollback();
-			
+			e.printStackTrace();
 			hasErrors = true;
 		}
 		finally {

@@ -14,7 +14,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Nombre Farmacia</a>
+          <a class="navbar-brand" href="#"><span><img src="../img/pharmacyslogo.png" width="35px" alt="" style="position: relative; top:-5px">PharmacyS</span></a>
         </div>
         
         <!-- Cuerpo barra de navegacion -->
@@ -22,8 +22,8 @@
           
           <!-- Botones de menu principal -->
           <ul class="nav navbar-nav navbar-right">
-            <li><a class="btn btn-default btn-sm" href="#"><i class="fa fa-clock-o" aria-hidden="true"></i><span>Reservas</span></a></li>
-            <li><a class="btn btn-default btn-sm" href="#"><i class="fa fa-shopping-basket" aria-hidden="true"></i><span>Pedidos</span></a></li>
+            <li><a class="btn btn-default btn-sm" href="#"><i class="fa fa-clock-o" aria-hidden="true"></i><span>Reservation</span></a></li>
+            <li><a class="btn btn-default btn-sm" href="#"><i class="fa fa-th-list" aria-hidden="true"></i><span>Orders</span></a></li>
             
             <!-- Dropdown Usuario -->
             <li class="dropdown">
@@ -39,7 +39,7 @@
 			  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 			    <li><a href="account.jsp">Preferences</a></li>
 			    <li role="separator" class="divider"></li>
-			    <li><a href="../login?logout=yes">Sign out</a></li>
+			    <li><a href="../login?action=logout">Sign out</a></li>
 			  </ul>
 			</li>
           </ul>

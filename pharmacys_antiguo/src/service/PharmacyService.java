@@ -13,8 +13,6 @@ import javax.ws.rs.core.MediaType;
 
 import dao.DBConnector;
 import model.Pharmacy;
-import model.PharmacyProduct;
-import model.Product;
 
 @Path("/pharmacy")
 public class PharmacyService {
@@ -47,38 +45,6 @@ public class PharmacyService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Pharmacy> getAllPersoInJSON(){
 		return dbc.getAllPharmacies();
-	}
-	
-	@GET
-	@Path("/getTop/{cif}/{n}")
-	@Produces(MediaType.APPLICATION_XML)
-	public List<Product> getTop(@PathParam("cif") String cif, @PathParam("n") int n){
-		return dbc.getTopProducts(n, cif);
-	}
-	
-	@GET
-	@Path("/getAllProducts/{cif}")
-	@Produces(MediaType.APPLICATION_XML)
-	public List<Product> getAllProducts(@PathParam("cif") String cif){
-		return dbc.getAllProductsByPharmacy(cif);
-	}
-	
-	@POST
-	@Path("/linkProduct/{cif}/{idProduct}/{price}/{stock}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public String insert(@PathParam("cif") String cif, @PathParam("idProduct") int idProduct,  @PathParam("price") float price, @PathParam("stock") int stock){
-		String result = "{\"status\":\"not ok\"}";
-		
-		PharmacyProduct pp = new PharmacyProduct();
-		pp.setPharmacyId(cif);
-		pp.setProductId(idProduct);
-		pp.setStock(stock);
-		pp.setPrice(price);
-		
-		if(!dbc.insertPharmacyProduct(pp))
-			result = "{\"status\":\"ok\"}";
-		
-		return result;
 	}
 	
 	@POST

@@ -48,4 +48,18 @@ public class InventoryService {
 		}
 		return json; 
 	}
+	
+	
+	@GET
+	@Path("/getTableBytes")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getTableBytes(){
+		String result = "{\"status\":\"not ok\"}";
+		float size = dbc.getInventorySize();
+		
+		if(size > 0.0f)
+			result = "{\"size\":\""+size+"\"}";
+		
+		return result;
+	}
 }

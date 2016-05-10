@@ -6,7 +6,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import model.Category;
-import model.Product;
 import util.HibernateUtil;
 
 public class CategoryDao {

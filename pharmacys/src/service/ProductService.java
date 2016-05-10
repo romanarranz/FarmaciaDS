@@ -51,6 +51,19 @@ public class ProductService {
 		return dbc.getLastProductInserted();
 	}
 	
+	@GET
+	@Path("/getTableBytes")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getTableBytes(){
+		String result = "{\"status\":\"not ok\"}";
+		float size = dbc.getProductSize();
+		
+		if(size > 0.0f)
+			result = "{\"size\":\""+size+"\"}";
+		
+		return result;
+	}
+	
 	@DELETE
 	@Path("/delete/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
