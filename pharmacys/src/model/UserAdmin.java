@@ -56,7 +56,7 @@ public class UserAdmin implements UserImplementator {
 		catch(Exception e){
 		   	e.getStackTrace();
 		}
-		        
+		
 		String message = "Haga clic en el siguiente enlace para verificar su cuenta de administrador: ";
 		message = message + "http://localhost:8080/pharmacys/verify/" + verificationHash;
 		        

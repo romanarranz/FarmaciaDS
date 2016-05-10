@@ -27,7 +27,7 @@
 	  </div>
     </div>
 
- 	<jsp:include page="include/scripts/product.jsp"></jsp:include>
+ 	<jsp:include page="include/scripts/reservation.jsp"></jsp:include>
  	<%} %>
 </body>
 </html>

@@ -145,6 +145,15 @@ public class DBConnector {
 	public List<Reservation> getAllReservationByCIF(String cif){
 		return this.reservationdao.getAllReservationByCIF(cif);
 	}
+	public List<Reservation> getAllReservationByCIFProductId(String cif, int productId){
+		return this.reservationdao.getAllReservationByCIFProductId(cif, productId);
+	}
+	public Reservation getReservation(String cif, int productId, String email){
+		return this.reservationdao.getReservation(cif, productId, email);
+	}
+	public boolean deleteReservation(Reservation r){
+		return this.reservationdao.deleteReservation(r);
+	}
 	
 	// USERDAO
 	public UserAbstraction getUserFuncById(String email){
@@ -167,5 +176,16 @@ public class DBConnector {
 	}
 	public UserRefinedAbstraction getUserByResetHash(String hash){
 		return this.userdao.getUserByResetHash(hash);
+	}
+	public UserRefinedAbstraction getUserAdminByEmailPassword(String email, String password){
+		UserRefinedAbstraction result = null;
+		UserRefinedAbstraction u = this.userdao.getUserByEmailPassword(email, password);
+		if(u != null){
+			if(u.getRole() == 1){
+				result = u;
+			}
+		}
+		
+		return result;
 	}
 }

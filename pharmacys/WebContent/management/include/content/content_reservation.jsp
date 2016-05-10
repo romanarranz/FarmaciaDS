@@ -3,6 +3,8 @@
 <%@ page import="java.io.*,java.util.*" %>
 <%@ page import="dao.DBConnector, model.Reservation" %>
 
+<jsp:include page="modal_delete_reservation.jsp" />
+
  <!-- Bloque central que ocupa un 75% de la pantalla, 100% en responsive movil -->
  <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" style="min-height: 100%; height: 100vh;">
   
@@ -40,10 +42,10 @@
 		<table class="table table-striped">
 			<thead>
 	        	<tr>
-	            	<th>#</th>
 	                <th>Email</th>
 	                <th>ProductId</th>
 	                <th>Quantity</th>
+	                <th>Delete</th>
 	            </tr>
 	       	</thead>
 	       	<tbody>
@@ -61,7 +63,7 @@
 	       					out.println("<td>"+r.getEmail()+"</td>");
 	       					out.println("<td>"+r.getProductId()+"</td>");
 	       					out.println("<td>"+r.getQuantity()+"</td>");
-	       					out.println("<td><i class=\"fa fa-eye\" aria-hidden=\"true\"></i></td>");
+	       					out.println("<td><i class=\"fa fa-trash\" aria-hidden=\"true\" data-toggle=\"modal\" data-target=\"#delete\"></i></td>");
 	       					out.println("</tr>");
 	       				}
 	       			}

@@ -2,7 +2,7 @@ package util;
 
 import java.security.MessageDigest;
 
-public class SHA512 {
+public final class SHA512 {
 
     public static String convertByteToHex(byte data[]){
         StringBuffer hexData = new StringBuffer();

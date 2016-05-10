@@ -15,7 +15,9 @@ import dao.DBConnector;
 import model.Category;
 import model.Inventory;
 import model.Product;
+import model.Reservation;
 import util.DateUtil;
+import util.SendEmailUsingGMAILSMTP;
 import util.TextParser;
 import util.UploadFile;
 
@@ -195,9 +197,27 @@ public class SProduct extends HttpServlet {
 						
 						if(!dbc.updateInventory(i)){
 							this.msg.add("Inventory updated successfully");
-							
+														
 							// COMPROBAR STOCK DE LOS USUARIOS QUE TENGAN PRODUCTOS RESERVADOS PARA ENVIARLES UN CORREO
 							// INDICANDOLES QUE YA TIENEN LOS PRODUCTOS DISPONIBLES
+							List<Reservation> reservationList = dbc.getAllReservationByCIFProductId(cif, productId);							
+							if(reservationList != null){
+								
+								List<String> userEmails = new ArrayList<String>();
+								for(Reservation r : reservationList){
+									userEmails.add(r.getEmail());
+								}
+								
+								if(userEmails != null){																																		
+									for(String email : userEmails){
+										String msgContent = "Hello "+email+" product booked " +product.getName()+" now is aviable in our application.";
+										SendEmailUsingGMAILSMTP smtp = new SendEmailUsingGMAILSMTP();
+										smtp.setContent(msgContent);
+										smtp.setRecipient(email);
+										smtp.send();
+									}
+								}
+							}
 						}
 						else
 							this.errors.add("Has failed to update the inventory");

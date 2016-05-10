@@ -32,7 +32,6 @@ public class UserRefinedAbstraction implements UserAbstraction {
 	private UserImplementator implementator;
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="EMAIL")
 	private String email;
 	
@@ -51,9 +50,6 @@ public class UserRefinedAbstraction implements UserAbstraction {
 	@Column(name="ROLE")
 	private int role;
 	
-	@Column(name="LIST_ORDERS")
-	private String orders;
-		
 	@Column(name="ACTIVE")
 	private int active;
 	
@@ -120,15 +116,6 @@ public class UserRefinedAbstraction implements UserAbstraction {
 	}
 	public void setRole(int r){
 		this.role = r;
-	}
-	
-	// LIST_ORDERS
-	@XmlElement(required=true)
-	public String getOrders(){
-		return this.orders;
-	}
-	public void setOrders(String orders){
-		this.orders = orders;
 	}
 	
 	// ACTIVE

@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.util.*" %>
 
     <!-- Barra de navegacion superior -->
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -22,12 +22,18 @@
           
           <!-- Botones de menu principal -->
           <ul class="nav navbar-nav navbar-right">
-            <li><a class="btn btn-default btn-sm" href="reservation.jsp"><i class="fa fa-clock-o" aria-hidden="true"></i><span>Reservation</span></a></li>
-            <li><a class="btn btn-default btn-sm" href="order.jsp"><i class="fa fa-th-list" aria-hidden="true"></i><span>Orders</span></a></li>
+          <%
+        		String uri = request.getServletPath();
+        		String [] uriSplitted = uri.split("/");
+        		String myPage = uriSplitted[uriSplitted.length-1];
+        	%>
+        	
+            <li><a class="<% if(myPage.equals("reservation.jsp")) out.print("active"); %> btn btn-default btn-sm" href="reservation.jsp"><i class="fa fa-clock-o" aria-hidden="true"></i><span>Reservation</span></a></li>
+            <li><a class="<% if(myPage.equals("order.jsp"))out.print("active"); %> btn btn-default btn-sm" href="order.jsp"><i class="fa fa-th-list" aria-hidden="true"></i><span>Orders</span></a></li>
             
             <!-- Dropdown Usuario -->
             <li class="dropdown">
-			  <a class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+			  <a class="<% if(myPage.equals("account.jsp")) out.print("active"); %> btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
 			  <%
 			    String username = null;
 				if(session.getAttribute("user") != null)

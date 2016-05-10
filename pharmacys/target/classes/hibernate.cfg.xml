@@ -7,10 +7,10 @@
 		<!-- Database Connection Settings -->
 		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
 		
-		<!-- Local 
+		<!-- Local
 		<property name="hibernate.connection.url">jdbc:mysql://10.211.55.6:3306/pharmacys</property>
 		<property name="hibernate.connection.username">roman</property>
-		<property name="hibernate.connection.password">o5WKxJkRxw</property>
+		<property name="hibernate.connection.password">o5WKxJkRXw</property>
 		-->
 		<!-- Remoto -->
 		<property name="hibernate.connection.url">jdbc:mysql://hugomaldonado.ddns.net:3306/pharmacys</property>

@@ -36,7 +36,7 @@
     <servlet-name>SPharmacy</servlet-name>
     <url-pattern>/pharmacy/*</url-pattern>
   </servlet-mapping>
-    <servlet>
+  <servlet>
     <servlet-name>SProduct</servlet-name>
     <servlet-class>servlets.SProduct</servlet-class>
     <load-on-startup>4</load-on-startup>
@@ -44,5 +44,14 @@
   <servlet-mapping>
     <servlet-name>SProduct</servlet-name>
     <url-pattern>/product/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>SReservation</servlet-name>
+    <servlet-class>servlets.SReservation</servlet-class>
+    <load-on-startup>5</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SReservation</servlet-name>
+    <url-pattern>/reservation/*</url-pattern>
   </servlet-mapping>
 </web-app>
