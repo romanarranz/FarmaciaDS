@@ -38,10 +38,10 @@ public final class InventoryDao {
         return inventories;
     }
 
-    public static int getInventoryQuantity(SQLiteDatabase db, String pharmacyCif, int productId) {
+    public static int getInventoryQuantity(SQLiteDatabase db, String pharmacyId, int productId) {
 
         String selectQuery = "SELECT " + PharmacySContract.InventoryTable.QUANTITY + " FROM " + PharmacySContract.InventoryTable.TABLE_NAME + " WHERE " +
-                PharmacySContract.InventoryTable.PHARMACY_ID + " = '" + pharmacyCif + "' AND " + PharmacySContract.InventoryTable.PRODUCT_ID + " = " + productId;
+                PharmacySContract.InventoryTable.PHARMACY_ID + " = '" + pharmacyId + "' AND " + PharmacySContract.InventoryTable.PRODUCT_ID + " = " + productId;
 
         Cursor c = db.rawQuery(selectQuery, null);
 
@@ -56,23 +56,46 @@ public final class InventoryDao {
         return quantity;
     }
 
-    public static Inventory getInventory(SQLiteDatabase db, String pharmacyCif, int productId) {
+    public static Inventory getInventory(SQLiteDatabase db, String pharmacyId, int productId) {
 
         String selectQuery = "SELECT * FROM " + PharmacySContract.InventoryTable.TABLE_NAME + " WHERE " +
-                PharmacySContract.InventoryTable.PHARMACY_ID + " = '" + pharmacyCif + "' AND " + PharmacySContract.InventoryTable.PRODUCT_ID + " = " + productId;
+                PharmacySContract.InventoryTable.PHARMACY_ID + " = '" + pharmacyId + "' AND " + PharmacySContract.InventoryTable.PRODUCT_ID + " = " + productId;
 
         Cursor c = db.rawQuery(selectQuery, null);
 
-        if(c != null)
+        Inventory inventory = null;
+
+        if(c != null) {
             c.moveToFirst();
 
-        Inventory inventory = new Inventory(c.getString(c.getColumnIndex(PharmacySContract.InventoryTable.PHARMACY_ID)),
-                                            c.getInt(c.getColumnIndex(PharmacySContract.InventoryTable.PRODUCT_ID)),
-                                            c.getFloat(c.getColumnIndex(PharmacySContract.InventoryTable.PRICE)),
-                                            c.getInt(c.getColumnIndex(PharmacySContract.InventoryTable.QUANTITY)));
+            inventory = new Inventory(c.getString(c.getColumnIndex(PharmacySContract.InventoryTable.PHARMACY_ID)),
+                                        c.getInt(c.getColumnIndex(PharmacySContract.InventoryTable.PRODUCT_ID)),
+                                        c.getFloat(c.getColumnIndex(PharmacySContract.InventoryTable.PRICE)),
+                                        c.getInt(c.getColumnIndex(PharmacySContract.InventoryTable.QUANTITY)));
 
-        c.close();
+            c.close();
+        }
 
         return inventory;
+    }
+
+    public static float getProductPrice(SQLiteDatabase db, String pharmacyId, int productId) {
+
+        String selectQuery = "SELECT " + PharmacySContract.InventoryTable.PRICE + " FROM " + PharmacySContract.InventoryTable.TABLE_NAME + " WHERE " +
+                PharmacySContract.InventoryTable.PHARMACY_ID + " = '" + pharmacyId + "' AND " + PharmacySContract.InventoryTable.PRODUCT_ID + " = " + productId;
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        float productPrice = 0.0f;
+
+        if(c != null) {
+            c.moveToFirst();
+
+            productPrice = c.getFloat(c.getColumnIndex(PharmacySContract.InventoryTable.PRICE));
+
+            c.close();
+        }
+
+        return productPrice;
     }
 }

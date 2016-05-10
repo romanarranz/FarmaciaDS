@@ -43,4 +43,14 @@
 
     <!-- Notificación al usuario de pedidos vacíos-->
     <string name="empty_orders">NO PREVIOUS ORDERS</string>
+
+    <!-- Notificación de inicio y continuación del proceso de pago -->
+    <string name="start_payment">Starting Payment Process</string>
+    <string name="continue_payment">Payment Process continue, next Pharmacy</string>
+
+    <!-- Notificación de pago satisfactorio -->
+    <string name="pay">Your payment has been correctly processed</string>
+
+    <!-- Notificación de terminación de todos los pagos -->
+    <string name="payment_finish">You have complete all payment process. Thank you</string>
 </resources>

@@ -31,6 +31,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
 
         public TextView orderReference;
         public TextView orderDate;
+        public TextView orderPrice;
         public DateFormat dateFormat;
 
         public OrderViewHolder(View itemView) {
@@ -38,6 +39,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
 
             orderReference = (TextView) itemView.findViewById(R.id.order_id);
             orderDate = (TextView) itemView.findViewById(R.id.order_date);
+            orderPrice = (TextView) itemView.findViewById(R.id.order_price);
 
             dateFormat = android.text.format.DateFormat.getDateFormat(context);
 
@@ -69,7 +71,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewH
     public void onBindViewHolder(OrderViewHolder holder, final int position) {
 
         holder.orderReference.setText("Reference: " + orders.get(position).getId());
-
+        holder.orderPrice.setText(String.valueOf(orders.get(position).getPrice()) + "€");
         holder.orderDate.setText(holder.dateFormat.format(orders.get(position).getDate()));
     }
 

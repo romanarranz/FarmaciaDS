@@ -8,13 +8,15 @@ public class Order {
     private String userId;
     private String pharmacyId;
     private Date date;
+    private float price;
 
-    public Order(int id, String userId, String pharmacyId, Date date) {
+    public Order(int id, String userId, String pharmacyId, Date date, float price) {
 
         this.id = id;
         this.userId = userId;
         this.pharmacyId = pharmacyId;
         this.date = date;
+        this.price = price;
     }
 
     public int getId() {
@@ -31,5 +33,9 @@ public class Order {
 
     public Date getDate() {
         return date;
+    }
+
+    public float getPrice() {
+        return price;
     }
 }

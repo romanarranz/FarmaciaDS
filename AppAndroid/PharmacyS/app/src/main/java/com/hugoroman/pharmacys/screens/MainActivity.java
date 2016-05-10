@@ -78,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }*/
 
+        userEmail = "hugomc92@gmail.com";
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.appbar);
         setSupportActionBar(toolbar);
 
@@ -86,8 +88,8 @@ public class MainActivity extends AppCompatActivity {
 
         View header = navView.getHeaderView(0);
 
-        // SÓLO PARA PRUEBAS
-        user = new DBConnector(getApplicationContext()).getUser("hugomc92@gmail.com");
+        // SÓLO PARA PRUEBAS porque ya está en else arriba
+        user = new DBConnector(getApplicationContext()).getUser(userEmail);
 
         userName = (TextView) header.findViewById(R.id.user_name);
 
@@ -142,6 +144,12 @@ public class MainActivity extends AppCompatActivity {
                                 if(navMenuItem != R.id.navigation_item_4) {
                                     fragment = new FragmentBasket();
 
+                                    Bundle bundle = new Bundle();
+
+                                    bundle.putString("USER_EMAIL", userEmail);
+
+                                    fragment.setArguments(bundle);
+
                                     fragmentTransaction = true;
                                 }
                                 break;
@@ -164,10 +172,15 @@ public class MainActivity extends AppCompatActivity {
                             case R.id.navigation_item_settings:
                                 return false;
                             case R.id.navigation_item_settings_1:
-                                Toast.makeText(getApplicationContext(), "Option 1 Selected", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Settings Selected", Toast.LENGTH_SHORT).show();
                                 break;
                             case R.id.navigation_item_settings_2:
-                                Toast.makeText(getApplicationContext(), "Option 2 Selected", Toast.LENGTH_SHORT).show();
+                                if(preferences.contains(USER_EMAIL)) {
+                                    preferences.edit().remove(USER_EMAIL).commit();
+
+                                }
+                                cleanFragmentStack();
+                                finish();
                                 break;
                         }
 
@@ -227,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("MAIN ACTIVITY", "ON ACTIVITY RESULT");
 
                 // SÓLO PARA PRUEBAS - Reemplazar por el id del shared preferences
-                user = new DBConnector(getApplicationContext()).getUser("hugomc92@gmail.com");
+                user = new DBConnector(getApplicationContext()).getUser(userEmail);
 
                 if(user != null)
                     userName.setText(user.getName() + " " + user.getSurname());
@@ -407,6 +420,13 @@ public class MainActivity extends AppCompatActivity {
             navMenuItem = -1;
             actionBarTittle = "Order: " + ((FragmentOrder) fragment).getOrderId();
         }
+        else if(fragment.getClass() == FragmentPayment.class) {
+            if(navMenuItem > 0)
+                navView.getMenu().findItem(navMenuItem).setChecked(false);
+
+            navMenuItem = -1;
+            actionBarTittle = "Payment Process ";
+        }
 
         if(navMenuItem > 0)
             navView.getMenu().findItem(navMenuItem).setChecked(true);
@@ -414,7 +434,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(actionBarTittle);
     }
 
-    private void cleanFragmentStack() {
+    public void cleanFragmentStack() {
 
         int count = getSupportFragmentManager().getBackStackEntryCount();
 

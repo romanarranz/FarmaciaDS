@@ -92,7 +92,8 @@ public class DBPharmacyS extends SQLiteOpenHelper {
                                                 PharmacySContract.OrderTable.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                                                 PharmacySContract.OrderTable.USER_ID + " varchar(100) REFERENCES " + PharmacySContract.UserTable.TABLE_NAME + "(" + PharmacySContract.UserTable.EMAIL + ") NOT NULL, " +
                                                 PharmacySContract.OrderTable.PHARMACY_ID + " varchar(9) REFERENCES " + PharmacyTable.TABLE_NAME + "(" + PharmacyTable.ID + ") NOT NULL, " +
-                                                PharmacySContract.OrderTable.DATE + " date NOT NULL " +
+                                                PharmacySContract.OrderTable.DATE + " date NOT NULL, " +
+                                                PharmacySContract.OrderTable.PRICE + " float NOT NULL " +
                                                 ");";
 
     public static final String CREATE_ORDER_PRODUCT = "CREATE TABLE " + PharmacySContract.OrderProductTable.TABLE_NAME + " ( " +
@@ -126,7 +127,7 @@ public class DBPharmacyS extends SQLiteOpenHelper {
 
     private static final String CREATE_INITIAL_RESERVATION = "INSERT INTO " + ReservationTable.TABLE_NAME + " VALUES ('73890889B', 1, 2);";
 
-    private static final String CREATE_INITIAL_ORDERS = "INSERT INTO " + PharmacySContract.OrderTable.TABLE_NAME + " VALUES (1, 'hugomc92@gmail.com', '73890889B', " + new GregorianCalendar(2015, 3, 13).getTimeInMillis() + "), (NULL, 'hugomc92@gmail.com', '73890889B', " + new GregorianCalendar(2015, 4, 23).getTimeInMillis() + ");";
+    private static final String CREATE_INITIAL_ORDERS = "INSERT INTO " + PharmacySContract.OrderTable.TABLE_NAME + " VALUES (1, 'hugomc92@gmail.com', '73890889B', " + new GregorianCalendar(2015, 3, 13).getTimeInMillis() + ", 35.57), (NULL, 'hugomc92@gmail.com', '73890889B', " + new GregorianCalendar(2015, 4, 23).getTimeInMillis() + ", 4.45);";
 
     private static final String CREATE_INITIAL_ORDERS_PRODUCT = "INSERT INTO " + PharmacySContract.OrderProductTable.TABLE_NAME + " VALUES (1, 1, 5), (1, 2, 1), (2, 2, 1);";
 
@@ -250,6 +251,21 @@ public class DBPharmacyS extends SQLiteOpenHelper {
     public List<Product> getAllOrderProducts(int orderId) {
 
         return OrderDao.getAllOrderProducts(this.getReadableDatabase(), orderId);
+    }
+
+    public float getProductPrice(String pharmacyId, int productId) {
+
+        return InventoryDao.getProductPrice(this.getReadableDatabase(), pharmacyId, productId);
+    }
+
+    public Basket getPharmacyBasket(String pharmacyId) {
+
+        return BasketDao.getPharmacyBasket(this.getReadableDatabase(), pharmacyId);
+    }
+
+    public void addToOrder(String userEmail, String pharmacyId, long date, float price, List<Product> products, List<Integer> quantities) {
+
+        OrderDao.addToOrder(this.getReadableDatabase(), userEmail, pharmacyId, date, price, products, quantities);
     }
 
     @Override

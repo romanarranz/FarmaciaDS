@@ -45,6 +45,8 @@ public class FragmentOrders extends Fragment {
         // Inflar el layout para este Fragment
         super.onCreateView(inflater, container, savedInstanceState);
 
+        setRetainInstance(true);
+
         view = inflater.inflate(R.layout.fragment_orders, container, false);
 
         DBConnector dbConnector = new DBConnector(this.getContext());

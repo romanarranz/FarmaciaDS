@@ -1,5 +1,7 @@
 package com.hugoroman.pharmacys.data;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -28,7 +30,8 @@ public final class OrderDao {
                 Order order = new Order(c.getInt(c.getColumnIndex(OrderTable.ID)),
                                         c.getString(c.getColumnIndex(OrderTable.USER_ID)),
                                         c.getString(c.getColumnIndex(OrderTable.PHARMACY_ID)),
-                                        new Date(c.getLong(c.getColumnIndex(OrderTable.DATE))));
+                                        new Date(c.getLong(c.getColumnIndex(OrderTable.DATE))),
+                                        c.getFloat(c.getColumnIndex(OrderTable.PRICE)));
 
                 orders.add(order);
 
@@ -109,5 +112,30 @@ public final class OrderDao {
         }
 
         return products;
+    }
+
+    public static void addToOrder(SQLiteDatabase db, String userEmail, String pharmacyId, long date, float price, List<Product> products, List<Integer> quantities) {
+
+
+        ContentValues contentValuesOrder = new ContentValues();
+
+        String idOrder = null;
+        contentValuesOrder.put(OrderTable.ID, idOrder);
+        contentValuesOrder.put(OrderTable.USER_ID, userEmail);
+        contentValuesOrder.put(OrderTable.PHARMACY_ID, pharmacyId);
+        contentValuesOrder.put(OrderTable.DATE, date);
+        contentValuesOrder.put(OrderTable.PRICE, price);
+
+        long orderId = db.insert(PharmacySContract.OrderTable.TABLE_NAME, null, contentValuesOrder);
+
+        ContentValues contentValuesOrderProduct = new ContentValues();
+
+        for(int i=0; i<products.size(); i++) {
+            contentValuesOrderProduct.put(OrderProductTable.ID_ORDER, orderId);
+            contentValuesOrderProduct.put(OrderProductTable.PRODUCT_ID, products.get(i).getId());
+            contentValuesOrderProduct.put(OrderProductTable.QUANTITY, quantities.get(i));
+        }
+
+        db.insert(OrderProductTable.TABLE_NAME, null, contentValuesOrderProduct);
     }
 }

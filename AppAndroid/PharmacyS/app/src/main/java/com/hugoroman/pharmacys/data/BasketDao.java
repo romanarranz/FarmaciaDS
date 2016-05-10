@@ -61,7 +61,7 @@ public final class BasketDao {
 
             c.close();
 
-            if (!update) {
+            if(!update) {
                 contentValues.put(PharmacySContract.BasketTable.PHARMACY_ID, pharmacyCif);
                 contentValues.put(PharmacySContract.BasketTable.PRODUCT_ID, productId);
                 contentValues.put(PharmacySContract.BasketTable.QUANTITY, quantity);
@@ -79,5 +79,40 @@ public final class BasketDao {
         db.delete(PharmacySContract.BasketTable.TABLE_NAME,
                 PharmacySContract.BasketTable.PHARMACY_ID + " = ? AND " + PharmacySContract.BasketTable.PRODUCT_ID + " = ?",
                 new String[] { pharmacyCif, String.valueOf(productId) });
+    }
+
+    public static Basket getPharmacyBasket(SQLiteDatabase db,String pharmacyId) {
+
+        String selectQuery = "SELECT * FROM " + PharmacySContract.BasketTable.TABLE_NAME + " WHERE " +
+                PharmacySContract.BasketTable.PHARMACY_ID + " = '" + pharmacyId + "'";
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        List<List<Object>> productsPharmaciesQuantities = new ArrayList<List<Object>>();
+
+        if(c != null && c.moveToFirst()) {
+            do {
+                List<Object> productPharmacyQuantity = new ArrayList<Object>();
+
+                String pharmacyCif = c.getString(c.getColumnIndex(PharmacySContract.BasketTable.PHARMACY_ID));
+
+                Pharmacy pharmacy = PharmacyDao.getPharmacy(db, pharmacyCif);
+
+                int productID = c.getInt(c.getColumnIndex(PharmacySContract.BasketTable.PRODUCT_ID));
+
+                Product product = ProductDao.getProduct(db, productID);
+
+                productPharmacyQuantity.add(pharmacy);
+                productPharmacyQuantity.add(product);
+                productPharmacyQuantity.add(c.getInt(c.getColumnIndex(PharmacySContract.BasketTable.QUANTITY)));
+
+                productsPharmaciesQuantities.add(productPharmacyQuantity);
+            } while(c.moveToNext());
+        }
+
+        if(c != null)
+            c.close();
+
+        return new Basket(productsPharmaciesQuantities);
     }
 }

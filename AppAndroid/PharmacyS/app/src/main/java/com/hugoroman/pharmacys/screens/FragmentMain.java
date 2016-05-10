@@ -76,6 +76,12 @@ public class FragmentMain extends Fragment implements View.OnClickListener {
                 break;
             case R.id.basket_cv:
                 fragment = new FragmentBasket();
+
+                Bundle bundle = new Bundle();
+
+                bundle.putString("USER_EMAIL", user.getEmail());
+
+                fragment.setArguments(bundle);
                 break;
             case R.id.orders_cv:
                 fragment = new FragmentOrders();

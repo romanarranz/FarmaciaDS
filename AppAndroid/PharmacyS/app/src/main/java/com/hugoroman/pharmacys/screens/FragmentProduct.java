@@ -34,6 +34,7 @@ public class FragmentProduct extends Fragment implements View.OnClickListener {
 
     private ImageView productPhoto;
     private TextView productName;
+    private TextView productPrice;
     private TextView productCategory;
     private TextView productDescription;
     private TextView productLaboratory;
@@ -82,6 +83,7 @@ public class FragmentProduct extends Fragment implements View.OnClickListener {
 
         productPhoto = (ImageView) view.findViewById(R.id.pro_photo);
         productName = (TextView) view.findViewById(R.id.pro_name);
+        productPrice = (TextView) view.findViewById(R.id.pro_price);
         productDescription = (TextView) view.findViewById(R.id.pro_description);
         productCategory = (TextView) view.findViewById(R.id.pro_category);
         productLaboratory = (TextView) view.findViewById(R.id.pro_laboratory);
@@ -93,6 +95,7 @@ public class FragmentProduct extends Fragment implements View.OnClickListener {
             productName.setText(product.getName());
 
             DBConnector dbConnector = new DBConnector(getContext());
+            productPrice.setText(String.valueOf(dbConnector.getProductPrice(pharmacyCif, product.getId())) + "€");
             productCategory.setText(dbConnector.getProductCategoryName(product.getId()));
 
             productDescription.setText(product.getDescription());

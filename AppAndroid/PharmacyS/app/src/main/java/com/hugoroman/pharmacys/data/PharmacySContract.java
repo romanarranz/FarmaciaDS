@@ -92,6 +92,7 @@ public final class PharmacySContract {
         public static final String USER_ID = "USER_ID";
         public static final String PHARMACY_ID = "PHARMACY_ID";
         public static final String DATE = "ORDER_DATE";
+        public static final String PRICE = "PRICE";
     }
 
     public static abstract class OrderProductTable implements  BaseColumns {

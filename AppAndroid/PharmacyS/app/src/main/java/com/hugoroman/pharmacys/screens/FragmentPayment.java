@@ -36,14 +36,14 @@ import com.hugoroman.pharmacys.model.Product;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
-public class FragmentBasket extends Fragment {
+public class FragmentPayment extends Fragment {
 
     private boolean anim = false;
 
     private View view;
     private DBConnector dbConnector;
-    private TextView emptyBasket;
     private BasketAdapter basketAdapter;
     private RecyclerView recyclerView;
     private Basket basket;
@@ -52,15 +52,15 @@ public class FragmentBasket extends Fragment {
     private boolean modeSelection;
     private ArrayList<Integer> selections;
     private PriceVisitor visitor;
-    private LinearLayout priceLinearLayout;
     private TextView basketPrice;
+    private ArrayList<String> pharmaciesCif;
     private String userEmail;
 
-    public FragmentBasket() {
+    public FragmentPayment() {
         // Required empty public constructor
         if(!anim && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            this.setEnterTransition(new Slide(Gravity.BOTTOM));
-            this.setExitTransition(new Slide(Gravity.BOTTOM));
+            this.setEnterTransition(new Slide(Gravity.TOP));
+            this.setExitTransition(new Slide(Gravity.TOP));
 
             anim = true;
         }
@@ -74,42 +74,33 @@ public class FragmentBasket extends Fragment {
         // Mantener el Fragment y los datos a cambios de orientación de pantalla
         setRetainInstance(true);
 
-        view = inflater.inflate(R.layout.fragment_basket, container, false);
+        view = inflater.inflate(R.layout.fragment_payment, container, false);
+
+        pharmaciesCif = getArguments().getStringArrayList("PH_CIFS");
 
         userEmail = getArguments().getString("USER_EMAIL");
 
         dbConnector = new DBConnector(this.getContext());
 
-        basket = dbConnector.getBasket();
-        emptyBasket = (TextView) view.findViewById(R.id.basket_empty);
+        basket = dbConnector.getPharmacyBasket(pharmaciesCif.get(0));
         modeSelection = false;
         selections = new ArrayList<Integer>();
 
         visitor = new PriceVisitor();
 
-        priceLinearLayout = (LinearLayout) view.findViewById(R.id.price_linearlayout);
-        basketPrice = (TextView) view.findViewById(R.id.basket_price);
+        basketPrice = (TextView) view.findViewById(R.id.payment_price);
 
-        fab = (FloatingActionButton) view.findViewById(R.id.fab_payment_delete);
+        fab = (FloatingActionButton) view.findViewById(R.id.fab_payment_action);
         Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.simple_grow);
         fab.setAnimation(animation);
 
         interpolator = new OvershootInterpolator();
 
-        FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.frame_basket);
-
         if(basket.getProductsPharmaciesQuantities().size() != 0) {
-            frameLayout.removeView(emptyBasket);
-
             visitorVisit(basket);
         }
-        else {
-            fab.hide();
 
-            frameLayout.removeView(priceLinearLayout);
-        }
-
-        recyclerView = (RecyclerView) view.findViewById(R.id.basket_rv);
+        recyclerView = (RecyclerView) view.findViewById(R.id.payment_rv);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext());
 
@@ -174,7 +165,7 @@ public class FragmentBasket extends Fragment {
                     // Procesar el borrado de elementos de la cesta
                     Iterator<Integer> listIterator = selections.iterator();
 
-                    while (listIterator.hasNext()) {
+                    while(listIterator.hasNext()) {
                         Integer position = listIterator.next();
 
                         Pharmacy pharmacy = (Pharmacy) basket.getProductsPharmaciesQuantities().get(position).get(0);
@@ -183,7 +174,7 @@ public class FragmentBasket extends Fragment {
                         dbConnector.removeFromBasket(pharmacy.getCif(), product.getId());
                     }
 
-                    basket = dbConnector.getBasket();
+                    basket = dbConnector.getPharmacyBasket(pharmaciesCif.get(0));
 
                     if(basket.getProductsPharmaciesQuantities().size() != 0)
                         visitorVisit(basket);
@@ -197,49 +188,72 @@ public class FragmentBasket extends Fragment {
                     fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_payment));
                     modeSelection = false;
 
-                    if(basket.getProductsPharmaciesQuantities().size() == 0) {
-                        FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.frame_basket);
-
-                        frameLayout.addView(emptyBasket);
-                        frameLayout.removeView(priceLinearLayout);
-                        fab.hide();
-
+                    if(basket.getProductsPharmaciesQuantities().size() == 0)
                         getActivity().getSupportFragmentManager().popBackStackImmediate();
-                    }
 
                     selections.clear();
                 }
                 else {
-                    // Procesar el pago
-                    // Por cada una de las farmacias que tengan productos en la cesta, pasar por su pago.
-                    Toast.makeText(getContext(), getResources().getString(R.string.start_payment), Toast.LENGTH_LONG).show();
-                    FragmentPayment fragmentPayment = new FragmentPayment();
-
-                    Bundle bundle = new Bundle();
-
-                    ArrayList<String> pharmaciesCif = new ArrayList<String>();
-
+                    Toast.makeText(getContext(), getResources().getString(R.string.pay), Toast.LENGTH_SHORT).show();
+                    // Borrar la cesta
                     Iterator<List<Object>> iterator = basket.getProductsPharmaciesQuantities().iterator();
+
+                    List<Product> products = new ArrayList<Product>();
+                    List<Integer> quantities = new ArrayList<Integer>();
 
                     while(iterator.hasNext()) {
                         List<Object> current = iterator.next();
                         Pharmacy pharmacy = (Pharmacy) current.get(0);
+                        Product product = (Product) current.get(1);
+                        Integer quantity = (Integer) current.get(2);
 
-                        if(!pharmaciesCif.contains(pharmacy.getCif()))
-                            pharmaciesCif.add(pharmacy.getCif());
+                        products.add(product);
+                        quantities.add(quantity);
+
+                        dbConnector.removeFromBasket(pharmacy.getCif(), product.getId());
                     }
+                    // Añadir a pedidos
+                    dbConnector.addToOrder(userEmail, pharmaciesCif.get(0), System.currentTimeMillis(), visitor.getBasketPrice(), products, quantities);
 
-                    bundle.putStringArrayList("PH_CIFS", pharmaciesCif);
-                    bundle.putString("USER_EMAIL", userEmail);
+                    basket = dbConnector.getPharmacyBasket(pharmaciesCif.get(0));
 
-                    fragmentPayment.setArguments(bundle);
+                    if(pharmaciesCif.size() > 1) {
+                        pharmaciesCif.remove(0);
+                        // Continuar con el proceso del pago
+                        // Por cada una de las farmacias restantes , pasar por su pago.
+                        Toast.makeText(getContext(), getResources().getString(R.string.continue_payment), Toast.LENGTH_SHORT).show();
+                        FragmentPayment fragmentPayment = new FragmentPayment();
 
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragmentPayment).addToBackStack(null).commit();
-                    else
-                        getActivity().getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_frame, fragmentPayment).addToBackStack(null).commit();
+                        Bundle bundle = new Bundle();
 
-                    ((MainActivity) getActivity()).setMenuItemCheck(fragmentPayment);
+                        bundle.putStringArrayList("PH_CIFS", pharmaciesCif);
+
+                        fragmentPayment.setArguments(bundle);
+
+                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragmentPayment).commit();
+                        else
+                            getActivity().getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_frame, fragmentPayment).commit();
+
+                        ((MainActivity) getActivity()).setMenuItemCheck(fragmentPayment);
+                    }
+                    else {
+                        Toast.makeText(getContext(), getResources().getString(R.string.payment_finish), Toast.LENGTH_SHORT).show();
+
+                        // Volver al inicio
+                        FragmentMain fragmentMain = new FragmentMain();
+
+                        fragmentMain.setUser(dbConnector.getUser(userEmail));
+
+                        ((MainActivity) getActivity()).cleanFragmentStack();
+
+                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragmentMain).commit();
+                        else
+                            getActivity().getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_frame, fragmentMain).commit();
+
+                        ((MainActivity) getActivity()).setMenuItemCheck(fragmentMain);
+                    }
                 }
             }
         });
@@ -294,5 +308,10 @@ public class FragmentBasket extends Fragment {
         }
 
         basketPrice.setText(getResources().getString(R.string.total_price_basket) + " " + visitor.getBasketPrice() + "€");
+    }
+
+    public String getPharmacyName() {
+
+        return dbConnector.getPharmacyName(pharmaciesCif.get(0));
     }
 }

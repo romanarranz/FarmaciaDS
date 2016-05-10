@@ -130,4 +130,19 @@ public class DBConnector {
 
         return pharmacyS.getAllOrderProducts(orderId);
     }
+
+    public float getProductPrice(String pharmacyId, int productId) {
+
+        return pharmacyS.getProductPrice(pharmacyId, productId);
+    }
+
+    public Basket getPharmacyBasket(String pharmacyId) {
+
+        return pharmacyS.getPharmacyBasket(pharmacyId);
+    }
+
+    public void addToOrder(String userEmail, String pharmacyId, long date, float price, List<Product> products, List<Integer> quantities) {
+
+        pharmacyS.addToOrder(userEmail, pharmacyId, date, price, products, quantities);
+    }
 }
