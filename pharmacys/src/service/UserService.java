@@ -16,6 +16,7 @@ import model.UserRefinedAbstraction;
 import util.DateUtil;
 import util.SHA512;
 import util.SendEmailUsingGMAILSMTP;
+import util.ServerConfig;
 
 @Path("/user")
 public class UserService {
@@ -79,7 +80,7 @@ public class UserService {
 					
 					SendEmailUsingGMAILSMTP smtp = new SendEmailUsingGMAILSMTP();
 					
-					String link = "http://localhost:8080/pharmacys/login?action=resetPassword&hash="+resetHash;
+					String link = "http://"+ServerConfig.server+":8080/pharmacys/login?action=resetPassword&hash="+resetHash;
 					String msgContent = "Please clic on the next link to reset your password: "+link;
 					smtp.setContent(msgContent);
 					smtp.setRecipient(email);
@@ -123,7 +124,7 @@ public class UserService {
 					
 					SendEmailUsingGMAILSMTP smtp = new SendEmailUsingGMAILSMTP();
 					
-					String link = "http://localhost:8080/pharmacys/login?action=resetPassword&hash="+resetHash;
+					String link = "http://"+ServerConfig.server+":8080/pharmacys/login?action=resetPassword&hash="+resetHash;
 					String msgContent = "Please clic on the next link to reset your password: "+link;
 					smtp.setContent(msgContent);
 					smtp.setRecipient(email);
@@ -222,10 +223,34 @@ public class UserService {
 		return result;
 	}
 	
-	@PUT
-	@Path("/updatePharmacies/{email}/{cif}")
+	@POST
+	@Path("/changePassword/")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String updatePharmacies(@PathParam("userIde") String email, @PathParam("cif") String cif){
+	public String changePassword(
+			@FormParam("email") String email,
+			@FormParam("oldPassword") String oldPassword,
+			@FormParam("newPassword") String newPassword
+			){
+		String result = "{\"status\":\"not ok\"}";
+		
+		if(email != null && oldPassword != null && newPassword != null){
+			UserRefinedAbstraction u = dbc.getUserByEmailPassword(email, oldPassword);
+			
+			if(u != null){
+				u.setPassword(newPassword);
+				
+				if(!dbc.updateUser(u))
+					result = "{\"status\":\"ok\"}";
+			}						
+		}
+					
+		return result;
+	}
+	
+	@PUT
+	@Path("/setPharmacy/{email}/{cif}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String setPharmacy(@PathParam("userIde") String email, @PathParam("cif") String cif){
 		String result = "{\"status\":\"not ok\"}";
 		UserRefinedAbstraction u = dbc.getUserById(email);
 		u.setCifPharmacy(cif);

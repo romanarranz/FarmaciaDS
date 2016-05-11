@@ -68,7 +68,7 @@
     	<h2 class="sub-header">Product List</h2>
     	
     	<!-- Add product -->
-    	<button type="button" class="btn btn-primary" style="position:relative; top: 45px" data-toggle="modal" data-target="#insert">Añadir</button>
+    	<button type="button" class="btn btn-primary" style="position:relative; top: 45px" data-toggle="modal" data-target="#insert">Add</button>
     	
     	<!-- Table -->
        	<table class="table table-striped" data-toggle="table" data-height="460" data-sort-name="id" data-sort-order="desc"

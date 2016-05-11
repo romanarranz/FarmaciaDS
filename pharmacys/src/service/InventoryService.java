@@ -34,7 +34,7 @@ public class InventoryService {
 				"\"units\":\""+product.getUnits()+"\","+
 				"\"expirationDate\":\""+product.getExpirationDate()+"\","+
 				"\"size\":"+product.getSize()+","+
-				"\"lot\":"+product.getLot()+","+
+				"\"lot\":\""+product.getLot()+"\","+
 				"\"urlImg\":\""+product.getUrlImg()+"\","+
 				"\"category\":"+
 				"{"+

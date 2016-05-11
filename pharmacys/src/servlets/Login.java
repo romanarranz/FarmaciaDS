@@ -42,7 +42,7 @@ public class Login extends HttpServlet {
         	e.getStackTrace();
         }
         
-        UserRefinedAbstraction user = dbc.getUserByEmailPassword(email,password);
+        UserRefinedAbstraction user = dbc.getUserAdminByEmailPassword(email, password);
         
         if (user != null) {
             request.getSession().setAttribute("user", user.getName());

@@ -36,14 +36,14 @@ public class PharmacyService {
 	@GET
 	@Path("/getAllInXML")
 	@Produces(MediaType.APPLICATION_XML)
-	public List<Pharmacy> getAllPersoInXML(){
+	public List<Pharmacy> getAllPharmaciesInXML(){
 		return dbc.getAllPharmacies();
 	}
 		
 	@GET
 	@Path("/getAllInJSON")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Pharmacy> getAllPersoInJSON(){
+	public List<Pharmacy> getAllPharmaciesInJSON(){
 		return dbc.getAllPharmacies();
 	}
 	

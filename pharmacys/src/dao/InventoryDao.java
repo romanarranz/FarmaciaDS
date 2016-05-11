@@ -2,6 +2,7 @@ package dao;
 
 import java.util.List;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -25,9 +26,11 @@ public class InventoryDao {
 					.list();
 			session.getTransaction().commit();
 		}
-		catch(Exception e){
+		catch(HibernateException e){
 			if(session != null)
 				session.getTransaction().rollback();
+			
+			e.printStackTrace();
 		}
 		finally {
 			if(session != null)
@@ -50,9 +53,11 @@ public class InventoryDao {
 					.uniqueResult();
 			session.getTransaction().commit();
 		}
-		catch(Exception e){
+		catch(HibernateException e){
 			if(session != null)
 				session.getTransaction().rollback();
+			
+			e.printStackTrace();
 		}
 		finally {
 			if(session != null)
@@ -76,9 +81,10 @@ public class InventoryDao {
 					.list();
 			session.getTransaction().commit();
 		}
-		catch(Exception e){
+		catch(HibernateException e){
 			if(session != null)
 				session.getTransaction().rollback();
+			e.printStackTrace();
 		}
 		finally {
 			if(session != null)
@@ -98,10 +104,11 @@ public class InventoryDao {
 			session.save(i);
 			session.getTransaction().commit();
 		}
-		catch (Exception e){
+		catch (HibernateException e){
 			if(session != null)
 				session.getTransaction().rollback();
-
+			
+			e.printStackTrace();
 			hasErrors = true;
 		}
 		finally {
@@ -122,10 +129,11 @@ public class InventoryDao {
 			session.update(i);
 			session.getTransaction().commit();
 		}
-		catch (Exception e){
+		catch (HibernateException e){
 			if(session != null)
 				session.getTransaction().rollback();
 			
+			e.printStackTrace();
 			hasErrors = true;
 		}
 		finally {
@@ -146,10 +154,11 @@ public class InventoryDao {
 			session.delete(i);
 			session.getTransaction().commit();
 		}
-		catch (Exception e){
+		catch (HibernateException e){
 			if(session != null)
 				session.getTransaction().rollback();
 			
+			e.printStackTrace();
 			hasErrors = true;
 		}
 		finally {

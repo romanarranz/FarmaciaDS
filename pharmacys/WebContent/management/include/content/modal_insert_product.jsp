@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.*" %>
-<%@ page import="dao.DBConnector, model.Category" %>
+<%@ page import="dao.DBConnector, model.Category, util.ServerConfig" %>
 
 <!-- Insert Products Modal -->
 <div id="insert" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
@@ -14,14 +14,14 @@
       	</div>
       	
       	<!-- Form Edit Parameters --> 
-      	<form method="post" action="http://localhost:8080/pharmacys/product" role="form" enctype="multipart/form-data">      	
+      	<form method="post" action="http://<% out.print(ServerConfig.server); %>:8080/pharmacys/product" role="form" enctype="multipart/form-data">      	
       	
       	<!-- Modal Body -->
       	<div class="modal-body">
         	<div class="row">		         	
         		<div class="col-md-5">
         			<img id="insertImgViewer" src="http://localhost:8080/pharmacys/img/img_no_aviable.png" style="width: 100%; height: 300px;" alt=""/>
-        			<label for="insertImg"  class="control-label">Asignar Imagen</label>    
+        			<label for="insertImg"  class="control-label">Set Image</label>    
                     <input type="file" id="insertImg" name="insertImg" />
         		</div>
           		<div class="col-md-7">          			          			

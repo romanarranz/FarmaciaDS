@@ -29,7 +29,7 @@ public class UploadFile {
 		 String result = "";
 		 
 		// Create path components to save the file
-		String path = ServletsConfig.dataDirectory;
+		String path = ServerConfig.dataDirectory;
 		Part filePart = request.getPart(inputName);
 		String fileName;
 		

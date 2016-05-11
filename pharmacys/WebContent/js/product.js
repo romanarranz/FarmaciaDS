@@ -6,7 +6,7 @@ $('#edit').on('show.bs.modal', function (event) {
 	// get data via api rest of the selected row
 	var id = childrens[0].innerHTML;
 	var cif = document.getElementById("editCif").value;
-	var url = "http://localhost:8080/pharmacys/rest/inventory/getByIdJSON/"+cif+"/"+id;
+	var url = "http://hugomaldonado.ddns.net:8080/pharmacys/rest/inventory/getByIdJSON/"+cif+"/"+id;
 	var modal = $(this)
 	$.ajax({
 		type: "GET",

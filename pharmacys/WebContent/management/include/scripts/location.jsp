@@ -20,8 +20,11 @@
 		if(pharmacy != null){
 			if(pharmacy.getLatitude() != 0.0 && pharmacy.getLongitude() != 0.0)
 				out.println("<script>loadMap("+pharmacy.getLatitude()+","+pharmacy.getLongitude()+");</script>");
-			else
+			else {
+				String browserType = request.getHeader("User-Agent");
+				out.println("<script>alert('"+browserType+"');</script>");
 				out.println("<script>asyncGetGeo(); checkCurrentGeo();</script>");
+			}
 		}
 	}
 	%>

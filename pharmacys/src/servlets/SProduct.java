@@ -18,6 +18,7 @@ import model.Product;
 import model.Reservation;
 import util.DateUtil;
 import util.SendEmailUsingGMAILSMTP;
+import util.ServerConfig;
 import util.TextParser;
 import util.UploadFile;
 
@@ -74,11 +75,11 @@ public class SProduct extends HttpServlet {
 		String resultUploadImg = UploadFile.upload(request, response, "insertImg");
 		if(resultUploadImg == ""){
 			this.errors.add("Cant upload your image");
-			product.setUrlImg("http://localhost:8080/pharmacys/img/img_no_aviable.png");
+			product.setUrlImg("http://"+ServerConfig.server+":8080/pharmacys/img/img_no_aviable.png");
 		}
 		else{
 			this.msg.add("Image uploaded successfully");
-			product.setUrlImg(resultUploadImg.replace("/Users/roman/Documents/workspace/pharmacys/WebContent/", "http://localhost:8080/pharmacys/"));
+			product.setUrlImg(resultUploadImg.replace(ServerConfig.dataDirectory+"/", "http://"+ServerConfig.server+":8080/pharmacys/data/"));
 		}
 		
 		Category c = dbc.getCategoryById(category);		
@@ -154,11 +155,11 @@ public class SProduct extends HttpServlet {
 	    		String resultUploadImg = UploadFile.upload(request, response, "editImg");
 	    		if(resultUploadImg == ""){
 	    			this.errors.add("Cant upload your image");
-	    			product.setUrlImg("http://localhost:8080/pharmacys/img/img_no_aviable.png");
+	    			product.setUrlImg("http://"+ServerConfig.server+":8080/pharmacys/img/img_no_aviable.png");
 	    		}
 	    		else{
 	    			this.msg.add("Image uploaded successfully");
-	    			product.setUrlImg(resultUploadImg.replace("/Users/roman/Documents/workspace/pharmacys/WebContent/", "http://localhost:8080/pharmacys/"));
+	    			product.setUrlImg(resultUploadImg.replace(ServerConfig.dataDirectory+"/", "http://"+ServerConfig.server+":8080/pharmacys/data/"));
 	    		}
         	}
         	else {

@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="util.ServerConfig" %>
 
 <jsp:include page="include/heads/location.jsp" />
 
@@ -10,7 +10,7 @@
 	%>
 		<div class="col-md-12">
 			<h1>Usted no tiene permiso para acceder aqui</h1>
-			<a href="http://localhost:8080/pharmacys/">Volver</a>
+			<a href="http://<% out.print(ServerConfig.server); %>:8080/pharmacys/">Volver</a>
 		</div>
 	<%
 	}

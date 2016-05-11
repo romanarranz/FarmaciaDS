@@ -102,10 +102,11 @@ public class ReservationDao {
 			session.delete(r);
 			session.getTransaction().commit();
 		}
-		catch (Exception e){
+		catch (HibernateException e){
 			if(session != null)
 				session.getTransaction().rollback();
 			
+			e.printStackTrace();
 			hasErrors = true;
 		}
 		finally {

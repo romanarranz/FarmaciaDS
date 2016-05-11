@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.io.*,java.util.*" %>
+<%@ page import="java.io.*,java.util.*, util.ServerConfig" %>
 
 <!-- Bloque central que ocupa un 75% de la pantalla, 100% en responsive movil -->
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main location">
@@ -38,7 +38,7 @@
     	<div class="col-sm-4 info-map text-center" style="padding: 0px 10px 0px 0px">
     		<h4 id="markerStatus">Finding your position...</h4>
     		
-    		<form method="post" action="http://localhost:8080/pharmacys/pharmacy" role="form">
+    		<form method="post" action="http://<% out.print(ServerConfig.server); %>:8080/pharmacys/pharmacy" role="form">
     			<input type="hidden" name="editCif" id="editCif" value="<% out.print(cif); %>"/>
     			
 		    	<div class="form-group text-left" style="padding: 0px 35px 0px 20px; margin-top: 30px">

@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="util.ServerConfig" %>
 <!-- Delete Products Modal -->
 <div id="delete" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
 	<div class="modal-dialog" role="document">
@@ -12,7 +12,7 @@
       	</div>
       	
       	<!-- Form Edit Parameters --> 
-      	<form method="post" action="http://localhost:8080/pharmacys/product" role="form" enctype="multipart/form-data">
+      	<form method="post" action="http://<% out.print(ServerConfig.server); %>:8080/pharmacys/product" role="form" enctype="multipart/form-data">
       	<input type="hidden" name="deleteId" id="deleteId" />
       	
       	<!-- Modal Body -->

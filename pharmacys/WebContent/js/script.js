@@ -32,7 +32,7 @@ $(function(){
         $(this).hide();
     });
 	
-	var uri_selected = "http://localhost:8080/pharmacys/rest/";
+	var uri_selected = "http://hugomaldonado.ddns.net:8080/pharmacys/rest/";
 	var json = true;
 	$("#button").click(function(){
 		$("#output").empty();
@@ -74,7 +74,7 @@ $(function(){
 			});
 		}
 		
-		uri_selected = "http://localhost:8080/JAXRS2MySQL/rest/";
+		uri_selected = "http://hugomaldonado.ddns.net:8080/pharmacys/rest/";
 		json = true;
 	});
 	

@@ -2,6 +2,7 @@ package dao;
 
 import java.util.List;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -23,9 +24,11 @@ public class ProductDao {
 					.setMaxResults(1).list().get(0);
 			session.getTransaction().commit();
 		}
-		catch(Exception e){
+		catch(HibernateException e){
 			if(session != null)
 				session.getTransaction().rollback();
+			
+			e.printStackTrace();
 		}
 		finally {
 			if(session != null)
@@ -49,9 +52,10 @@ public class ProductDao {
 			session.getTransaction().commit();
 			
 		}
-		catch(Exception e){
+		catch(HibernateException e){
 			if(session != null)
 				session.getTransaction().rollback();
+			e.printStackTrace();
 		}
 		finally {
 			if(session != null)
@@ -72,9 +76,11 @@ public class ProductDao {
 			products = session.createQuery("from Product p").list();
 			session.getTransaction().commit();
 		}
-		catch(Exception e){
+		catch(HibernateException e){
 			if(session != null)
 				session.getTransaction().rollback();
+			
+			e.printStackTrace();
 		}
 		finally {
 			if(session != null)
@@ -94,10 +100,11 @@ public class ProductDao {
 			session.save(p);
 			session.getTransaction().commit();
 		}
-		catch(Exception e){
+		catch(HibernateException e){
 			if(session != null)
 				session.getTransaction().rollback();
 			
+			e.printStackTrace();
 			hasErrors = true;
 		}
 		finally {
@@ -118,10 +125,11 @@ public class ProductDao {
 			session.update(p);
 			session.getTransaction().commit();
 		}
-		catch (Exception e){
+		catch (HibernateException e){
 			if(session != null)
 				session.getTransaction().rollback();
 			
+			e.printStackTrace();
 			hasErrors = true;
 		}
 		finally {
@@ -142,10 +150,11 @@ public class ProductDao {
 			session.delete(p);
 			session.getTransaction().commit();
 		}
-		catch (Exception e){
+		catch (HibernateException e){
 			if(session != null)
 				session.getTransaction().rollback();
 			
+			e.printStackTrace();
 			hasErrors = true;
 		}
 		finally {

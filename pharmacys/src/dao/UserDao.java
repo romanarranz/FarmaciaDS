@@ -2,6 +2,7 @@ package dao;
 
 import java.util.List;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -28,9 +29,10 @@ public class UserDao {
 					.uniqueResult();
 			session.getTransaction().commit();
 		}
-		catch(Exception e){
+		catch(HibernateException e){
 			if(session != null)
 				session.getTransaction().rollback();
+			e.printStackTrace();
 		}
 		finally {
 			if(session != null)
@@ -66,9 +68,10 @@ public class UserDao {
 					.uniqueResult();
 			session.getTransaction().commit();
 		}
-		catch(Exception e){
+		catch(HibernateException e){
 			if(session != null)
 				session.getTransaction().rollback();
+			e.printStackTrace();
 		}
 		finally {
 			if(session != null)
@@ -91,9 +94,10 @@ public class UserDao {
 					.uniqueResult();
 			session.getTransaction().commit();
 		}
-		catch(Exception e){
+		catch(HibernateException e){
 			if(session != null)
 				session.getTransaction().rollback();
+			e.printStackTrace();
 		}
 		finally {
 			if(session != null)
@@ -117,9 +121,10 @@ public class UserDao {
 					.uniqueResult();
 			session.getTransaction().commit();
 		}
-		catch(Exception e){
+		catch(HibernateException e){
 			if(session != null)
 				session.getTransaction().rollback();
+			e.printStackTrace();
 		}
 		finally {
 			if(session != null)
@@ -140,9 +145,10 @@ public class UserDao {
 			users = session.createQuery("from UserRefinedAbstraction u").list();
 			session.getTransaction().commit();
 		}
-		catch(Exception e){
+		catch(HibernateException e){
 			if(session != null)
 				session.getTransaction().rollback();
+			e.printStackTrace();
 		}
 		finally {
 			if(session != null)
@@ -162,10 +168,10 @@ public class UserDao {
 			session.save(user);
 			session.getTransaction().commit();
 		}
-		catch(Exception e){
+		catch(HibernateException e){
 			if(session != null)
 				session.getTransaction().rollback();
-			
+			e.printStackTrace();
 			hasErrors = true;
 		}
 		finally {
@@ -186,10 +192,11 @@ public class UserDao {
 			session.update(user);
 			session.getTransaction().commit();
 		}
-		catch (Exception e){
+		catch (HibernateException e){
 			if(session != null)
 				session.getTransaction().rollback();
 			
+			e.printStackTrace();
 			hasErrors = true;
 		}
 		finally {
