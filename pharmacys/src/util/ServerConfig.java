@@ -1,7 +1,7 @@
 package util;
 
 public class ServerConfig {
-	/* Local
+	/* Local 
 	public static final String dataDirectory = "/Users/roman/Documents/workspace/pharmacys/WebContent/data";
 	public static final String server = "localhost";*/
 	

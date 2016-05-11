@@ -133,6 +133,8 @@ public class Login extends HttpServlet {
     }
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
+		
 		String action  = request.getParameter("action");
 		
 		switch(action){
@@ -166,6 +168,7 @@ public class Login extends HttpServlet {
 	
 	@Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
 		
 		// Limpiar los mensajes que hubiera anteriormente
 		if(!this.msg.isEmpty()) 	this.msg.clear();

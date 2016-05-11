@@ -13,18 +13,7 @@ public class DateUtil {
 	}
 	
 	public static java.sql.Date toSQLDate(String date){
-		java.util.Date myDate = null;
-		java.sql.Date result = null;
-		
-		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-     	try {
-     		myDate = formatter.parse(date);
-     	}
-     	catch (Exception e) {
-     		e.printStackTrace();
-     	}
-     	result = new java.sql.Date(myDate.getTime());
-     	
+		java.sql.Date result = java.sql.Date.valueOf(date);     	
      	return result;
 	}
 	

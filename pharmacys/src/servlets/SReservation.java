@@ -49,7 +49,9 @@ public class SReservation extends HttpServlet {
     }
     
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// Limpiar los mensajes que hubiera anteriormente
+    	request.setCharacterEncoding("UTF-8");
+    	
+    	// Limpiar los mensajes que hubiera anteriormente
 		if(!this.msg.isEmpty()) 	this.msg.clear();
 		if(!this.errors.isEmpty()) 	this.errors.clear();
 		

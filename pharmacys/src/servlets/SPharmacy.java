@@ -145,6 +145,7 @@ public class SPharmacy extends HttpServlet {
     }
     
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
 		
 		// Limpiar los mensajes que hubiera anteriormente
 		if(!this.msg.isEmpty()) 	this.msg.clear();

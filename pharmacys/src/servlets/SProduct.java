@@ -60,11 +60,12 @@ public class SProduct extends HttpServlet {
 		product.setDescription(TextParser.parseLatinToHTML(description));
 		product.setLaboratory(TextParser.parseLatinToHTML(laboratory));
 		product.setUnits(units);
-		        
+		
 		// PARSE EXPIRATION_DATE
      	java.sql.Date sqlDate = DateUtil.toSQLDate(expirationDate);
-     	if(sqlDate != null)
+     	if(sqlDate != null){
      		product.setExpirationDate(sqlDate);
+     	}
      	else
      		this.errors.add("Cant insert your expiration date");
      	
@@ -168,8 +169,9 @@ public class SProduct extends HttpServlet {
 
     		// PARSE EXPIRATION_DATE
          	java.sql.Date sqlDate = DateUtil.toSQLDate(expirationDate);
-         	if(sqlDate != null)
+         	if(sqlDate != null){
          		product.setExpirationDate(sqlDate);
+         	}
          	else
          		this.errors.add("Cant insert your expiration date");
     		
@@ -266,6 +268,8 @@ public class SProduct extends HttpServlet {
     
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		request.setCharacterEncoding("UTF-8");
+		
 		// Limpiar los mensajes que hubiera anteriormente
 		if(!this.msg.isEmpty()) 	this.msg.clear();
 		if(!this.errors.isEmpty()) 	this.errors.clear();
