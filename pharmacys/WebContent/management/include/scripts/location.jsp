@@ -22,8 +22,18 @@
 				out.println("<script>loadMap("+pharmacy.getLatitude()+","+pharmacy.getLongitude()+");</script>");
 			else {
 				String browserType = request.getHeader("User-Agent");
-				out.println("<script>alert('"+browserType+"');</script>");
-				out.println("<script>asyncGetGeo(); checkCurrentGeo();</script>");
+				 
+				/*
+								SKIP CHROME BUG 
+				
+				getCurrentPosition() and watchPosition() are deprecated on insecure origins.
+				To use this feature, you should consider switching your application to a secure origin, such as HTTPS.
+				See https://goo.gl/rStTGz for more details.
+				*/
+				if(browserType.indexOf("Chrome") > -1)
+					out.println("<script>loadMap(37.18425,-3.6024603);</script>");				
+				else
+					out.println("<script>asyncGetGeo(); checkCurrentGeo();</script>");
 			}
 		}
 	}
