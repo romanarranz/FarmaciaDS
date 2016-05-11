@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -13,8 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 import dao.DBConnector;
 import model.Pharmacy;
 import model.UserRefinedAbstraction;
+import util.ServerConfig;
+import util.UploadFile;
 
 @WebServlet("/pharmacy")
+@MultipartConfig
 public class SPharmacy extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -50,6 +54,17 @@ public class SPharmacy extends HttpServlet {
 		pharmacy.setStartSchedule(startSchedule);
 		pharmacy.setEndSchedule(endSchedule);
 		
+		// UPLOAD IMAGE
+		String resultUploadImg = UploadFile.upload(request, response, "insertImg");
+		if(resultUploadImg == ""){
+			this.errors.add("Cant upload your image");
+			pharmacy.setUrlImg("http://"+ServerConfig.server+":8080/pharmacys/img/img_no_aviable.png");
+		}
+		else{
+			this.msg.add("Image uploaded successfully");
+			pharmacy.setUrlImg(resultUploadImg.replace(ServerConfig.dataDirectory+"/", "http://"+ServerConfig.server+":8080/pharmacys/data/"));
+		}
+		
 		if(!dbc.insertPharmacy(pharmacy)){
 			this.msg.add("Pharamcy inserted successfully");
 			request.getSession().setAttribute("cif", cif);
@@ -84,6 +99,23 @@ public class SPharmacy extends HttpServlet {
 		pharmacy.setStartSchedule(startSchedule);
 		pharmacy.setEndSchedule(endSchedule);
 		
+		// UPLOAD IMAGE
+    	long imgSize = request.getPart("editImg").getSize(); 
+    	if( imgSize > 0){
+    		String resultUploadImg = UploadFile.upload(request, response, "editImg");
+    		if(resultUploadImg == ""){
+    			this.errors.add("Cant upload your image");
+    			pharmacy.setUrlImg("http://"+ServerConfig.server+":8080/pharmacys/img/img_no_aviable.png");
+    		}
+    		else{
+    			this.msg.add("Image uploaded successfully");
+    			pharmacy.setUrlImg(resultUploadImg.replace(ServerConfig.dataDirectory+"/", "http://"+ServerConfig.server+":8080/pharmacys/data/"));
+    		}
+    	}
+    	else {
+    		this.msg.add("No image selected");
+    	}
+    	
 		if(!dbc.updatePharmacy(pharmacy))
 			this.msg.add("Pharamcy updated successfully");
 		else

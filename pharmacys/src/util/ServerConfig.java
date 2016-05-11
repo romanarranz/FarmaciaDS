@@ -7,5 +7,5 @@ public class ServerConfig {
 	
 	/* Remote */
 	public static final String dataDirectory = "/var/lib/tomcat7/webapps/pharmacys/data";
-	public static final String server = "hugomaldonado.ddns.net";	
+	public static final String server = "hugomaldonado.ddns.net";
 }

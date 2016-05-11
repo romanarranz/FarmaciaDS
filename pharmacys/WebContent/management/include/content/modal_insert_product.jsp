@@ -20,7 +20,7 @@
       	<div class="modal-body">
         	<div class="row">		         	
         		<div class="col-md-5">
-        			<img id="insertImgViewer" src="http://localhost:8080/pharmacys/img/img_no_aviable.png" style="width: 100%; height: 300px;" alt=""/>
+        			<img id="insertImgViewer" src="http://<% out.print(ServerConfig.server); %>:8080/pharmacys/img/img_no_aviable.png" style="width: 100%; height: 300px;" alt=""/>
         			<label for="insertImg"  class="control-label">Set Image</label>    
                     <input type="file" id="insertImg" name="insertImg" />
         		</div>

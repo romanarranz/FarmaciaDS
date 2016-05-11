@@ -49,6 +49,9 @@ public class Pharmacy {
 	@Column(name="ADDRESS")
 	private String address;
 	
+	@Column(name="URL_IMG")
+	private String urlImg;
+	
 	// CIF
 	@XmlElement(required=true)
 	public String getCif(){
@@ -128,5 +131,14 @@ public class Pharmacy {
 	}
 	public void setAddress(String address){
 		this.address = address;
+	}
+	
+	// URL_IMG
+	@XmlElement(required=true)
+	public String getUrlImg(){
+		return this.urlImg;		
+	}
+	public void setUrlImg(String uri){
+		this.urlImg = uri;
 	}
 }

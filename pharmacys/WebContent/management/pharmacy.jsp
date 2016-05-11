@@ -29,7 +29,7 @@
 	  </div>
     </div>
 
- 	<jsp:include page="include/scripts/general.jsp"></jsp:include>
+ 	<jsp:include page="include/scripts/pharmacy.jsp"></jsp:include>
  	<%} %>
 </body>
 </html>

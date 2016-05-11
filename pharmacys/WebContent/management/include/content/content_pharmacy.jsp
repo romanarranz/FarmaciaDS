@@ -40,7 +40,15 @@
     	<h1 style="font-size:40px;">Insert your pharmacy below</h1>
     	<hr style="border-top: 1px dashed #cccccc">
     	
-    	<form method="post" action="http://<% out.print(ServerConfig.server); %>:8080/pharmacys/pharmacy" role="form">
+    	<form method="post" action="http://<% out.print(ServerConfig.server); %>:8080/pharmacys/pharmacy" role="form" enctype="multipart/form-data">    	
+    	<div class="form-group text-left row">
+			<img id="insertImgViewer" src="http://<% out.print(ServerConfig.server); %>:8080/pharmacys/img/img_no_aviable.png" style="width: 50%; height: 200px; margin: 0 25%" alt=""/>
+			<br>
+        	<label for="insertImg" class="col-sm-4 form-control-label">Set Image</label>
+        	<div class="col-sm-8">    
+            	<input type="file" id="insertImg" name="insertImg" />
+            </div>
+        </div>
     	<div class="form-group text-left row">
     		<label class="col-sm-4 form-control-label" for="insertCif">CIF</label>
     		<div class="col-sm-8">
@@ -92,7 +100,15 @@
     	<h1 style="font-size:40px;"><% out.print(pharmacy.getName()); %></h1>
         <hr style="border-top: 1px dashed #cccccc">
         
-        <form method="post" action="http://<% out.print(ServerConfig.server); %>:8080/pharmacys/pharmacy" role="form">
+        <form method="post" action="http://<% out.print(ServerConfig.server); %>:8080/pharmacys/pharmacy" role="form" enctype="multipart/form-data">
+        <div class="form-group text-left row">
+			<img id="editImgViewer" src="<% out.print(pharmacy.getUrlImg()); %>" style="width: 50%; height: 200px; margin: 0 25%" alt=""/>
+			<br>
+        	<label for="editImg" class="col-sm-4 form-control-label">Set Image</label>
+        	<div class="col-sm-8">    
+            	<input type="file" id="editImg" name="editImg" />
+            </div>
+        </div>
         <div class="form-group text-left row">
     		<label class="col-sm-4 form-control-label" for="editCif">CIF</label>
     		<div class="col-sm-8">
