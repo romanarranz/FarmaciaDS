@@ -1,5 +1,6 @@
 package com.hugoroman.pharmacys.data;
 
+import android.app.Activity;
 import android.content.Context;
 
 import com.hugoroman.pharmacys.model.Basket;
@@ -41,6 +42,11 @@ public class DBConnector {
         return pharmacyS.getPharmacyInventory(pharmacyId);
     }
 
+    public Product getProduct(int productId) {
+
+        return pharmacyS.getProduct(productId);
+    }
+
     public String getProductCategoryName(int idProduct) {
 
         return pharmacyS.getProductCategoryName(idProduct);
@@ -56,9 +62,9 @@ public class DBConnector {
         return pharmacyS.getProductCategoryId(idProduct);
     }
 
-    public List<Product> getAllProductsByCategoryId(int categoryId) {
+    public List<Product> getAllProductsByCategoryId(int categoryId, String pharmacyId) {
 
-        return pharmacyS.getAllProductsByCategoryId(categoryId);
+        return pharmacyS.getAllProductsByCategoryId(categoryId, pharmacyId);
     }
 
     public int getInventoryQuantity(String pharmacyId, int productId) {
@@ -86,14 +92,14 @@ public class DBConnector {
         return pharmacyS.getReservation();
     }
 
-    public void addToReservation(String pharmacyId, int productId, int quantity) {
+    public void addToReservation(String pharmacyId, int productId, int quantity, String userEmail) {
 
-        pharmacyS.addToReservation(pharmacyId, productId, quantity);
+        pharmacyS.addToReservation(pharmacyId, productId, quantity, userEmail);
     }
 
-    public void removeFromReservation(String pharmacyId, int productId) {
+    public void removeFromReservation(String pharmacyId, int productId, String userEmail, boolean onlyLocal) {
 
-        pharmacyS.removeFromReservation(pharmacyId, productId);
+        pharmacyS.removeFromReservation(pharmacyId, productId, userEmail, onlyLocal);
     }
 
     public Inventory getInventory(String pharmacyId, int productId) {
@@ -141,8 +147,66 @@ public class DBConnector {
         return pharmacyS.getPharmacyBasket(pharmacyId);
     }
 
-    public void addToOrder(String userEmail, String pharmacyId, long date, float price, List<Product> products, List<Integer> quantities) {
+    public void addToOrder(String userEmail, String pharmacyId, long date, float price, List<Product> products, List<Integer> quantities, boolean onlyLocal, Integer orderLastId) {
 
-        pharmacyS.addToOrder(userEmail, pharmacyId, date, price, products, quantities);
+        pharmacyS.addToOrder(userEmail, pharmacyId, date, price, products, quantities, onlyLocal, orderLastId);
+    }
+
+    public void addUser(Activity activity, String name, String surname, String email, String password, boolean onlyLocal) {
+
+        pharmacyS.addUser(activity, name, surname, email, password, onlyLocal);
+    }
+
+    public void addPharmacy(String pharmacyCif, String pharmacyName, int pharmacyPhone, String pharmacyDescription, int pharmacyStart, int pharmacyEnd,
+                            double pharmacyLatitude, double pharmacyLongitude, String pharmacyAddress, String pharmacyLogo) {
+
+        pharmacyS.addPharmacy(pharmacyCif, pharmacyName, pharmacyPhone, pharmacyDescription, pharmacyStart, pharmacyEnd, pharmacyLatitude,
+                pharmacyLongitude, pharmacyAddress, pharmacyLogo);
+    }
+
+    public void addProduct(int productId, String productName, int productCategory, String productDescription, String productLaboratoy, String productUnits, long productExpDate,
+                           int productSize, String productLot, String productPhoto) {
+
+        pharmacyS.addProduct(productId, productName, productCategory, productDescription, productLaboratoy, productUnits, productExpDate, productSize, productLot, productPhoto);
+    }
+
+    public void addInventory(String pharmacyId, int productId, float productPrice, int stock) {
+
+        pharmacyS.addInventory(pharmacyId, productId, productPrice, stock);
+    }
+
+    public void deleteAllProducts() {
+
+        pharmacyS.deleteAllProducts();
+    }
+
+    public void deleteAllInventories() {
+
+        pharmacyS.deleteAllInventories();
+    }
+
+    public void deleteAllOrders() {
+
+        pharmacyS.deleteAllOrders();
+    }
+
+    public void deleteBasket() {
+
+        pharmacyS.deleteBasket();
+    }
+
+    public void deleteAllReservations(String userEmail) {
+
+        pharmacyS.deleteAllReservations(userEmail);
+    }
+
+    public boolean existsProduct(int productId) {
+
+        return pharmacyS.existsProduct(productId);
+    }
+
+    public void updateStock(String pharmacyId, int productId, int quantity) {
+
+        pharmacyS.updateStock(pharmacyId, productId, quantity);
     }
 }

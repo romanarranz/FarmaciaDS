@@ -1,9 +1,11 @@
 package com.hugoroman.pharmacys.screens;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,18 +13,29 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hugoroman.pharmacys.R;
+import com.hugoroman.pharmacys.data.DBConnector;
+import com.hugoroman.pharmacys.data.DBConnectorServer;
+import com.hugoroman.pharmacys.util.PostUserAsync;
+import com.hugoroman.pharmacys.util.SHA512;
 
-//http://sourcey.com/beautiful-android-login-and-signup-screens-with-material-design/
+import java.util.HashMap;
 
 public class LoginActivity extends Activity {
 
     private static final int REQUEST_SIGNUP = 0;
+    private static final int REQUEST_RECOVER = 1;
+
+    private static final String URL_SERVER = "http://hugomaldonado.ddns.net";
+    private static final String PORT = "8080";
 
     private EditText iEmail;
     private EditText iPass;
+    private String email;
+    private String passHash;
     private Button btnLogin;
     private TextView linkForgotPassword;
     private TextView linkSignUp;
+    private MediaPlayer successSound;
 
     private Toast exitToast;
 
@@ -43,8 +56,7 @@ public class LoginActivity extends Activity {
             @Override
             public void onClick(View v) {
                 // Loguearse
-                //login();
-                onLoginSuccess();
+                login();
             }
         });
 
@@ -52,6 +64,8 @@ public class LoginActivity extends Activity {
             @Override
             public void onClick(View v) {
                 // Recuperación de contraseña
+                Intent intent = new Intent(getApplicationContext(), RecoverActivity.class);
+                startActivityForResult(intent, REQUEST_RECOVER);
             }
         });
 
@@ -69,39 +83,59 @@ public class LoginActivity extends Activity {
 
     private void login() {
 
-        if(!validate()) {
-            onLoginFailed();
+        if(!validate())
+            return;
+
+        email = iEmail.getText().toString();
+        String password = iPass.getText().toString();
+
+        try {
+            passHash = SHA512.hashText(password);
+
+        } catch(Exception e) {
+            e.printStackTrace();
 
             return;
         }
 
-        btnLogin.setEnabled(false);
+        String url = URL_SERVER + ":" + PORT + "/pharmacys/rest/user/login";
 
-        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this, R.style.AppThemeDialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Authenticating...");
-        progressDialog.show();
+        HashMap<String, String> params = new HashMap<String, String>();
 
-        String email = iEmail.getText().toString();
-        String password = iPass.getText().toString();
+        params.put("email", email);
+        params.put("password", passHash);
 
-        // Lógica del login
-        new android.os.Handler().postDelayed(
-            new Runnable() {
-
-                @Override
-                public void run() {
-                    // Cuando se complete, se decide si llamar a uno u a otro en función de la respuesta del servidor.
-                    // Si es correcto se tiene que guardar en el SharedPreferences
-                    onLoginSuccess();
-                    //onLoginFailed();
-                    progressDialog.dismiss();
-                }
-            }, 3000);
+        new PostUserAsync(this, url).execute(params);
     }
 
-    public void onLoginSuccess() {
+    public void onLoginPreSuccess() {
 
+        // Obtener el resto de datos del servidor
+        DBConnectorServer.getUserName(this, email);
+    }
+
+    public void onLoginSuccess(String name) {
+
+        // Guardarlo en la BD local
+        DBConnector dbConnector = new DBConnector(this.getApplicationContext());
+
+        int space = name.indexOf(" ");
+        String surname = name.substring(space + 1);
+        name = name.substring(0, space);
+
+        Log.e("USER NAME LOG IN", name);
+        Log.e("USER SURNAME LOG IN", surname);
+        dbConnector.addUser(this, name, surname, email, passHash, true);
+
+        // Guardar en el SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences(MainActivity.SYSPRE, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(MainActivity.USER_EMAIL, email);
+        editor.putString(MainActivity.PASS, passHash);
+        editor.commit();
+
+        successSound = MediaPlayer.create(this.getApplicationContext(), R.raw.tuntun);
+        successSound.start();
         setResult(RESULT_OK, null);
 
         finish();
@@ -109,9 +143,7 @@ public class LoginActivity extends Activity {
 
     public void onLoginFailed() {
 
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
-
-        btnLogin.setEnabled(true);
+        Toast.makeText(getBaseContext(), "Login failed, wrong user or password", Toast.LENGTH_LONG).show();
     }
 
     public boolean validate() {
@@ -129,8 +161,8 @@ public class LoginActivity extends Activity {
             iEmail.setError(null);
         }
 
-        if(password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            iPass.setError("between 4 and 10 alphanumeric characters");
+        if(password.isEmpty() || password.length() < 8) {
+            iPass.setError("8 or more alphanumeric characters");
             valid = false;
         }
         else {
@@ -143,12 +175,17 @@ public class LoginActivity extends Activity {
     // Capturar el evento cuando se registre el usuario si así lo ha pulsado
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_SIGNUP) {
-            if (resultCode == RESULT_OK) {
-
+        if(requestCode == REQUEST_SIGNUP) {
+            if(resultCode == RESULT_OK) {
                 // Terminamos la actividad de login y volvemos a la main
-                onLoginSuccess();
+                setResult(RESULT_OK, null);
+
+                finish();
             }
+        }
+        else if(requestCode == REQUEST_RECOVER) {
+            if(resultCode == RESULT_OK)
+                finishAffinity();
         }
     }
 

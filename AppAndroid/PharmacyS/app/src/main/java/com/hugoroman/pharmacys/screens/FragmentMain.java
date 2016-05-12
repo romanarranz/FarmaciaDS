@@ -1,5 +1,6 @@
 package com.hugoroman.pharmacys.screens;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,12 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hugoroman.pharmacys.R;
+import com.hugoroman.pharmacys.data.DBConnector;
 import com.hugoroman.pharmacys.model.User;
 
 public class FragmentMain extends Fragment implements View.OnClickListener {
 
-    //private static final Slide enterAnim = new Slide(Gravity.LEFT);
-    //private static final Slide exitAnim = new Slide(Gravity.BOTTOM);
     private boolean anim = false;
 
     private View view;
@@ -79,12 +79,24 @@ public class FragmentMain extends Fragment implements View.OnClickListener {
 
                 Bundle bundle = new Bundle();
 
+                if(user == null) {
+                    String userEmail = getActivity().getSharedPreferences(MainActivity.SYSPRE, Context.MODE_PRIVATE).getString(MainActivity.USER_EMAIL, MainActivity.NOT_USER_EMAIL);
+
+                    user = new DBConnector(getContext()).getUser(userEmail);
+                }
+
                 bundle.putString("USER_EMAIL", user.getEmail());
 
                 fragment.setArguments(bundle);
                 break;
             case R.id.orders_cv:
                 fragment = new FragmentOrders();
+
+                if(user == null) {
+                    String userEmail = getActivity().getSharedPreferences(MainActivity.SYSPRE, Context.MODE_PRIVATE).getString(MainActivity.USER_EMAIL, MainActivity.NOT_USER_EMAIL);
+
+                    user = new DBConnector(getContext()).getUser(userEmail);
+                }
 
                 ((FragmentOrders) fragment).setUser(user);
 

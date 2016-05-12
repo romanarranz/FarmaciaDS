@@ -27,11 +27,11 @@ public final class BasketDao {
 
                 String pharmacyCif = c.getString(c.getColumnIndex(PharmacySContract.BasketTable.PHARMACY_ID));
 
-                Pharmacy pharmacy = PharmacyDao.getPharmacy(db, pharmacyCif);
+                final Pharmacy pharmacy = PharmacyDao.getPharmacy(db, pharmacyCif);
 
                 int productID = c.getInt(c.getColumnIndex(PharmacySContract.BasketTable.PRODUCT_ID));
 
-                Product product = ProductDao.getProduct(db, productID);
+                final Product product = ProductDao.getProduct(db, productID);
 
                 productPharmacyQuantity.add(pharmacy);
                 productPharmacyQuantity.add(product);
@@ -39,10 +39,9 @@ public final class BasketDao {
 
                 productsPharmaciesQuantities.add(productPharmacyQuantity);
             } while(c.moveToNext());
-        }
 
-        if(c != null)
             c.close();
+        }
 
         return new Basket(productsPharmaciesQuantities);
     }
@@ -96,11 +95,11 @@ public final class BasketDao {
 
                 String pharmacyCif = c.getString(c.getColumnIndex(PharmacySContract.BasketTable.PHARMACY_ID));
 
-                Pharmacy pharmacy = PharmacyDao.getPharmacy(db, pharmacyCif);
+                final Pharmacy pharmacy = PharmacyDao.getPharmacy(db, pharmacyCif);
 
                 int productID = c.getInt(c.getColumnIndex(PharmacySContract.BasketTable.PRODUCT_ID));
 
-                Product product = ProductDao.getProduct(db, productID);
+                final Product product = ProductDao.getProduct(db, productID);
 
                 productPharmacyQuantity.add(pharmacy);
                 productPharmacyQuantity.add(product);
@@ -114,5 +113,20 @@ public final class BasketDao {
             c.close();
 
         return new Basket(productsPharmaciesQuantities);
+    }
+
+    public static void deleteBasket(SQLiteDatabase db) {
+
+        String selectQuery = "SELECT * FROM " + PharmacySContract.BasketTable.TABLE_NAME;
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if(c != null && c.moveToFirst()) {
+            do {
+                db.delete(PharmacySContract.BasketTable.TABLE_NAME, null, null);
+            } while(c.moveToNext());
+
+            c.close();
+        }
     }
 }

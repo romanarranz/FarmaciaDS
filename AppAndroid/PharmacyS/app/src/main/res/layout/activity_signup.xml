@@ -33,6 +33,19 @@
                 android:hint="Name" />
         </android.support.design.widget.TextInputLayout>
 
+        <!-- Apellidos -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <EditText android:id="@+id/input_surname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords"
+                android:hint="Surname" />
+        </android.support.design.widget.TextInputLayout>
+
         <!-- Email -->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -59,15 +72,15 @@
                 android:hint="Password"/>
         </android.support.design.widget.TextInputLayout>
 
-        <!-- Botón login -->
+        <!-- Botón de registrarse -->
         <Button
             android:id="@+id/btn_login"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="24dp"
+            android:background="@color/colorPrimary"
             android:padding="12dp"
-            android:background="@drawable/ripple"
             android:text="@string/signup"
 
             android:enabled="true" />

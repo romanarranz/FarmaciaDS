@@ -1,5 +1,6 @@
 package com.hugoroman.pharmacys.screens;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -148,7 +149,9 @@ public class FragmentReservation extends Fragment {
                     Pharmacy pharmacy = (Pharmacy) reservation.getProductsPharmaciesQuantities().get(position).get(0);
                     Product product = (Product) reservation.getProductsPharmaciesQuantities().get(position).get(1);
 
-                    dbConnector.removeFromReservation(pharmacy.getCif(), product.getId());
+                    String userEmail = getActivity().getSharedPreferences(MainActivity.SYSPRE, Context.MODE_PRIVATE).getString(MainActivity.USER_EMAIL, MainActivity.NOT_USER_EMAIL);
+
+                    dbConnector.removeFromReservation(pharmacy.getCif(), product.getId(), userEmail, false);
                 }
 
                 reservation = dbConnector.getReservation();

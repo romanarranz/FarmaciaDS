@@ -57,8 +57,8 @@
             android:layout_marginTop="24dp"
             android:layout_marginBottom="24dp"
             android:padding="12dp"
-            android:background="@drawable/ripple"
             android:text="@string/login"
+            android:background="@color/colorPrimary"
             android:enabled="true" />
 
         <TextView android:id="@+id/link_forgot_password"

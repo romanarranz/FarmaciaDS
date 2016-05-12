@@ -1,5 +1,6 @@
 package com.hugoroman.pharmacys.data;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -20,12 +21,10 @@ public final class PharmacyDao {
 
         Cursor c = db.rawQuery(selectQuery, null);
 
-        Pharmacy pharmacy = null;
-
         if(c != null) {
             c.moveToFirst();
 
-            pharmacy = new Pharmacy(c.getString(c.getColumnIndex(PharmacyTable.ID)),
+            final Pharmacy pharmacy = new Pharmacy(c.getString(c.getColumnIndex(PharmacyTable.ID)),
                                     c.getString(c.getColumnIndex(PharmacyTable.NAME)),
                                     c.getInt(c.getColumnIndex(PharmacyTable.PHONE_NUMBER)),
                                     c.getString(c.getColumnIndex(PharmacyTable.DESCRIPTION)),
@@ -37,9 +36,11 @@ public final class PharmacyDao {
                                     c.getString(c.getColumnIndex(PharmacyTable.LOGO)));
 
             c.close();
+
+            return pharmacy;
         }
 
-        return pharmacy;
+        return null;
     }
 
     public static List<Pharmacy> getAllPharmacies(SQLiteDatabase db) {
@@ -54,7 +55,7 @@ public final class PharmacyDao {
 
         if(c != null && c.moveToFirst()) {
             do {
-                Pharmacy pharmacy = new Pharmacy(c.getString(c.getColumnIndex(PharmacyTable.ID)),
+                final Pharmacy pharmacy = new Pharmacy(c.getString(c.getColumnIndex(PharmacyTable.ID)),
                         c.getString(c.getColumnIndex(PharmacyTable.NAME)),
                         c.getInt(c.getColumnIndex(PharmacyTable.PHONE_NUMBER)),
                         c.getString(c.getColumnIndex(PharmacyTable.DESCRIPTION)),
@@ -67,10 +68,9 @@ public final class PharmacyDao {
 
                 pharmacies.add(pharmacy);
             } while(c.moveToNext());
-        }
 
-        if(c != null)
             c.close();
+        }
 
         return pharmacies;
     }
@@ -93,5 +93,39 @@ public final class PharmacyDao {
         }
 
         return pharmacyName;
+    }
+
+    public static void addPharmacy(SQLiteDatabase db, String pharmacyCif, String pharmacyName, int pharmacyPhone, String pharmacyDescription, int pharmacyStart, int pharmacyEnd,
+                            double pharmacyLatitude, double pharmacyLongitude, String pharmacyAddress, String pharmacyLogo) {
+
+        String selectQuery = "SELECT * FROM " + PharmacySContract.PharmacyTable.TABLE_NAME + " WHERE " + PharmacyTable.ID + " = '" + pharmacyCif + "'";
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        ContentValues contentValues = new ContentValues();
+
+        if(c != null) {
+            boolean update = c.moveToFirst();
+
+            c.close();
+
+            contentValues.put(PharmacyTable.ID, pharmacyCif);
+            contentValues.put(PharmacyTable.NAME, pharmacyName);
+            contentValues.put(PharmacyTable.PHONE_NUMBER, pharmacyPhone);
+            contentValues.put(PharmacyTable.DESCRIPTION, pharmacyDescription);
+            contentValues.put(PharmacyTable.START_SCHEDULE, pharmacyStart);
+            contentValues.put(PharmacyTable.END_SCHEDULE, pharmacyEnd);
+            contentValues.put(PharmacyTable.LATITUDE, pharmacyLatitude);
+            contentValues.put(PharmacyTable.LONGITUDE, pharmacyLongitude);
+            contentValues.put(PharmacyTable.ADDRESS, pharmacyAddress);
+            contentValues.put(PharmacyTable.LOGO, pharmacyLogo);
+
+            if(!update) {
+                db.insert(PharmacyTable.TABLE_NAME, null, contentValues);
+            }
+            else {
+                db.update(PharmacyTable.TABLE_NAME, contentValues, PharmacyTable.ID + " = ?", new String[] { pharmacyCif });
+            }
+        }
     }
 }

@@ -27,11 +27,11 @@ public final class ReservationDao {
 
                 String pharmacyCif = c.getString(c.getColumnIndex(PharmacySContract.ReservationTable.PHARMACY_ID));
 
-                Pharmacy pharmacy = PharmacyDao.getPharmacy(db, pharmacyCif);
+                final Pharmacy pharmacy = PharmacyDao.getPharmacy(db, pharmacyCif);
 
                 int productID = c.getInt(c.getColumnIndex(PharmacySContract.ReservationTable.PRODUCT_ID));
 
-                Product product = ProductDao.getProduct(db, productID);
+                final Product product = ProductDao.getProduct(db, productID);
 
                 productPharmacyQuantity.add(pharmacy);
                 productPharmacyQuantity.add(product);
@@ -47,7 +47,7 @@ public final class ReservationDao {
         return new Reservation(productsPharmaciesQuantities);
     }
 
-    public static void addToReservation(SQLiteDatabase db, String pharmacyCif, int productId, int quantity) {
+    public static void addToReservation(SQLiteDatabase db, String pharmacyCif, int productId, int quantity, String userEmail) {
 
         String selectQuery = "SELECT * FROM " + PharmacySContract.ReservationTable.TABLE_NAME + " WHERE " +
                 PharmacySContract.ReservationTable.PHARMACY_ID + " = '" + pharmacyCif + "' AND " + PharmacySContract.ReservationTable.PRODUCT_ID + " = " + productId;
@@ -61,23 +61,45 @@ public final class ReservationDao {
 
             c.close();
 
-            if (!update) {
+            if(!update) {
                 contentValues.put(PharmacySContract.ReservationTable.PHARMACY_ID, pharmacyCif);
                 contentValues.put(PharmacySContract.ReservationTable.PRODUCT_ID, productId);
                 contentValues.put(PharmacySContract.ReservationTable.QUANTITY, quantity);
                 db.insert(PharmacySContract.ReservationTable.TABLE_NAME, null, contentValues);
+
+                DBConnectorServer.addToReservation(pharmacyCif, productId, userEmail, quantity);
             } else {
                 contentValues.put(PharmacySContract.ReservationTable.QUANTITY, quantity);
                 db.update(PharmacySContract.ReservationTable.TABLE_NAME, contentValues,
                         PharmacySContract.ReservationTable.PHARMACY_ID + " = ? AND " + PharmacySContract.ReservationTable.PRODUCT_ID + " = ?", new String[]{pharmacyCif, String.valueOf(productId)});
+
+                DBConnectorServer.updateReservation(pharmacyCif, productId, userEmail, quantity);
             }
         }
     }
 
-    public static void removeFromReservation(SQLiteDatabase db, String pharmacyCif, int productId) {
+    public static void removeFromReservation(SQLiteDatabase db, String pharmacyCif, int productId, String userEmail, boolean onlyLocal) {
 
         db.delete(PharmacySContract.ReservationTable.TABLE_NAME,
                 PharmacySContract.ReservationTable.PHARMACY_ID + " = ? AND " + PharmacySContract.ReservationTable.PRODUCT_ID + " = ?",
                 new String[] { pharmacyCif, String.valueOf(productId) });
+
+        if(!onlyLocal)
+            DBConnectorServer.removeReservation(pharmacyCif, productId, userEmail);
+    }
+
+    public static void deleteAllReservations(SQLiteDatabase db, String userEmail) {
+
+        String selectQuery = "SELECT * FROM " + PharmacySContract.ReservationTable.TABLE_NAME;
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if(c != null && c.moveToFirst()) {
+            do {
+                removeFromReservation(db, c.getString(c.getColumnIndex(PharmacySContract.ReservationTable.PHARMACY_ID)), c.getInt(c.getColumnIndex(PharmacySContract.ReservationTable.PRODUCT_ID)), userEmail, true);
+            } while(c.moveToNext());
+
+            c.close();
+        }
     }
 }

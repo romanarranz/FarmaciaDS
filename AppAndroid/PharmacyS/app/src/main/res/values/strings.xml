@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">PharmacyS</string>
 
-    <!-- Elementos del login y signup -->
+    <!-- Elementos del login, signup y recover -->
     <string name="email">E-mail</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
@@ -10,6 +10,7 @@
     <string name="no_account">No account yet? Create one</string>
     <string name="member">Already a member? Sign in</string>
     <string name="exit">Press back to exit</string>
+    <string name="recover">Recover Password</string>
 
     <!-- Elementos del NavView -->
     <string name="user">User</string>

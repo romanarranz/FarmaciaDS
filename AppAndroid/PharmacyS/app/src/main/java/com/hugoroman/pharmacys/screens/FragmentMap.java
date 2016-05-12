@@ -156,7 +156,6 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, GoogleM
     public void setUpPharmacies() {
 
         if(pharmacies != null && !pharmacies.isEmpty()) {
-
             pharmacies = dbConnector.getAllPharmacies();
 
             for(Pharmacy pharmacy : pharmacies) {

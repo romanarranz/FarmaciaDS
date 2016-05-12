@@ -1,12 +1,12 @@
 package com.hugoroman.pharmacys.data;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
-import com.hugoroman.pharmacys.data.PharmacySContract.OrderTable;
 import com.hugoroman.pharmacys.data.PharmacySContract.OrderProductTable;
+import com.hugoroman.pharmacys.data.PharmacySContract.OrderTable;
 import com.hugoroman.pharmacys.model.Order;
 import com.hugoroman.pharmacys.model.Product;
 
@@ -103,7 +103,7 @@ public final class OrderDao {
 
         if(c != null && c.moveToFirst()) {
             do {
-                Product product = ProductDao.getProduct(db, c.getInt(c.getColumnIndex(OrderProductTable.PRODUCT_ID)));
+                final Product product = ProductDao.getProduct(db, c.getInt(c.getColumnIndex(OrderProductTable.PRODUCT_ID)));
 
                 products.add(product);
             } while(c.moveToNext());
@@ -114,12 +114,27 @@ public final class OrderDao {
         return products;
     }
 
-    public static void addToOrder(SQLiteDatabase db, String userEmail, String pharmacyId, long date, float price, List<Product> products, List<Integer> quantities) {
+    public static void addToOrder(SQLiteDatabase db, String userEmail, String pharmacyId, long date, float price, List<Product> products, List<Integer> quantities, boolean onlyLocal, Integer orderLastId) {
 
+        if(!onlyLocal) {
+            // Crear el pedido en el servidor
+            DBConnectorServer.addToOrder(userEmail, pharmacyId, price, products, quantities);
+            Log.e("CREATE ORDER", "ON SERVER");
+
+            // Llamar a la api rest para producir recibo
+        }
 
         ContentValues contentValuesOrder = new ContentValues();
 
-        String idOrder = null;
+        Integer idOrder;
+
+        if(orderLastId == null)
+            idOrder = DBConnectorServer.getLastIdOrder();
+        else
+            idOrder = orderLastId;
+
+        Log.e("ADD TO ORDER", "LAST ID " + idOrder + " asdFAS");
+
         contentValuesOrder.put(OrderTable.ID, idOrder);
         contentValuesOrder.put(OrderTable.USER_ID, userEmail);
         contentValuesOrder.put(OrderTable.PHARMACY_ID, pharmacyId);
@@ -137,5 +152,36 @@ public final class OrderDao {
         }
 
         db.insert(OrderProductTable.TABLE_NAME, null, contentValuesOrderProduct);
+    }
+
+    public static void deleteAllOrders(SQLiteDatabase db) {
+
+        String selectQuery = "SELECT * FROM " + OrderTable.TABLE_NAME;
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if(c != null && c.moveToFirst()) {
+            do {
+                int productId = c.getInt(c.getColumnIndex(OrderTable.ID));
+
+                String selectQueryOrderProduct = "SELECT * FROM " + OrderProductTable.TABLE_NAME + " WHERE " +
+                        OrderProductTable.ID_ORDER + " = " + productId;
+
+                Cursor c2 = db.rawQuery(selectQueryOrderProduct, null);
+
+                if (c2 != null && c2.moveToFirst()) {
+                    do {
+                        db.delete(OrderProductTable.TABLE_NAME, null, null);
+                    } while (c2.moveToNext());
+
+                    c2.close();
+                }
+
+                db.delete(OrderTable.TABLE_NAME, null, null);
+
+            } while(c.moveToNext());
+
+            c.close();
+        }
     }
 }

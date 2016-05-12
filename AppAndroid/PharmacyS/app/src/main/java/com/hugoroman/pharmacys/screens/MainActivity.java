@@ -23,16 +23,21 @@ import android.widget.Toast;
 
 import com.hugoroman.pharmacys.R;
 import com.hugoroman.pharmacys.data.DBConnector;
-import com.hugoroman.pharmacys.data.DBPharmacyS;
+import com.hugoroman.pharmacys.data.DBConnectorServer;
 import com.hugoroman.pharmacys.model.User;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String SYSPRE = "PHARMACYS";
-    private static final String USER_EMAIL = "USER_EMAIL";
-    private static final String NOT_USER_EMAIL = "NOT_USER_EMAIL";
+    public static final String SYSPRE = "PHARMACYS";
+    public static final String USER_EMAIL = "USER_EMAIL";
+    public static final String NOT_USER_EMAIL = "NOT_USER_EMAIL";
+    public static final String PASS = "USER_PASSWORD";
+    public static final String NOT_PASS = "PASSWORD_NOT_FOUND";
+
+    public static boolean UPDATED = false;
+
     private static final int REQUEST_LOGIN = 0;
     private static final String NAV_MENU_ITEM = "navItemId";
     private static final String ACTIONBAR_TITTLE = "actionBarTittle";
@@ -54,31 +59,27 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Sólo para pruebas -> Borra toda la BD
-        this.getApplicationContext().deleteDatabase(DBPharmacyS.DATABASE_NAME);
+        //this.getApplicationContext().deleteDatabase(DBPharmacyS.DATABASE_NAME);
 
         Log.e("MAIN ACTIVITY", "ON CREATE");
 
         preferences = getSharedPreferences(SYSPRE, MODE_PRIVATE);
 
-        /*if(!preferences.contains(USER_EMAIL)) {
-            Toast.makeText(this, "Creating login activity", Toast.LENGTH_SHORT).show();
+        userEmail = preferences.getString(USER_EMAIL, NOT_USER_EMAIL);
+
+        Log.e("USER EMAIL ON CREATE", userEmail);
+
+        if(userEmail.equals(NOT_USER_EMAIL)) {
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivityForResult(intent, REQUEST_LOGIN);
         }
         else {
-            userEmail = preferences.getString(USER_EMAIL, NOT_USER_EMAIL);
-
-            if(!userEmail.equals(NOT_USER_EMAIL))
-                user = new DBConnector(getApplicationContext()).getUser(userEmail);
-            else {
-                Log.e("SHARED PREFERENCES", "ERROR RECOVERING USER ID FROM SHARED PREFERENCES");
-
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivityForResult(intent, REQUEST_LOGIN);
+            if(!UPDATED) {
+                DBConnectorServer.syncDB(this, userEmail);
             }
-        }*/
 
-        userEmail = "hugomc92@gmail.com";
+            user = new DBConnector(getApplicationContext()).getUser(userEmail);
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.appbar);
         setSupportActionBar(toolbar);
@@ -87,9 +88,6 @@ public class MainActivity extends AppCompatActivity {
         navView = (NavigationView) findViewById(R.id.drawer_nav);
 
         View header = navView.getHeaderView(0);
-
-        // SÓLO PARA PRUEBAS porque ya está en else arriba
-        user = new DBConnector(getApplicationContext()).getUser(userEmail);
 
         userName = (TextView) header.findViewById(R.id.user_name);
 
@@ -169,16 +167,17 @@ public class MainActivity extends AppCompatActivity {
                                     fragmentTransaction = true;
                                 }
                                 break;
-                            case R.id.navigation_item_settings:
-                                return false;
                             case R.id.navigation_item_settings_1:
-                                Toast.makeText(getApplicationContext(), "Settings Selected", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                                startActivity(intent);
+
+                                fragmentTransaction = false;
                                 break;
                             case R.id.navigation_item_settings_2:
-                                if(preferences.contains(USER_EMAIL)) {
+                                if(preferences.contains(USER_EMAIL))
                                     preferences.edit().remove(USER_EMAIL).commit();
 
-                                }
+                                Toast.makeText(getApplicationContext(), "Logging out... Thank you", Toast.LENGTH_LONG).show();
                                 cleanFragmentStack();
                                 finish();
                                 break;
@@ -215,6 +214,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
+
+        //DBConnectorServer.tryConnection(userName);
     }
 
     // Capturar si se ha pulsado el icono de la hamburguesa para abrir el menú
@@ -239,13 +240,20 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.e("MAIN ACTIVITY", "ON ACTIVITY RESULT");
 
-                // SÓLO PARA PRUEBAS - Reemplazar por el id del shared preferences
+                userEmail = getSharedPreferences(SYSPRE, MODE_PRIVATE).getString(USER_EMAIL, NOT_USER_EMAIL);
+
+                if(!UPDATED) {
+                    DBConnectorServer.syncDB(this, userEmail);
+                }
+
+                Log.e("Log get email SHP", "email: " + userEmail);
+
                 user = new DBConnector(getApplicationContext()).getUser(userEmail);
 
-                if(user != null)
+                if(user != null) {
                     userName.setText(user.getName() + " " + user.getSurname());
-
-                Log.e("USER", user.getName() + " " + user.getSurname());
+                    Log.e("USER", user.getName() + " " + user.getSurname());
+                }
 
                 // Solicitar permisos Localización dinámicamente para Android Marshallow y N
                 if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
@@ -271,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
 
-        Fragment fragment = null;
+        Fragment fragment;
 
         if(savedInstanceState == null) {
             navMenuItem = R.id.navigation_item_1;
@@ -305,20 +313,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        /*if(!preferences.contains("user-email")) {
-            Toast backtoast = Toast.makeText(this, "Creating login activity on resume", Toast.LENGTH_SHORT);
-            backtoast.show();
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-
-
-        }*/
-    }
-
-    @Override
     public void onBackPressed() {
 
         drawerLayout.closeDrawers();
@@ -330,11 +324,13 @@ public class MainActivity extends AppCompatActivity {
             setMenuItemCheck(null);
         }
         else {
+            UPDATED = false;
+
             super.onBackPressed();
         }
     }
 
-    private Fragment getVisibleFragment(){
+    private Fragment getVisibleFragment() {
 
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
 
@@ -358,80 +354,82 @@ public class MainActivity extends AppCompatActivity {
         else
             Log.e("SET ON ITEM CHECKED", "fragment null");
 
-        if(fragment.getClass() == FragmentMain.class) {
-            navMenuItem = R.id.navigation_item_1;
-            actionBarTittle = "PharmacyS";
+        if(fragment != null) {
+            if(fragment.getClass() == FragmentMain.class) {
+                navMenuItem = R.id.navigation_item_1;
+                actionBarTittle = "PharmacyS";
 
-            // Vaciar la pila de Fragments, para si se pulsa en el botón atrás cerrar la App.
-            cleanFragmentStack();
-        }
-        else if(fragment.getClass() == FragmentPharmacies.class) {
-            navMenuItem = R.id.navigation_item_2;
-            actionBarTittle = "Pharmacies";
-        }
-        else if(fragment.getClass() == FragmentMap.class) {
-            navMenuItem = R.id.navigation_item_3;
-            actionBarTittle = "Pharmacies Map";
-        }
-        else if(fragment.getClass() == FragmentPharmacy.class) {
+                // Vaciar la pila de Fragments, para si se pulsa en el botón atrás cerrar la App.
+                cleanFragmentStack();
+            }
+            else if(fragment.getClass() == FragmentPharmacies.class) {
+                navMenuItem = R.id.navigation_item_2;
+                actionBarTittle = "Pharmacies";
+            }
+            else if(fragment.getClass() == FragmentMap.class) {
+                navMenuItem = R.id.navigation_item_3;
+                actionBarTittle = "Pharmacies Map";
+            }
+            else if(fragment.getClass() == FragmentPharmacy.class) {
+                if(navMenuItem > 0)
+                    navView.getMenu().findItem(navMenuItem).setChecked(false);
+
+                navMenuItem = -1;
+                actionBarTittle = ((FragmentPharmacy) fragment).getPharmacyName();
+            }
+            else if(fragment.getClass() == FragmentInventory.class) {
+                if(navMenuItem > 0)
+                    navView.getMenu().findItem(navMenuItem).setChecked(false);
+
+                navMenuItem = -1;
+                actionBarTittle = "Product Categories";
+            }
+            else if(fragment.getClass() == FragmentProducts.class) {
+                if(navMenuItem > 0)
+                    navView.getMenu().findItem(navMenuItem).setChecked(false);
+
+                navMenuItem = -1;
+                actionBarTittle = "Catalogue of " + ((FragmentProducts) fragment).getCategoryName();
+            }
+            else if(fragment.getClass() == FragmentProduct.class) {
+                if(navMenuItem > 0)
+                    navView.getMenu().findItem(navMenuItem).setChecked(false);
+
+                navMenuItem = -1;
+                actionBarTittle = ((FragmentProduct) fragment).getProductName();
+            }
+            else if(fragment.getClass() == FragmentBasket.class) {
+                navMenuItem = R.id.navigation_item_4;
+                actionBarTittle = "My Basket";
+            }
+            else if(fragment.getClass() == FragmentReservation.class) {
+                navMenuItem = R.id.navigation_item_6;
+                actionBarTittle = "My Reservation";
+            }
+            else if(fragment.getClass() == FragmentOrders.class) {
+                navMenuItem = R.id.navigation_item_5;
+                actionBarTittle = "My Orders";
+            }
+            else if(fragment.getClass() == FragmentOrder.class) {
+                if (navMenuItem > 0)
+                    navView.getMenu().findItem(navMenuItem).setChecked(false);
+
+                navMenuItem = -1;
+                actionBarTittle = "Order: " + ((FragmentOrder) fragment).getOrderId();
+            }
+            else if(fragment.getClass() == FragmentPayment.class) {
+                if (navMenuItem > 0)
+                    navView.getMenu().findItem(navMenuItem).setChecked(false);
+
+                navMenuItem = -1;
+                actionBarTittle = "Payment Process ";
+            }
+
             if(navMenuItem > 0)
-                navView.getMenu().findItem(navMenuItem).setChecked(false);
+                navView.getMenu().findItem(navMenuItem).setChecked(true);
 
-            navMenuItem = -1;
-            actionBarTittle = ((FragmentPharmacy)fragment).getPharmacyName();
+            getSupportActionBar().setTitle(actionBarTittle);
         }
-        else if(fragment.getClass() == FragmentInventory.class) {
-            if(navMenuItem > 0)
-                navView.getMenu().findItem(navMenuItem).setChecked(false);
-
-            navMenuItem = -1;
-            actionBarTittle = "Product Categories";
-        }
-        else if(fragment.getClass() == FragmentProducts.class) {
-            if(navMenuItem > 0)
-                navView.getMenu().findItem(navMenuItem).setChecked(false);
-
-            navMenuItem = -1;
-            actionBarTittle = "Catalogue of " + ((FragmentProducts)fragment).getCategoryName();
-        }
-        else if(fragment.getClass() == FragmentProduct.class) {
-            if(navMenuItem > 0)
-                navView.getMenu().findItem(navMenuItem).setChecked(false);
-
-            navMenuItem = -1;
-            actionBarTittle = ((FragmentProduct) fragment).getProductName();
-        }
-        else if(fragment.getClass() == FragmentBasket.class) {
-            navMenuItem = R.id.navigation_item_4;
-            actionBarTittle = "My Basket";
-        }
-        else if(fragment.getClass() == FragmentReservation.class) {
-            navMenuItem = R.id.navigation_item_6;
-            actionBarTittle = "My Reservation";
-        }
-        else if(fragment.getClass() == FragmentOrders.class) {
-            navMenuItem = R.id.navigation_item_5;
-            actionBarTittle = "My Orders";
-        }
-        else if(fragment.getClass() == FragmentOrder.class) {
-            if(navMenuItem > 0)
-                navView.getMenu().findItem(navMenuItem).setChecked(false);
-
-            navMenuItem = -1;
-            actionBarTittle = "Order: " + ((FragmentOrder) fragment).getOrderId();
-        }
-        else if(fragment.getClass() == FragmentPayment.class) {
-            if(navMenuItem > 0)
-                navView.getMenu().findItem(navMenuItem).setChecked(false);
-
-            navMenuItem = -1;
-            actionBarTittle = "Payment Process ";
-        }
-
-        if(navMenuItem > 0)
-            navView.getMenu().findItem(navMenuItem).setChecked(true);
-
-        getSupportActionBar().setTitle(actionBarTittle);
     }
 
     public void cleanFragmentStack() {
@@ -439,8 +437,8 @@ public class MainActivity extends AppCompatActivity {
         int count = getSupportFragmentManager().getBackStackEntryCount();
 
         if(count > 0) {
-            for (int i = 0; i < count; i++) {
-                getSupportFragmentManager().popBackStack();
+            for(int i=0; i < count; i++) {
+                getSupportFragmentManager().popBackStackImmediate();
             }
         }
     }

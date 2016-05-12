@@ -1,10 +1,12 @@
 package com.hugoroman.pharmacys.screens;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.transition.Slide;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +22,7 @@ import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout;
 import com.hugoroman.pharmacys.R;
 import com.hugoroman.pharmacys.data.DBConnector;
 import com.hugoroman.pharmacys.model.Product;
+import com.hugoroman.pharmacys.util.LoadImage;
 
 import java.sql.Date;
 import java.text.DateFormat;
@@ -92,6 +95,7 @@ public class FragmentProduct extends Fragment implements View.OnClickListener {
         productAvailables = (TextView) view.findViewById(R.id.pro_availables);
 
         if(product != null) {
+            new LoadImage(productPhoto).execute(product.getUrlImage());
             productName.setText(product.getName());
 
             DBConnector dbConnector = new DBConnector(getContext());
@@ -149,6 +153,9 @@ public class FragmentProduct extends Fragment implements View.OnClickListener {
                 addReserveAction.setImageDrawable(getResources().getDrawable(R.drawable.ic_reservations));
             }
         }
+        else if(maxQuantity == 1) {
+            addQuantity.setImageAlpha(0);
+        }
 
         substractQuantity.setImageAlpha(0);
         quantitySelector.setText("1");
@@ -165,6 +172,7 @@ public class FragmentProduct extends Fragment implements View.OnClickListener {
                 morph.show();
                 break;
             case R.id.rel_product:
+                // Ocultar el selector de cantidad de elementos si se pulsa en cualquier otro sitio de la pantall
                 morph.hide();
                 break;
             case R.id.substract_count:
@@ -178,14 +186,15 @@ public class FragmentProduct extends Fragment implements View.OnClickListener {
                         substractQuantity.setImageAlpha(1000);
 
                     quantitySelector.setText(String.valueOf(quantity));
-                }
 
-                addQuantity.setImageAlpha(1000);
+                    addQuantity.setImageAlpha(1000);
+                }
                 break;
             case R.id.add_count:
+                Log.e("MAX QUANTITY", "" + maxQuantity);
                 // Cambiar el número de unidades que se puede tramitar sumando 1
                 if(maxQuantity != 0) {
-                    if (quantity < maxQuantity) {
+                    if(quantity < maxQuantity) {
                         quantity++;
 
                         if(quantity == maxQuantity)
@@ -194,15 +203,23 @@ public class FragmentProduct extends Fragment implements View.OnClickListener {
                             addQuantity.setImageAlpha(1000);
 
                         quantitySelector.setText(String.valueOf(quantity));
+
+                        substractQuantity.setImageAlpha(1000);
+                    }
+                    else {
+                        addQuantity.setImageAlpha(0);
+                        substractQuantity.setImageAlpha(0);
                     }
                 }
                 else {
                     quantity++;
 
                     quantitySelector.setText(String.valueOf(quantity));
+
+                    substractQuantity.setImageAlpha(1000);
                 }
 
-                substractQuantity.setImageAlpha(1000);
+                //substractQuantity.setImageAlpha(1000);
                 break;
             case R.id.add_reserve:
                 if(maxQuantity > 0) {
@@ -218,7 +235,9 @@ public class FragmentProduct extends Fragment implements View.OnClickListener {
                     // Procesar la reserva
                     DBConnector dbConnector = new DBConnector(getContext());
 
-                    dbConnector.addToReservation(pharmacyCif, product.getId(), quantity);
+                    String userEmail = getActivity().getSharedPreferences(MainActivity.SYSPRE, Context.MODE_PRIVATE).getString(MainActivity.USER_EMAIL, MainActivity.NOT_USER_EMAIL);
+
+                    dbConnector.addToReservation(pharmacyCif, product.getId(), quantity, userEmail);
 
                     // Notificar al usuario que ha sido, o no, correctamente añadido como reserva
                     Toast.makeText(getContext(), getResources().getString(R.string.insert_reservations), Toast.LENGTH_LONG).show();

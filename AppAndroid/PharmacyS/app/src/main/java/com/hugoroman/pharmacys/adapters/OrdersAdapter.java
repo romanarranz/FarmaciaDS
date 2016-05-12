@@ -10,9 +10,7 @@ import android.widget.TextView;
 import com.hugoroman.pharmacys.R;
 import com.hugoroman.pharmacys.model.Order;
 
-import java.sql.Date;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.OrderViewHolder> {

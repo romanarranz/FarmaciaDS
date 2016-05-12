@@ -1,5 +1,6 @@
 package com.hugoroman.pharmacys.screens;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -18,8 +19,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +35,6 @@ import com.hugoroman.pharmacys.model.Product;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 
 public class FragmentPayment extends Fragment {
 
@@ -211,9 +209,13 @@ public class FragmentPayment extends Fragment {
                         quantities.add(quantity);
 
                         dbConnector.removeFromBasket(pharmacy.getCif(), product.getId());
+                        dbConnector.updateStock(pharmacy.getCif(), product.getId(), quantity);
                     }
                     // Añadir a pedidos
-                    dbConnector.addToOrder(userEmail, pharmaciesCif.get(0), System.currentTimeMillis(), visitor.getBasketPrice(), products, quantities);
+                    if(userEmail == null)
+                        userEmail = getActivity().getSharedPreferences(MainActivity.SYSPRE, Context.MODE_PRIVATE).getString(MainActivity.USER_EMAIL, MainActivity.NOT_USER_EMAIL);
+
+                    dbConnector.addToOrder(userEmail, pharmaciesCif.get(0), System.currentTimeMillis(), visitor.getBasketPrice(), products, quantities, false, null);
 
                     basket = dbConnector.getPharmacyBasket(pharmaciesCif.get(0));
 
@@ -240,12 +242,12 @@ public class FragmentPayment extends Fragment {
                     else {
                         Toast.makeText(getContext(), getResources().getString(R.string.payment_finish), Toast.LENGTH_SHORT).show();
 
+                        ((MainActivity) getActivity()).cleanFragmentStack();
+
                         // Volver al inicio
                         FragmentMain fragmentMain = new FragmentMain();
 
                         fragmentMain.setUser(dbConnector.getUser(userEmail));
-
-                        ((MainActivity) getActivity()).cleanFragmentStack();
 
                         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragmentMain).commit();

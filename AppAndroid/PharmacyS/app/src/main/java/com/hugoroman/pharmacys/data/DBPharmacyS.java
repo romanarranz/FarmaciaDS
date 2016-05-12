@@ -1,5 +1,6 @@
 package com.hugoroman.pharmacys.data;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -43,7 +44,7 @@ public class DBPharmacyS extends SQLiteOpenHelper {
                                                     PharmacyTable.END_SCHEDULE + " int(2) DEFAULT '0'," +
                                                     PharmacyTable.LATITUDE + " DOUBLE NOT NULL DEFAULT '0'," +
                                                     PharmacyTable.LONGITUDE + " DOUBLE NOT NULL DEFAULT '0'," +
-                                                    PharmacyTable.ADDRESS + " varchar(200) NOT NULL DEFAULT ''," +
+                                                    PharmacyTable.ADDRESS + " varchar(200) DEFAULT ''," +
                                                     PharmacyTable.LOGO + " varchar(200) DEFAULT ''" +
                                                     ");";
 
@@ -89,7 +90,7 @@ public class DBPharmacyS extends SQLiteOpenHelper {
                                                     ");";
 
     public static final String CREATE_ORDER = "CREATE TABLE " + PharmacySContract.OrderTable.TABLE_NAME + " ( " +
-                                                PharmacySContract.OrderTable.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                                                PharmacySContract.OrderTable.ID + " INTEGER PRIMARY KEY, " +
                                                 PharmacySContract.OrderTable.USER_ID + " varchar(100) REFERENCES " + PharmacySContract.UserTable.TABLE_NAME + "(" + PharmacySContract.UserTable.EMAIL + ") NOT NULL, " +
                                                 PharmacySContract.OrderTable.PHARMACY_ID + " varchar(9) REFERENCES " + PharmacyTable.TABLE_NAME + "(" + PharmacyTable.ID + ") NOT NULL, " +
                                                 PharmacySContract.OrderTable.DATE + " date NOT NULL, " +
@@ -116,10 +117,11 @@ public class DBPharmacyS extends SQLiteOpenHelper {
                                                                 " ('98371937A','FARMACIA SANTA MARIA',987381821,'',10,22, 0, 0, 'DIRECCIÓN', 'http://farmaciamariadelcarmen.es/wp-content/uploads/2016/04/farmacia_cover_L.jpg')" +
                                                                 ";";
 
-    private static final String CREATE_INITIAL_CATEGORY = "INSERT INTO " + CategoryTable.TABLE_NAME + " VALUES (1, 'BABY', 2130837579), (NULL, 'COSMETIC', 2130837623);";
+    private static final String CREATE_INITIAL_CATEGORY = "INSERT INTO " + CategoryTable.TABLE_NAME + " VALUES (1, 'BABY', 2130837579), (NULL, 'NUTRITION', 2130837647), (NULL, 'HEATH', 2130837628)," +
+            "(NULL, 'NATURAL', 2130837646), (NULL, 'HYGIENE', 2130837629), (NULL, 'COSMETIC', 2130837623), (NULL, 'VETERINARY', 2130837650);";
 
-    private static final String CREATE_INITIAL_PRODUCT = "INSERT INTO " + ProductTable.TABLE_NAME + " VALUES (1, 1, 'PACIFIER', 'BABY PACIFIER', 'SUAVINEX', 'u', NULL, 1, '12d181BA', NULL)," +
-                                                        "(NULL, 2, 'FACE CREAM', 'FACE CREAM FOR BEAUTY', 'NIVEA', 'g', " + new GregorianCalendar(2017, 0, 15).getTimeInMillis() +" , 100, '12d181BA', NULL);";
+    private static final String CREATE_INITIAL_PRODUCT = "INSERT INTO " + ProductTable.TABLE_NAME + " VALUES (1, 1, 'PACIFIER', 'BABY PACIFIER', 'SUAVINEX', 'u', NULL, 1, '12d181BA', 'http://www.abc.es/Media/201405/19/panal--644x362.jpg')," +
+                                                        "(NULL, 2, 'FACE CREAM', 'FACE CREAM FOR BEAUTY', 'NIVEA', 'g', " + new GregorianCalendar(2017, 0, 15).getTimeInMillis() +" , 100, '12d181BA', 'http://i.blogs.es/8f4c80/crema-salina-collistar/original.jpg');";
 
     private static final String CREATE_INITIAL_INVENTORY = "INSERT INTO " + InventoryTable.TABLE_NAME + " VALUES ('73890889B', 1, 3.20, 10), ('73890889B', 2, 5.90, 0);";
 
@@ -163,6 +165,11 @@ public class DBPharmacyS extends SQLiteOpenHelper {
         return InventoryDao.getPharmacyInventory(this.getReadableDatabase(), pharmacyId);
     }
 
+    public Product getProduct(int productId) {
+
+        return ProductDao.getProduct(this.getReadableDatabase(), productId);
+    }
+
     public String getProductCategoryName(int idProduct) {
 
         return ProductDao.getProductCategoryName(this.getReadableDatabase(), idProduct);
@@ -178,9 +185,9 @@ public class DBPharmacyS extends SQLiteOpenHelper {
         return ProductDao.getProductCategoryId(this.getReadableDatabase(), idProduct);
     }
 
-    public List<Product> getAllProductsByCategoryId(int categoryId) {
+    public List<Product> getAllProductsByCategoryId(int categoryId, String pharmacyId) {
 
-        return ProductDao.getAllProductsByCategoryId(this.getReadableDatabase(), categoryId);
+        return InventoryDao.getAllProductsByCategoryId(this.getReadableDatabase(), categoryId, pharmacyId);
     }
 
     public int getInventoryQuantity(String pharmacyId, int productId) {
@@ -208,14 +215,14 @@ public class DBPharmacyS extends SQLiteOpenHelper {
         return ReservationDao.getReservation(this.getReadableDatabase());
     }
 
-    public void addToReservation(String pharmacyId, int productId, int quantity) {
+    public void addToReservation(String pharmacyId, int productId, int quantity, String userEmail) {
 
-        ReservationDao.addToReservation(this.getWritableDatabase(), pharmacyId, productId, quantity);
+        ReservationDao.addToReservation(this.getWritableDatabase(), pharmacyId, productId, quantity, userEmail);
     }
 
-    public void removeFromReservation(String pharmacyId, int productId) {
+    public void removeFromReservation(String pharmacyId, int productId, String userEmail, boolean onlyLocal) {
 
-        ReservationDao.removeFromReservation(this.getWritableDatabase(), pharmacyId, productId);
+        ReservationDao.removeFromReservation(this.getWritableDatabase(), pharmacyId, productId, userEmail, onlyLocal);
     }
 
     public Inventory getInventory(String pharmacyId, int productId) {
@@ -263,9 +270,67 @@ public class DBPharmacyS extends SQLiteOpenHelper {
         return BasketDao.getPharmacyBasket(this.getReadableDatabase(), pharmacyId);
     }
 
-    public void addToOrder(String userEmail, String pharmacyId, long date, float price, List<Product> products, List<Integer> quantities) {
+    public void addToOrder(String userEmail, String pharmacyId, long date, float price, List<Product> products, List<Integer> quantities, boolean onlyLocal, Integer orderLastId) {
 
-        OrderDao.addToOrder(this.getReadableDatabase(), userEmail, pharmacyId, date, price, products, quantities);
+        OrderDao.addToOrder(this.getReadableDatabase(), userEmail, pharmacyId, date, price, products, quantities, onlyLocal, orderLastId);
+    }
+
+    public void addUser(Activity activity, String name, String surname, String email, String password, boolean onlyLocal) {
+
+        UserDao.addUser(this.getWritableDatabase(), activity, name, surname, email, password, onlyLocal);
+    }
+
+    public void addPharmacy(String pharmacyCif, String pharmacyName, int pharmacyPhone, String pharmacyDescription, int pharmacyStart, int pharmacyEnd,
+                            double pharmacyLatitude, double pharmacyLongitude, String pharmacyAddress, String pharmacyLogo) {
+
+        PharmacyDao.addPharmacy(this.getWritableDatabase(), pharmacyCif, pharmacyName, pharmacyPhone, pharmacyDescription, pharmacyStart, pharmacyEnd, pharmacyLatitude,
+                pharmacyLongitude, pharmacyAddress, pharmacyLogo);
+    }
+
+    public void addProduct(int productId, String productName, int productCategory, String productDescription, String productLaboratoy, String productUnits, long productExpDate,
+                           int productSize, String productLot, String productPhoto) {
+
+        ProductDao.addProduct(this.getWritableDatabase(), productId, productName, productCategory, productDescription, productLaboratoy, productUnits, productExpDate, productSize, productLot, productPhoto);
+    }
+
+    public void addInventory(String pharmacyId, int productId, float productPrice, int stock) {
+
+        InventoryDao.addInventory(this.getWritableDatabase(), pharmacyId, productId, productPrice, stock);
+    }
+
+    public void deleteAllProducts() {
+
+        ProductDao.deleteAllProducts(this.getWritableDatabase());
+    }
+
+    public void deleteAllInventories() {
+
+        InventoryDao.deleteAllInventories(this.getWritableDatabase());
+    }
+
+    public void deleteAllOrders() {
+
+        OrderDao.deleteAllOrders(this.getWritableDatabase());
+    }
+
+    public void deleteBasket() {
+
+        BasketDao.deleteBasket(this.getWritableDatabase());
+    }
+
+    public void deleteAllReservations(String userEmail) {
+
+        ReservationDao.deleteAllReservations(this.getWritableDatabase(), userEmail);
+    }
+
+    public boolean existsProduct(int productId) {
+
+        return ProductDao.existsProduct(this.getReadableDatabase(), productId);
+    }
+
+    public void updateStock(String pharmacyId, int productId, int quantity) {
+
+        InventoryDao.updateStock(this.getWritableDatabase(), pharmacyId, productId, quantity);
     }
 
     @Override
@@ -289,15 +354,16 @@ public class DBPharmacyS extends SQLiteOpenHelper {
         db.execSQL(CREATE_ORDER);
         db.execSQL(CREATE_ORDER_PRODUCT);
 
-        db.execSQL(CREATE_INITIAL_USER);
-        db.execSQL(CREATE_INITIAL_PHARMACY_DATA);
         db.execSQL(CREATE_INITIAL_CATEGORY);
-        db.execSQL(CREATE_INITIAL_PRODUCT);
-        db.execSQL(CREATE_INITIAL_INVENTORY);
-        db.execSQL(CREATE_INITIAL_BASKET);
-        db.execSQL(CREATE_INITIAL_RESERVATION);
-        db.execSQL(CREATE_INITIAL_ORDERS);
-        db.execSQL(CREATE_INITIAL_ORDERS_PRODUCT);
+
+        //db.execSQL(CREATE_INITIAL_USER);
+        //db.execSQL(CREATE_INITIAL_PHARMACY_DATA);
+        //db.execSQL(CREATE_INITIAL_PRODUCT);
+        //db.execSQL(CREATE_INITIAL_INVENTORY);
+        //db.execSQL(CREATE_INITIAL_BASKET);
+        //db.execSQL(CREATE_INITIAL_RESERVATION);
+        //db.execSQL(CREATE_INITIAL_ORDERS);
+        //db.execSQL(CREATE_INITIAL_ORDERS_PRODUCT);
     }
 
     @Override

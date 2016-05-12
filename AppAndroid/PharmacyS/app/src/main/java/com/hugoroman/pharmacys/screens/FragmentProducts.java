@@ -61,7 +61,7 @@ public class FragmentProducts extends Fragment {
 
         categoryName = dbConnector.getCategoryName(categoryID);
 
-        final List<Product> products = dbConnector.getAllProductsByCategoryId(categoryID);
+        final List<Product> products = dbConnector.getAllProductsByCategoryId(categoryID, pharmacyCif);
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.products_rv);
 

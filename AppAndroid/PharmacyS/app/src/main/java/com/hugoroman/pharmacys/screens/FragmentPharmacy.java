@@ -10,10 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hugoroman.pharmacys.R;
 import com.hugoroman.pharmacys.model.Pharmacy;
+import com.hugoroman.pharmacys.util.LoadImage;
 
 
 public class FragmentPharmacy extends Fragment {
@@ -22,8 +24,10 @@ public class FragmentPharmacy extends Fragment {
 
     private View view;
     private Pharmacy pharmacy;
+    private ImageView pharmacyPhoto;
     private TextView pharmacyName;
     private TextView pharmacyPhone;
+    private TextView pharmacyAddress;
     private TextView pharmacyDescription;
     private TextView pharmacyOpeningtime;
     private Button catalogButton;
@@ -48,17 +52,21 @@ public class FragmentPharmacy extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_pharmacy, container, false);
 
+        pharmacyPhoto = (ImageView) view.findViewById(R.id.ph_photo);
         pharmacyName = (TextView) view.findViewById(R.id.ph_name);
         pharmacyPhone = (TextView) view.findViewById(R.id.ph_phone);
+        pharmacyAddress = (TextView) view.findViewById(R.id.ph_address);
         pharmacyDescription = (TextView) view.findViewById(R.id.ph_description);
         pharmacyOpeningtime = (TextView) view.findViewById(R.id.ph_opening_time);
         catalogButton = (Button) view.findViewById(R.id.ph_catalog_button);
 
         if(pharmacy != null) {
+            new LoadImage(pharmacyPhoto).execute(pharmacy.getLogo());
             pharmacyName.setText(pharmacy.getName());
             pharmacyPhone.setText(String.valueOf(pharmacy.getPhoneNumber()));
+            pharmacyAddress.setText(pharmacy.getAddress());
             pharmacyDescription.setText(pharmacy.getDescription());
-            pharmacyOpeningtime.setText(pharmacy.getStartSchedule() + ":00 - " + pharmacy.getEndSchedule() + ":00");
+            pharmacyOpeningtime.setText("Opening times: " + pharmacy.getStartSchedule() + ":00 - " + pharmacy.getEndSchedule() + ":00");
         }
 
         catalogButton.setOnClickListener(new View.OnClickListener() {

@@ -19,13 +19,13 @@
             android:id="@+id/rel_product">
 
             <ImageView
-                android:layout_width="150dp"
-                android:layout_height="150dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/pro_photo"
-                android:src="@mipmap/logo"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="40dp"/>
+                android:layout_marginTop="10dp"
+                android:adjustViewBounds="true" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -73,7 +73,9 @@
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
                 android:textSize="15sp"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp" />
 
             <TextView
                 android:layout_width="match_parent"

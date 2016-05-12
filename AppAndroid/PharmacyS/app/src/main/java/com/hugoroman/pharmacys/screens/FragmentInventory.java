@@ -75,7 +75,7 @@ public class FragmentInventory extends Fragment {
                 bundle.putInt("CATEGORY_ID", categoryID);
                 bundle.putString("PH_CIF", pharmacyCif);
 
-                                fragmentProducts.setArguments(bundle);
+                fragmentProducts.setArguments(bundle);
 
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragmentProducts).addToBackStack(null).commit();

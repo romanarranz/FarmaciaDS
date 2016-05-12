@@ -38,10 +38,12 @@
         <item
             android:id="@+id/navigation_item_settings_1"
             android:icon="@drawable/ic_settings"
-            android:title="@string/settings" />
+            android:title="@string/settings"
+            android:checkable="false"/>
         <item
             android:id="@+id/navigation_item_settings_2"
             android:icon="@drawable/ic_logout"
-            android:title="@string/logout"/>
+            android:title="@string/logout"
+            android:checkable="false"/>
     </group>
 </menu>

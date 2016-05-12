@@ -203,8 +203,6 @@ public class FragmentBasket extends Fragment {
                         frameLayout.addView(emptyBasket);
                         frameLayout.removeView(priceLinearLayout);
                         fab.hide();
-
-                        getActivity().getSupportFragmentManager().popBackStackImmediate();
                     }
 
                     selections.clear();
@@ -235,9 +233,9 @@ public class FragmentBasket extends Fragment {
                     fragmentPayment.setArguments(bundle);
 
                     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragmentPayment).addToBackStack(null).commit();
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragmentPayment).commit();
                     else
-                        getActivity().getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_frame, fragmentPayment).addToBackStack(null).commit();
+                        getActivity().getSupportFragmentManager().beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).replace(R.id.content_frame, fragmentPayment).commit();
 
                     ((MainActivity) getActivity()).setMenuItemCheck(fragmentPayment);
                 }

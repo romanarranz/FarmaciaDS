@@ -2,11 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hugoroman.pharmacys">
 
-    <!-- Permisos para autocompletar el email cuando el usuario se esté registrando o logeando -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-
     <!-- Permisos de conexión a internet -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -41,7 +36,9 @@
             android:value="AIzaSyCXz1SHulAqEAqpWz1DUCg0OZ1P9qBhXIM"/>
 
 
-        <activity android:name=".screens.MainActivity">
+        <activity
+            android:name=".screens.MainActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -59,6 +56,15 @@
         </activity>
 
         <activity
+            android:name=".screens.RecoverActivity"
+            android:parentActivityName=".screens.MainActivity"
+            android:theme="@style/AppThemeLogin">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".screens.MainActivity" />
+        </activity>
+
+        <activity
             android:name=".screens.SignUpActivity"
             android:parentActivityName=".screens.LoginActivity"
             android:theme="@style/AppThemeLogin"
@@ -67,6 +73,16 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".screens.LoginActivity" />
+        </activity>
+
+        <activity
+            android:name=".screens.SettingsActivity"
+            android:parentActivityName=".screens.MainActivity"
+            android:theme="@style/AppThemeSettings">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".screens.MainActivity" />
         </activity>
 
     </application>

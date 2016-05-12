@@ -1,13 +1,12 @@
 package com.hugoroman.pharmacys.data;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.hugoroman.pharmacys.model.Product;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
 
 public final class ProductDao {
 
@@ -18,12 +17,10 @@ public final class ProductDao {
 
         Cursor c = db.rawQuery(selectQuery, null);
 
-        Product product = null;
-
         if(c != null) {
             c.moveToFirst();
 
-            product = new Product(c.getInt(c.getColumnIndex(PharmacySContract.ProductTable.ID)),
+            final Product product = new Product(c.getInt(c.getColumnIndex(PharmacySContract.ProductTable.ID)),
                                     c.getInt(c.getColumnIndex(PharmacySContract.ProductTable.CATEGORY)),
                                     c.getString(c.getColumnIndex(PharmacySContract.ProductTable.NAME)),
                                     c.getString(c.getColumnIndex(PharmacySContract.ProductTable.DESCRIPTION)),
@@ -35,9 +32,11 @@ public final class ProductDao {
                                     c.getString(c.getColumnIndex(PharmacySContract.ProductTable.URL_IMAGE)));
 
             c.close();
+
+            return product;
         }
 
-        return product;
+        return null;
     }
 
     public static String getProductName(SQLiteDatabase db, int productId) {
@@ -158,38 +157,6 @@ public final class ProductDao {
         return categoryId;
     }
 
-    public static List<Product> getAllProductsByCategoryId(SQLiteDatabase db, int categoryId) {
-
-        String selectQuery = "SELECT * FROM " + PharmacySContract.ProductTable.TABLE_NAME + " WHERE " + PharmacySContract.ProductTable.CATEGORY + " = " + categoryId;
-
-        List<Product> products = new ArrayList<Product>();
-
-        Cursor c = db.rawQuery(selectQuery, null);
-
-        if(c != null && c.moveToFirst()) {
-            do {
-                Product product = new Product(c.getInt(c.getColumnIndex(PharmacySContract.ProductTable.ID)),
-                                                c.getInt(c.getColumnIndex(PharmacySContract.ProductTable.CATEGORY)),
-                                                c.getString(c.getColumnIndex(PharmacySContract.ProductTable.NAME)),
-                                                c.getString(c.getColumnIndex(PharmacySContract.ProductTable.DESCRIPTION)),
-                                                c.getString(c.getColumnIndex(PharmacySContract.ProductTable.LABORATORY)),
-                                                c.getString(c.getColumnIndex(PharmacySContract.ProductTable.UNITS)),
-                                                new Date(c.getLong(c.getColumnIndex(PharmacySContract.ProductTable.EXPIRATION_DATE))),
-                                                c.getInt(c.getColumnIndex(PharmacySContract.ProductTable.SIZE)),
-                                                c.getString(c.getColumnIndex(PharmacySContract.ProductTable.LOT)),
-                                                c.getString(c.getColumnIndex(PharmacySContract.ProductTable.URL_IMAGE)));
-
-                products.add(product);
-
-            } while(c.moveToNext());
-        }
-
-        if(c != null)
-            c.close();
-
-        return products;
-    }
-
     public static String getCategoryName(SQLiteDatabase db, int categoryId) {
 
         String selectQuery = "SELECT " + PharmacySContract.CategoryTable.NAME + " FROM " + PharmacySContract.CategoryTable.TABLE_NAME + " WHERE " +
@@ -208,5 +175,72 @@ public final class ProductDao {
         }
 
         return categoryName;
+    }
+
+    public static void addProduct(SQLiteDatabase db, int productId, String productName, int productCategory, String productDescription, String productLaboratoy, String productUnits, long productExpDate,
+                           int productSize, String productLot, String productPhoto) {
+
+        String selectQuery = "SELECT * FROM " + PharmacySContract.ProductTable.TABLE_NAME + " WHERE " + PharmacySContract.ProductTable.ID + " = '" + productId + "'";
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        ContentValues contentValues = new ContentValues();
+
+        if(c != null) {
+            boolean found = c.moveToFirst();
+
+            c.close();
+
+            contentValues.put(PharmacySContract.ProductTable.ID, productId);
+            contentValues.put(PharmacySContract.ProductTable.NAME, productName);
+            contentValues.put(PharmacySContract.ProductTable.CATEGORY, productCategory);
+            contentValues.put(PharmacySContract.ProductTable.DESCRIPTION, productDescription);
+            contentValues.put(PharmacySContract.ProductTable.LABORATORY, productLaboratoy);
+            contentValues.put(PharmacySContract.ProductTable.UNITS, productUnits);
+            contentValues.put(PharmacySContract.ProductTable.EXPIRATION_DATE, productExpDate);
+            contentValues.put(PharmacySContract.ProductTable.SIZE, productSize);
+            contentValues.put(PharmacySContract.ProductTable.LOT, productLot);
+            contentValues.put(PharmacySContract.ProductTable.URL_IMAGE, productPhoto);
+
+            if(found)
+            db.delete(PharmacySContract.ProductTable.TABLE_NAME, null, null);
+
+            db.insert(PharmacySContract.ProductTable.TABLE_NAME, null, contentValues);
+        }
+    }
+
+    public static void deleteAllProducts(SQLiteDatabase db) {
+
+        String selectQuery = "SELECT * FROM " + PharmacySContract.ProductTable.TABLE_NAME;
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if(c != null && c.moveToFirst()) {
+            do {
+                db.delete(PharmacySContract.ProductTable.TABLE_NAME, null, null);
+            } while(c.moveToNext());
+        }
+
+        if(c != null)
+            c.close();
+    }
+
+    public static boolean existsProduct(SQLiteDatabase db, int productId) {
+
+        String selectQuery = "SELECT * FROM " + PharmacySContract.ProductTable.TABLE_NAME + " WHERE " +
+                PharmacySContract.ProductTable.ID + " = " + productId;
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        boolean exists = false;
+
+        if(c != null) {
+            if(c.moveToFirst())
+                exists = true;
+
+            c.close();
+        }
+
+        return exists;
     }
 }
