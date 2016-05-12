@@ -6,13 +6,15 @@
 	
 	<!-- Top content -->
     <div class="top-content">
-        	
+        
    		<div class="inner-bg">
    			<div class="container">
-   			<%
+   				<%
 				// si la sesion es nueva o el atributo user no esta definido
 				if(session.isNew()||session.getAttribute("user") == null){ 	
-			%>
+				%>
+			
+				<jsp:include page="management/include/content/modal_forgotPassword_login.jsp"></jsp:include>
 				<div class="row">
                 <div class="col-sm-8 col-sm-offset-2 text">
                 <%  
@@ -76,6 +78,9 @@
 			               	</div>
 			                <button type="submit" name="action" value="login" class="btn">Sign in!</button>
 			          	</form>
+			          	
+			          	<p style="margin-top: 10px"><a id="forgottenPassword" href="javascript:;" data-toggle="modal" data-target="#forgotPassword">Forgot your Password?</a></p>
+			          	
 		        	</div>
             	</div>
                	</div> <!-- end row -->

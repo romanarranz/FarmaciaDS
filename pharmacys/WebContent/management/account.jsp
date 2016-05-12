@@ -8,7 +8,7 @@
 	if(session.isNew()||session.getAttribute("user") == null){
 	%>
 		<div class="col-md-12">
-			<h1>Usted no tiene permiso para acceder aqui</h1>
+			<h1>You do not have permission to break in here</h1>
 			<a href="http://<% out.print(ServerConfig.server); %>:8080/pharmacys/">Volver</a>
 		</div>
 	<%

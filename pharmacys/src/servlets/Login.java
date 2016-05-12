@@ -12,7 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import dao.DBConnector;
 import model.UserRefinedAbstraction;
+import util.DateUtil;
 import util.SHA512;
+import util.SendEmailUsingGMAILSMTP;
+import util.ServerConfig;
 
 @WebServlet("/login")
 public class Login extends HttpServlet {
@@ -132,8 +135,61 @@ public class Login extends HttpServlet {
     	}
     }
     
+    private void forgotPassword(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	String email = request.getParameter("forgotEmail");
+    	
+    	if(email != null){
+    		UserRefinedAbstraction user = dbc.getUserById(email);
+    		
+    		if(user != null){
+    			String currentDate = DateUtil.getCurrentDateTime();
+    			String resetHash = "";
+    			try {
+    	        	resetHash = SHA512.hashText(currentDate);
+    	        }
+    	        catch(Exception e) {
+    	        	e.getStackTrace();
+    	        }
+    			
+    			resetHash = resetHash.substring(0, 20);
+    			
+    			if(resetHash != null && !resetHash.equals(null) && resetHash != ""){
+    				user.setResetHash(resetHash);
+    					
+    				if(!dbc.updateUser(user)){
+    					System.out.println(email+" requested to reset his password");
+    						
+    					SendEmailUsingGMAILSMTP smtp = new SendEmailUsingGMAILSMTP();
+    						
+    					String link = "http://"+ServerConfig.server+":8080/pharmacys/login?action=resetPassword&hash="+resetHash;
+    					String msgContent = "Please clic on the next link to reset your password: "+link;
+    					smtp.setContent(msgContent);
+    					smtp.setRecipient(email);
+    					    					
+    					if(smtp.send()){
+    						this.msg.add("We have sent a email with the reset link");
+    					}
+    					else {
+    						this.errors.add("An error occurred when we tried to send mail to");
+    					}
+    				}
+    				else
+    					this.errors.add(email+" requested to reset his password but failed");    						
+    			}
+    		}
+        	else
+        		this.errors.add("Unknow user email");
+    	}
+    	
+    	this.redirect = "/pharmacys/index.jsp";
+    }
+    
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
+		
+		// Limpiar los mensajes que hubiera anteriormente
+		if(!this.msg.isEmpty()) 	this.msg.clear();
+		if(!this.errors.isEmpty()) 	this.errors.clear();
 		
 		String action  = request.getParameter("action");
 		
@@ -151,8 +207,7 @@ public class Login extends HttpServlet {
 					
 					if(user != null){
 						this.redirect = "/pharmacys/resetPassword.jsp";
-						request.getSession().setAttribute("userEmail", user.getEmail());
-						response.sendRedirect(this.redirect);
+						request.getSession().setAttribute("userEmail", user.getEmail());						
 					}
 					else {
 						System.out.println("hash "+ hash + " received but cant find user ");
@@ -163,7 +218,10 @@ public class Login extends HttpServlet {
 			default:
 				System.out.println("Something was wrong");
 				break;
-		}		
+		}
+		request.getSession().setAttribute("msg", this.msg);
+		request.getSession().setAttribute("errors", this.errors);
+		response.sendRedirect(this.redirect);
 	}
 	
 	@Override
@@ -195,6 +253,10 @@ public class Login extends HttpServlet {
 				
 			case "reset":
 				resetPassword(request, response);
+				break;
+				
+			case "forgotPassword":
+				forgotPassword(request, response);
 				break;
 			default:
 				request.getRequestDispatcher("/index.jsp").forward(request, response);
