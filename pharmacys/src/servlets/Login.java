@@ -196,7 +196,8 @@ public class Login extends HttpServlet {
 		switch(action){
 			case "logout":				
 				request.getSession().invalidate();
-				request.getRequestDispatcher("/index.jsp").forward(request, response);
+				this.redirect = "/pharmacys/index.jsp";
+				//request.getRequestDispatcher("/index.jsp").forward(request, response);
 				break;
 			
 			case "resetPassword":

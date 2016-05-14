@@ -33,7 +33,7 @@ $('#edit').on('show.bs.modal', function (event) {
 			modal.find('#editSize').val(jsondata.size);
 			modal.find('#editExpDate').val(jsondata.expirationDate);
 			modal.find('#editLot').val(jsondata.lot);
-			modal.find('#editDescr').val(parse(jsondata.description));
+			modal.find('#editDescr').val(parse(jsondata.description.join("\n")));
 			modal.find('#editStock').val(jsondata.stock);
 			modal.find('#editPrice').val(jsondata.price);
 		},

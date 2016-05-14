@@ -22,7 +22,7 @@
       	<div class="modal-body">
         	<div class="row">		         	
         		<div class="col-md-5">
-        			<img id="editImgViewer" src="http://localhost:8080/pharmacys/img/img_no_aviable.png" style="width: 100%; height: 300px;" alt=""/>
+        			<img id="editImgViewer" src="http://<% out.print(ServerConfig.server); %>:8080/pharmacys/img/img_no_aviable.png" style="width: 100%; height: 300px;" alt=""/>
         			<label for="editImg"  class="control-label">Change Image</label>    
                     <input type="file" id="editImg" name="editImg" />
         		</div>

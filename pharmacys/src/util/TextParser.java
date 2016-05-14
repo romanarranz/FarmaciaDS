@@ -9,4 +9,16 @@ public class TextParser {
 		
 		return result;
 	}
+	
+	public static String parseJSONRFC4627(String text){
+		String result = text;
+		result = result.replace("\0", "\n");
+		result = result.replace("\n", "\",\"");
+		result = result.replace("\r", "");
+		result = result.replace("\b", "");
+		result = result.replace("\f", "");
+		result = result.replace("\'", "\\'");
+		result = "[\""+ result + "\"]";
+		return result;
+	}
 }

@@ -6,18 +6,22 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import dao.DBConnector;
 import model.Inventory;
 import model.Product;
+import util.TextParser;
 
 @Path("/inventory")
 public class InventoryService {
 	
-	private DBConnector dbc = new DBConnector();
+	private DBConnector dbc = new DBConnector();	
 	
 	@GET
 	@Path("/getByIdJSON/{cif}/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON+";charset=UTF-8")
 	public String getByIdJSON(@PathParam("cif") String cif, @PathParam("id") String id){
 		String json = "{\"status\":\"not ok\"}";
 		
@@ -25,11 +29,12 @@ public class InventoryService {
 		Inventory inventory = dbc.getInventoryById(cif, Integer.parseInt(id));
 			
 		if(inventory != null && product != null){
+			String parsedDescription = TextParser.parseJSONRFC4627((product.getDescription()));
 			json = 
 			"{"+
 				"\"id\":"+product.getId()+","+				
 				"\"name\":\""+product.getName()+"\","+
-				"\"description\":\""+product.getDescription()+"\","+
+				"\"description\":"+parsedDescription+","+
 				"\"laboratory\":\""+product.getLaboratory()+"\","+
 				"\"units\":\""+product.getUnits()+"\","+
 				"\"expirationDate\":\""+product.getExpirationDate()+"\","+
@@ -45,6 +50,23 @@ public class InventoryService {
 				"\"stock\":"+inventory.getStock()+","+
 				"\"price\":"+inventory.getPrice()+
 			"}";
+			
+			JSONObject ok = null;
+			try {
+				ok = new JSONObject(json);
+				System.out.println(ok.toString());
+			}
+			catch(JSONException ex){
+				ex.printStackTrace();
+			}
+			
+			if(ok == null){
+				System.out.println("cadena mal formada \n"+json);
+			}
+			else {
+				json = ok.toString();
+				System.out.println("cadena bien formada \n"+json);
+			}
 		}
 		return json; 
 	}
