@@ -1,20 +1,30 @@
 package testMonitorizacion;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.awt.Label;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import controlVelocidad.Eje;
+import controlVelocidad.ControlVelocidad;
 import monitorizacion.CalculadorVelMed;
+import monitorizacion.Monitorizacion;
 import monitorizacion.Reseteo;
+import simulador.Interfaz;
 
-public class ReseteoTest {
+public class ReseteoTest extends Thread {
 	
+	private Interfaz i;
+	private Monitorizacion m;
+	private ControlVelocidad c;
 	private Reseteo r;
-	private CalculadorVelMed c;
-	private Eje e;
+	private CalculadorVelMed cal;
 	private boolean err;
 	
 	@BeforeClass
@@ -24,10 +34,28 @@ public class ReseteoTest {
 	
 	@Before
 	public void testInit(){
-		e = new Eje();
-		c = new CalculadorVelMed();
-		r = new Reseteo();
+		i = new Interfaz();		
+		m = i.getSimulacion().getPanelBotones().getMonitorizacion();
+		c = i.getSimulacion().getPanelBotones().getControlVelocidad();
+		cal = m.getCalculadorVelMed();
+		r = m.getReseteo();
 		err = false;
+	}
+	
+	@Test
+	public void testInicializacion(){
+		System.out.print("\ttestInicializacion...");
+		try {
+			assertNotNull(r);
+			assertTrue(r instanceof Reseteo);			
+		}
+		catch(AssertionError e){
+			System.out.print("\tnot ok\n");
+			err = true;
+			throw e;
+		}
+		
+		if(!err) System.out.print("\tok\n");
 	}
 	
 	@Test
@@ -35,23 +63,38 @@ public class ReseteoTest {
 		
 		System.out.print("\ttestReset...");
 		try {
-			assertEquals(e.leerRevoluciones(), 0);
-			assert(c.getSumatoriaGas() == 0.0);
-			assertEquals(c.getTiempoGas(), 1);
-			assertEquals(c.getTiempoVel(), 1);
+			MouseEvent me = new MouseEvent(new Label(), 0, 0, 0, 0, 0, 0, false);
+			ActionEvent ae = new ActionEvent(me.getSource(), me.getID(), me.paramString());
+			
+			// encender
+			i.getSimulacion().getPanelBotones().BotonEncenderActionPerformed(ae);
+			assertEquals(c.obtenerRev(), 0);
+			assertTrue(cal.getSumatoriaGas() == 0.0);
+			assertEquals(cal.getTiempoGas(), 1);
+			assertEquals(cal.getTiempoVel(), 1);
+			
+			// Acelerador: pulso boton
+			i.getSimulacion().getPanelBotones().toggleAcelerador();
+			i.getSimulacion().getPanelBotones().BotonAcelerarActionPerformed(ae);			
+			
+			int tVel = cal.getTiempoVel();
+			double velMedia = cal.leerVelMedia();
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				err = true;
+			}
 			
 			// cambiamos los valores y comprobamos
-			e.velAnterior = 20;
-			e.incrementarVueltas(300);
-			c.calcularVelocidadMedia(e);
-			assertEquals(c.getTiempoVel(), 2);
-			assert(c.leerVelMedia() == 20);
-			
+			assertTrue(tVel < cal.getTiempoVel());
+			assertTrue(velMedia < cal.leerVelMedia());
+
 			// reseteamo los valores y comprobamos
-			r.inicializarValores(c, e);
-			assertEquals(e.leerRevolucionesTotales(), 0);
-			assert(c.getSumatoriaGas() == 0.0);
-			assertEquals(c.getTiempoGas(), 1);
+			i.getSimulacion().getPanelBotones().BotonRestearActionPerformed(ae);			
+			assertEquals(c.obtenerRevtotal(), 0);
+			assertTrue(cal.getSumatoriaGas() == 0.0);
+			assertEquals(cal.getTiempoGas(), 1);
 		}
 		catch(AssertionError e){
 			System.out.print("\tnot ok\n");

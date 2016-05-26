@@ -1,20 +1,22 @@
 package testMonitorizacion;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import controlVelocidad.Eje;
 import monitorizacion.Monitorizacion;
 import monitorizacion.RelojM;
+import simulador.Interfaz;
 
 public class RelojMTest extends Thread {
 
+	private Interfaz i;
+	private Monitorizacion m;
 	private RelojM r;
-	private Eje e;
 	private boolean err;
 	
 	@BeforeClass
@@ -24,9 +26,27 @@ public class RelojMTest extends Thread {
 	
 	@Before
 	public void testInit(){
-		e = new Eje();
-		r = new RelojM(new Monitorizacion(e));
+		i = new Interfaz();
+		m = i.getSimulacion().getPanelBotones().getMonitorizacion();
+		r = m.getReloj();
 		err = false;
+	}
+	
+	@Test
+	public void testInicializacion(){
+		System.out.print("\ttestInicializacion...");
+		try {
+			assertNotNull(r);
+			assertTrue(r instanceof RelojM);
+			assertSame(r, i.getSimulacion().getPanelEtiquetas().getMonitorizacion().getReloj());
+		}
+		catch(AssertionError e){
+			System.out.print("\tnot ok\n");
+			err = true;
+			throw e;
+		}
+		
+		if(!err) System.out.print("\tok\n");
 	}
 	
 	@Test
@@ -34,9 +54,6 @@ public class RelojMTest extends Thread {
 		
 		System.out.print("\ttestCrono...");
 		try {
-			assertEquals(r.getTiempoTranscurrido(), 0);			
-			r.start();
-			
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {

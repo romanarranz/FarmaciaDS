@@ -3,7 +3,7 @@ import controlVelocidad.Eje;
 public class Monitorizacion {
 	private Deposito deposi;
 	private Notificaciones notify;
-	private Reseteo rest;
+	private Reseteo reset;
 	private CalculadorVelMed velMed;
 	private RelojM reloj;
     private Eje eje;
@@ -13,7 +13,7 @@ public class Monitorizacion {
 		deposi = new Deposito();
 		velMed = new CalculadorVelMed();
 		notify = new Notificaciones();
-		rest = new Reseteo();
+		reset = new Reseteo();
 	}
 	public void start(){
 		reloj.start();
@@ -56,7 +56,7 @@ public class Monitorizacion {
 		velMed.calcularGastoMedio(eje, deposi);
 	}
 	public void reseteo(){
-		rest.inicializarValores(velMed, eje);
+		reset.inicializarValores(velMed, eje);
 	}
 	public void cambiarANivelInicial() {
 		deposi.cambiarANivelInicial();		
@@ -74,5 +74,17 @@ public class Monitorizacion {
 		System.out.printf("\nAceite: %d\n", (int) notify._revolAceite);
 		System.out.printf("\nPastillas: %d\n", (int) notify._revolPastillas);
 		System.out.printf("\nRevision General %d\n", (int) notify._revolRevision);
+	}
+	public Reseteo getReseteo(){
+		return this.reset;
+	}
+	public CalculadorVelMed getCalculadorVelMed(){
+		return this.velMed;
+	}
+	public RelojM getReloj(){
+		return this.reloj;
+	}
+	public Notificaciones getNotificaciones(){
+		return this.notify;
 	}
 }

@@ -179,7 +179,7 @@ public class PanelBotones extends JPanel implements Observador {
 	synchronized private void BotonRepostarActionPerformed(ActionEvent evt) {
 		monitor.cambiarANivelInicial();
 	}
-	synchronized private void BotonRestearActionPerformed(ActionEvent evt) {
+	synchronized public void BotonRestearActionPerformed(ActionEvent evt) {
 		monitor.reseteo();
 	}
 	synchronized private void BotonMecanico1ActionPerformed(ActionEvent evt) {
@@ -256,7 +256,9 @@ public class PanelBotones extends JPanel implements Observador {
 	public ControlVelocidad getControlVelocidad(){
 		return control;
 	}
-	
+	public Monitorizacion getMonitorizacion(){
+		return monitor;
+	}
 	public void toggleAcelerador(){
 		BotonAcelerar.setSelected(!BotonAcelerar.isSelected());
 	}

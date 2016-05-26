@@ -190,4 +190,7 @@ public class PanelEtiquetas extends JPanel implements Observador {
 	public ControlVelocidad getControlVelocidad(){
 		return this.control;
 	}
+	public Monitorizacion getMonitorizacion(){
+		return this.monitor;
+	}
 }

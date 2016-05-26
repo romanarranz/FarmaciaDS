@@ -85,4 +85,7 @@ public class Notificaciones {
 	public String leerNotifRevision() {
 		return NOTIFREV;
 	}
+	public void setRevolPastillas(long a){
+		this._revolPastillas = a;
+	}
 }

@@ -2,6 +2,7 @@ package testControlVelocidad;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.awt.Label;
@@ -38,7 +39,8 @@ public class ControlVelocidadTest extends Thread {
 		System.out.print("\ttestInicializacion...");
 		try {
 			assertNotNull(c);
-			assertTrue(c instanceof ControlVelocidad);			
+			assertTrue(c instanceof ControlVelocidad);
+			assertSame(c, i.getSimulacion().getPanelEtiquetas().getControlVelocidad());
 		}
 		catch(AssertionError e){
 			System.out.print("\tnot ok\n");
