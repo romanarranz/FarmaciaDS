@@ -8,7 +8,6 @@ import javax.swing.JToggleButton;
 
 import controlVelocidad.*;
 import monitorizacion.Monitorizacion;
-import testMonitorizacion.*;
 
 @SuppressWarnings("serial")
 public class PanelBotones extends JPanel implements Observador {
@@ -135,7 +134,7 @@ public class PanelBotones extends JPanel implements Observador {
 			control.freno.pisar();
 		}
 	}
-	synchronized private void BotonMantenerActionPerformed(ActionEvent evt) {
+	synchronized public void BotonMantenerActionPerformed(ActionEvent evt) {
 		interfaz.etiquetaEstado.setText("Manteniendo");
 		control.cambiarPalanca(Palanca.MANTENIENDO);
 	}
@@ -151,7 +150,7 @@ public class PanelBotones extends JPanel implements Observador {
 		control.freno.soltar();
 		control.acelera.soltar();
 	}
-	synchronized public void BotonFrenoActionPerformed(ActionEvent evt) {		
+	synchronized public void BotonFrenoActionPerformed(ActionEvent evt) {	
 		if(BotonFreno.isSelected()){
 			interfaz.etiquetaEstado.setText("Frenando");
 			BotonFreno.setText("Soltar Freno");

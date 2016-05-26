@@ -82,6 +82,9 @@ public class ControlVelocidad {
 	public int leerVelSeleccionada() {
 		return almacena.leerVelSeleccionada();
 	}
+	public int leerVelocidad(){
+		return almacena.leerVelocidad();
+	}
 	public Almacenamiento getAlmacen(){
 		return this.almacena;
 	}
@@ -102,5 +105,8 @@ public class ControlVelocidad {
 	}
 	public Motor getMotor(){
 		return this.motor;
+	}
+	public Automatico getAutomatico(){
+		return this.automatico;
 	}
 }

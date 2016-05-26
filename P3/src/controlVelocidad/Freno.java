@@ -6,7 +6,7 @@ public class Freno implements Pedal{
 	public Freno() {
 		_estado = false;
 	}
-	public void decremento(int desaceleracion, Eje eje) {	
+	public void decremento(int desaceleracion, Eje eje) {
 		eje.incrementarVueltas(-desaceleracion);
 	}
 	public int actualizarFreno() {

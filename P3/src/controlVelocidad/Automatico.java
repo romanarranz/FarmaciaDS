@@ -11,5 +11,4 @@ public class Automatico {
 			aAcelerador_a.incrementar(0, eje);
 		}
 	}
-
 }

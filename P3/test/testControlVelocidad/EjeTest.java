@@ -2,14 +2,22 @@ package testControlVelocidad;
 
 import static org.junit.Assert.*;
 
+import java.awt.Label;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import controlVelocidad.ControlVelocidad;
 import controlVelocidad.Eje;
+import simulador.Interfaz;
 
 public class EjeTest {
 
+	private Interfaz i;
+	private ControlVelocidad c;
 	private Eje e;
 	private boolean err;
 	
@@ -20,8 +28,26 @@ public class EjeTest {
 	
 	@Before
 	public void testInit(){
-		e = new Eje();
+		i = new Interfaz();
+		c = i.getSimulacion().getPanelBotones().getControlVelocidad();
+		e = c.getEje();
 		err = false;
+	}
+	
+	@Test
+	public void testInicializacion(){
+		System.out.print("\ttestInicializacion...");
+		try {
+			assertNotNull(e);
+			assertTrue(e instanceof Eje);			
+		}
+		catch(AssertionError e){
+			System.out.print("\tnot ok\n");
+			err = true;
+			throw e;
+		}
+		
+		if(!err) System.out.print("\tok\n");
 	}
 	
 	@Test
@@ -29,16 +55,44 @@ public class EjeTest {
 		
 		System.out.print("\ttestRevoluciones...");
 		try {
-			assertTrue(e.MAXVUELTAS > 0);
-			assert(e.RADIO > 0 && e.RADIO < 1);
+			MouseEvent me = new MouseEvent(new Label(), 0, 0, 0, 0, 0, 0, false);
+			ActionEvent ae = new ActionEvent(me.getSource(), me.getID(), me.paramString());
+			
+			// encender motor
+			i.getSimulacion().getPanelBotones().BotonEncenderActionPerformed(ae);
+			assertTrue(c.getMotor().leerEstado() == true);
+			assertTrue(e.leerRevoluciones() == 0);
 			assertTrue(e.leerRevolucionesTotales() == 0);
 			
-			e.incrementarVueltas(10);
-			assertEquals(e.leerRevoluciones(), 10);
+			// acelerar
+			i.getSimulacion().getPanelBotones().BotonAcelerarActionPerformed(ae);
+			assertEquals(c.getAcelerador().leerEstado(), true);			
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				err = true;
+			}
+			assertTrue(e.leerRevoluciones() > 0);						
+
+			// frenando el motor
+			int revoluciones = c.obtenerRev();
+			i.getSimulacion().getPanelBotones().toggleFreno();
+			i.getSimulacion().getPanelBotones().BotonFrenoActionPerformed(ae);
+			
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				err = true;
+			}
+			// si las rev de antes son mayores a las de ahora, es porque estamos frenando
+			assertTrue(revoluciones > e.leerRevoluciones());
 		}
 		catch(AssertionError e){
 			System.out.print("\tnot ok\n");
 			err = true;
+			throw e;
 		}
 		
 		if(!err) System.out.print("\tok\n");

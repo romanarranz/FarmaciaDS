@@ -2,16 +2,22 @@ package testControlVelocidad;
 
 import static org.junit.Assert.*;
 
+import java.awt.Label;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import controlVelocidad.Almacenamiento;
 import controlVelocidad.ControlVelocidad;
 import controlVelocidad.Palanca;
+import simulador.Interfaz;
 
 public class PalancaTest {
 	
+	private Interfaz i;
+	private ControlVelocidad c;
 	private Palanca p;
 	private boolean err;
 	
@@ -22,52 +28,47 @@ public class PalancaTest {
 	
 	@Before
 	public void testInit(){
-		p = new Palanca();
+		i = new Interfaz();
+		c = i.getSimulacion().getPanelBotones().getControlVelocidad();
+		p = c.getPalanca();
 		err = false;
+	}
+	
+	@Test
+	public void testInicializacion(){
+		System.out.print("\ttestInicializacion...");
+		try {
+			assertNotNull(p);
+			assertTrue(p instanceof Palanca);			
+		}
+		catch(AssertionError e){
+			System.out.print("\tnot ok\n");
+			err = true;
+			throw e;
+		}
+		
+		if(!err) System.out.print("\tok\n");
 	}
 	
 	@Test
 	public void testEstado(){
 		System.out.print("\ttestEstado...");
 		try {
-			// tendriamos que simular una pulsacion de boton del actionperformed para que cambie el estado
-			// interno del singleton y obtener el resultado esperado.
+			MouseEvent me = new MouseEvent(new Label(), 0, 0, 0, 0, 0, 0, false);
+			ActionEvent ae = new ActionEvent(me.getSource(), me.getID(), me.paramString());
 			
-			// en resumen tengo que provocar la pulsacion por boton mediante sw.
-			assertFalse(p.leerEstado() > 2);
-			assertTrue(p.leerEstado() <= 2);
+			// encender motor
+			i.getSimulacion().getPanelBotones().BotonEncenderActionPerformed(ae);
+			assertTrue(p.leerEstado() == Palanca.APAGADO);
 			
-			p.cambiarEstado(1);
-			assertEquals(p.leerEstado(), 1);
-		}
-		catch(AssertionError e){
-			System.out.print("\tnot ok\n");
-			err = true;
-		}
-		
-		if(!err) System.out.print("\tok\n");
-	}
-	
-	/*
-	 * 
-	 * Sugerido por el profesor
-	 */
-	@Test
-	public void testAutomatico(){
-		System.out.print("\ttestEstado...");
-		ControlVelocidad c = new ControlVelocidad();
-		Almacenamiento a = c.getAlmacen();
-		try {
-			assertTrue(c.getPalanca().leerEstado() == Palanca.APAGADO);
-			assertTrue(c.obtenerVel() > 0);
-			
-			MouseEvent evento = new MouseEvent(new Label(), 0,0,0, false);
-			PanelBotones.palancaActionPerformed(evento);
+			i.getSimulacion().getPanelBotones().BotonMantenerActionPerformed(ae);
 			assertTrue(c.getPalanca().leerEstado() == Palanca.MANTENIENDO);
 		}
 		catch(AssertionError e){
 			System.out.print("\tnot ok\n");
 			err = true;
+			
+			throw e;
 		}
 		
 		if(!err) System.out.print("\tok\n");

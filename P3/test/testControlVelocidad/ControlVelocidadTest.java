@@ -1,16 +1,23 @@
 package testControlVelocidad;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import java.awt.Label;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import controlVelocidad.ControlVelocidad;;
+import controlVelocidad.ControlVelocidad;
+import simulador.Interfaz;;
 
 public class ControlVelocidadTest extends Thread {
+	
+	private Interfaz i;
 	private ControlVelocidad c;
 	private boolean err;
 	
@@ -21,32 +28,17 @@ public class ControlVelocidadTest extends Thread {
 	
 	@Before
 	public void testInit(){
-		c = new ControlVelocidad();
+		i = new Interfaz();
+		c = i.getSimulacion().getPanelBotones().getControlVelocidad();
 		err = false;
 	}
 	
 	@Test
-	public void testAlmacenaje(){
-		System.out.print("\ttestAlmacenaje...");
+	public void testInicializacion(){
+		System.out.print("\ttestInicializacion...");
 		try {
-			c.motor.cambiarEstado();
-			c.freno.soltar();
-			
-			c.acelera.pisar();
-			c.eje.velAnterior = 20;	
-			c.acelera.incrementar(20, c.eje);
-			c.acelera.actualizarAcelerador(10);
-			
-			c.almacena.almacenarVelocidad(20);
-			c.almacena.almacenarVelSeleccionada();
-			
-			c.controlarEstado();
-			
-			assertFalse(c.obtenerDist() < -100);
-			assertTrue(c.obtenerDist() >= 0);
-			assertFalse(c.obtenerVel() > 10);
-			assertEquals(c.obtenerVel(), 5);
-			
+			assertNotNull(c);
+			assertTrue(c instanceof ControlVelocidad);			
 		}
 		catch(AssertionError e){
 			System.out.print("\tnot ok\n");
@@ -58,42 +50,86 @@ public class ControlVelocidadTest extends Thread {
 	}
 	
 	@Test
-	public void testEjes(){
+	public void testAlmacenaje(){
+		System.out.print("\ttestAlmacenaje...");
+		try {			
+			MouseEvent me = new MouseEvent(new Label(), 0, 0, 0, 0, 0, 0, false);
+			ActionEvent ae = new ActionEvent(me.getSource(), me.getID(), me.paramString());
+			
+			// encender motor
+			i.getSimulacion().getPanelBotones().BotonEncenderActionPerformed(ae);
+			assertTrue(c.getMotor().leerEstado() == true);
+			assertTrue(c.obtenerDist() == 0);
+			
+			// acelerar
+			i.getSimulacion().getPanelBotones().BotonAcelerarActionPerformed(ae);
+			assertEquals(c.getAcelerador().leerEstado(), true);			
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				err = true;
+			}
+			assertTrue(c.obtenerVel() > 0);
+			assertTrue(c.obtenerDist() > 0);			
+		}
+		catch(AssertionError e){
+			System.out.print("\tnot ok\n");
+			err = true;
+			throw e;
+		}
 		
-		System.out.print("\ttestEjes...");
+		if(!err) System.out.print("\tok\n");
+	}
+	
+	@Test
+	public void testGeneral(){
+		
+		System.out.print("\ttestGeneral...");
 		try {
-			// encendiendo el motor
-			c.motor.cambiarEstado();
-			c.freno.soltar();
+			MouseEvent me = new MouseEvent(new Label(), 0, 0, 0, 0, 0, 0, false);
+			ActionEvent ae = new ActionEvent(me.getSource(), me.getID(), me.paramString());
 			
-			c.acelera.pisar();
-			c.eje.velAnterior = 20;			
-			c.acelera.incrementar(20, c.eje);
-			c.acelera.actualizarAcelerador(10);
+			// encender motor
+			i.getSimulacion().getPanelBotones().BotonEncenderActionPerformed(ae);
+			assertTrue(c.getMotor().leerEstado() == true);
 			
-			c.eje.calcularVelocidad(c.almacena);
-			c.eje.incrementarVueltas(3);
-			c.eje.calcularVelocidad(c.almacena);
+			// acelerar
+			i.getSimulacion().getPanelBotones().BotonAcelerarActionPerformed(ae);
+			assertEquals(c.getAcelerador().leerEstado(), true);			
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				err = true;
+			}
+			assertTrue(c.leerVelocidad() > 0);			
 			
-			c.controlarEstado();
-			
-			assertTrue(c.obtenerRev() > 0);
-			assertTrue(c.obtenerRevtotal() > 0);
-			
-			// mantiene
-			int revBefore = c.obtenerRev();
-			long revTotalBefore = c.obtenerRevtotal();
-			c.cambiarPalanca(1);
-			c.controlarEstado();
-			
-			assert(revBefore == c.obtenerRev());
-			assert(revTotalBefore == c.obtenerRevtotal());
+			// mantener velocidad
+			i.getSimulacion().getPanelBotones().BotonMantenerActionPerformed(ae);
+						
+			int revoluciones = c.obtenerRev();						
+			try { 
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				err = true;
+			}			
+			assertEquals(revoluciones, c.obtenerRev());
 			
 			// apagando el motor
-			c.motor.cambiarEstado();
-			c.controlarEstado();
+			i.getSimulacion().getPanelBotones().BotonEncenderActionPerformed(ae);			
+			assertTrue(c.getMotor().leerEstado() == false);
+			revoluciones = c.obtenerRev();
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				err = true;
+			}
 			
-			assertEquals(c.obtenerRev(), 0);
+			// si las rev de antes son mayores a las de ahora, esta parando progresivamente
+			assertTrue(revoluciones > c.obtenerRev());
 		}
 		catch(AssertionError e){
 			System.out.print("\tnot ok\n");
