@@ -23,7 +23,10 @@ public final class allTest {
 	    
 	    System.out.println("************ TEST MONITORIZACION ************");
 	    result = JUnitCore.runClasses(
+	    	testMonitorizacion.CalculadorVelMedTest.class,
 	    	testMonitorizacion.DepositoTest.class,
+	    	testMonitorizacion.MonitorizacionTest.class,
+	    	testMonitorizacion.NotificacionesTest.class,
 	    	testMonitorizacion.RelojMTest.class,
 	    	testMonitorizacion.ReseteoTest.class
 	    );
@@ -38,5 +41,7 @@ public final class allTest {
 	    for (Failure failure : result.getFailures()) {
 	    	System.out.println(failure.toString());
 	    }
+	    
+	    System.exit(0);
 	}
 }

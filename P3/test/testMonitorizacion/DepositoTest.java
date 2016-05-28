@@ -1,17 +1,22 @@
 package testMonitorizacion;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import java.awt.Label;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import controlVelocidad.Eje;
 import monitorizacion.Deposito;
+import simulador.Interfaz;
 
 public class DepositoTest {
 	
+	private Interfaz i;
 	private Deposito d;
 	private boolean err;
 	
@@ -22,8 +27,25 @@ public class DepositoTest {
 	
 	@Before
 	public void testInit(){
-		d = new Deposito();
+		i = new Interfaz();
+		d = i.getSimulacion().getPanelBotones().getMonitorizacion().getDeposito();
 		err = false;
+	}
+	
+	@Test
+	public void testInicializacion(){
+		System.out.print("\ttestInicializacion...");
+		try {
+			assertNotNull(d);
+			assertTrue(d instanceof Deposito);			
+		}
+		catch(AssertionError e){
+			System.out.print("\tnot ok\n");
+			err = true;
+			throw e;
+		}
+		
+		if(!err) System.out.print("\tok\n");
 	}
 	
 	@Test
@@ -31,19 +53,33 @@ public class DepositoTest {
 		
 		System.out.print("\ttestNiveles...");
 		try {
+			MouseEvent me = new MouseEvent(new Label(), 0, 0, 0, 0, 0, 0, false);
+			ActionEvent ae = new ActionEvent(me.getSource(), me.getID(), me.paramString());
+			
+			// encender
+			i.getSimulacion().getPanelBotones().BotonEncenderActionPerformed(ae);
 			assertTrue(d.leerNivelInicial() > 0);
 			assertTrue(d.leerNivelActual() == d.leerNivelInicial());
 			
-			// actualizamos el deposito incrementando las revoluciones para que disminuya el nivel
-			Eje e = new Eje();
-			e.incrementarVueltas(300);
-			d.actualizarDeposito(e);
-		
-			assert(d.leerNivelInicial() > d.leerNivelActual());
-			assertFalse(d.leerNivelActual() > 100);
+			// Acelerador: pulso boton
+			i.getSimulacion().getPanelBotones().toggleAcelerador();
+			i.getSimulacion().getPanelBotones().BotonAcelerarActionPerformed(ae);			
+						
+			double nivel = d.leerNivelActual();
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				err = true;
+			}
+			assertTrue(d.leerNivelInicial() > d.leerNivelActual());
+			assertTrue(d.leerNivelActual() < nivel);
 			
-			d.cambiarANivelInicial();
-			assert(d.leerNivelActual() == d.leerNivelInicial());
+			// Paramos motor y repostamos gasolina para rellenar el deposito
+			i.getSimulacion().getPanelBotones().BotonEncenderActionPerformed(ae);
+			i.getSimulacion().getPanelBotones().BotonRepostarActionPerformed(ae);
+			
+			assertTrue(d.leerNivelActual() == d.leerNivelInicial());
 		}
 		catch(AssertionError e){
 			System.out.print("\tnot ok\n");

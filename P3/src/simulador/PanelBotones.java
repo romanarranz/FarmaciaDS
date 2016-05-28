@@ -176,7 +176,7 @@ public class PanelBotones extends JPanel implements Observador {
 			interfaz.etiquetaEstado.setText("Parado2");	
 		}
 	}
-	synchronized private void BotonRepostarActionPerformed(ActionEvent evt) {
+	synchronized public void BotonRepostarActionPerformed(ActionEvent evt) {
 		monitor.cambiarANivelInicial();
 	}
 	synchronized public void BotonRestearActionPerformed(ActionEvent evt) {

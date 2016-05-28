@@ -87,4 +87,7 @@ public class Monitorizacion {
 	public Notificaciones getNotificaciones(){
 		return this.notify;
 	}
+	public Deposito getDeposito(){
+		return this.deposi;
+	}
 }
