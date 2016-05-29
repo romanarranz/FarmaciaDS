@@ -3,7 +3,7 @@ package simulador;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListaObservadoresObservables {
+public class ListaObservadoresObservables extends Observable {
 
 	private List<Observador> observadores;
 	
@@ -21,5 +21,11 @@ public class ListaObservadoresObservables {
 	
 	public List<Observador> getObservadores(){
 		return observadores;
+	}
+	
+	public void notificarObservadores(){
+		for(Observador o : observadores){
+			o.actualizar();
+		}
 	}
 }

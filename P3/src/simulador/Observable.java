@@ -1,21 +1,19 @@
 package simulador;
 
 public abstract class Observable {	
-	public ListaObservadoresObservables lObservadores;
+	public Observador o;
 	
 	public Observable() {
-		lObservadores = new ListaObservadoresObservables();
+		o = null;
 	}
-	public void agregarObservador(Observador o) {
-		lObservadores.incluir(o);
+	public void insertar(Observador o) {
+		this.o = o;
 	}
-	public void eliminarObservador(Observador o) {
-		lObservadores.eliminar(o);
+	public void eliminar(){
+		o = null;
 	}
-	public void notificarObservadores() {
-		for (Observador o : lObservadores.getObservadores()) {
-			o.actualizar();
-	    }
+	public void notificarObservador() {
+		o.actualizar();
 	}
 }
 
@@ -23,7 +21,7 @@ public abstract class Observable {
 para probarlo se tiene que unir todos lso observadores de la palicacion, panel de etiquetas y panel de botones en una misma
 clase observadora.
 
-Ahora una instancia de esa clase observadora ha que utilizarla dentro de un listener que nos permita asociarle
+Ahora una instancia de esa clase observadora hay que utilizarla dentro de un listener que nos permita asociarle
 observadores, de tal manera que cada vez que se acciona algo en ese listener se llama a notificar a esos observadores.
 
 */

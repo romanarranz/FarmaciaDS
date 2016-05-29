@@ -36,7 +36,8 @@ public final class allTest {
 	    
 	    System.out.println("************ TEST SIMULADOR ************");
 	    result = JUnitCore.runClasses(
-	    	testControlVelocidad.PedalTest.class
+	    	testSimulador.InterfazTest.class,
+	    	testSimulador.SimulacionTest.class
 	    );
 	    for (Failure failure : result.getFailures()) {
 	    	System.out.println(failure.toString());

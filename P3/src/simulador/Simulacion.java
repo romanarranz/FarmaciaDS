@@ -1,31 +1,44 @@
 package simulador;
-public class Simulacion extends Observable implements Runnable {
+public class Simulacion extends ListaObservadoresObservables implements Runnable {
 	
 	private final int INTERVALO = 100; 
+	private boolean running = true;
+	private int t;
 	
 	public Simulacion(PanelEtiquetas panelE, PanelBotones panelB){
-		this.agregarObservador(panelE);
-		this.agregarObservador(panelB);
+		this.incluir(panelE);
+		this.incluir(panelB);
+		t = 0;
+	}
+	
+	public void terminate(){
+		running = false;
 	}
 	
 	public void run() {
-		while(true){
+		while(running){
 			try{ 
 				Thread.sleep(INTERVALO);
+				t += INTERVALO;
 			}
 			catch(java.lang.InterruptedException e){
 				e.printStackTrace();
+				running = false;
 			}
 			
 			this.notificarObservadores();
 		}
 	}
 	
+	public int getTiempoTranscurrido(){
+		return t;
+	}
+	
 	public PanelEtiquetas getPanelEtiquetas(){
-		return (PanelEtiquetas) this.lObservadores.getObservadores().get(0);
+		return (PanelEtiquetas) this.getObservadores().get(0);
 	}
 	
 	public PanelBotones getPanelBotones(){
-		return (PanelBotones) this.lObservadores.getObservadores().get(1);
+		return (PanelBotones) this.getObservadores().get(1);
 	}
 }

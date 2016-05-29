@@ -18,7 +18,7 @@ public class Interfaz extends JApplet {
 	public Interfaz(){
 		PanelEtiquetas panelE = new PanelEtiquetas(this);
 		PanelBotones panelB = new PanelBotones(this);
-		simulacion =new Simulacion(panelE,panelB);
+		simulacion = new Simulacion(panelE,panelB);
 		control = new ControlVelocidad();
 		monitor = new Monitorizacion(control.eje);		
 		panelE.aniadirComponentes(monitor, control);
@@ -37,6 +37,10 @@ public class Interfaz extends JApplet {
 	
 	public ControlVelocidad getControlVelocidad(){
 		return this.control;
+	}
+	
+	public Monitorizacion getMonitorizacion(){
+		return this.monitor;
 	}
 	
 	public Simulacion getSimulacion(){

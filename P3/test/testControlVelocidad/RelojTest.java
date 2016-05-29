@@ -44,7 +44,6 @@ public class RelojTest extends Thread{
 		catch(AssertionError e){
 			System.out.print("\tnot ok\n");
 			err = true;
-			throw e;
 		}
 		
 		if(!err) System.out.print("\tok\n");

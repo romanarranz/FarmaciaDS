@@ -42,7 +42,6 @@ public class MotorTest {
 		catch(AssertionError e){
 			System.out.print("\tnot ok\n");
 			err = true;
-			throw e;
 		}
 		
 		if(!err) System.out.print("\tok\n");
@@ -64,9 +63,7 @@ public class MotorTest {
 		}
 		catch(AssertionError e){
 			System.out.print("\tnot ok\n");
-			err = true;
-			
-			throw e;
+			err = true;			
 		}
 		
 		if(!err) System.out.print("\tok\n");
