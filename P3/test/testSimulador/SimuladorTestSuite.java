@@ -7,7 +7,6 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
 	InterfazTest.class,
 	ListaObservadoresObservablesTest.class,
-	ObservadorTestListener.class,
 	PanelBotonesTest.class,
 	SimulacionTest.class
 })

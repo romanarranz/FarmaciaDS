@@ -38,7 +38,6 @@ public final class allTest {
 	    result = JUnitCore.runClasses(
 	    	testSimulador.InterfazTest.class,
 	    	testSimulador.ListaObservadoresObservablesTest.class,
-	    	testSimulador.ObservadorTestListener.class,
 	    	testSimulador.PanelBotonesTest.class,
 	    	testSimulador.SimulacionTest.class
 	    );

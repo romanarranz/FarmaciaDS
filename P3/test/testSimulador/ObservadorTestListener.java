@@ -9,8 +9,9 @@ import org.junit.BeforeClass;
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 import junit.framework.TestListener;
+import simulador.Observador;
 
-public class ObservadorTestListener implements TestListener {
+public class ObservadorTestListener implements TestListener, Observador {
 	
 	private List<String> eventList;
 	private boolean err;
@@ -28,26 +29,33 @@ public class ObservadorTestListener implements TestListener {
 	
 	@Override
 	public void addError(Test test, Throwable e) {
-		// TODO Auto-generated method stub
-		
+		eventList.add("error");
+		err = true;
+		System.out.print("\tnot ok\n");
 	}
 
 	@Override
 	public void addFailure(Test test, AssertionFailedError e) {
-		// TODO Auto-generated method stub
-		
+		eventList.add("failure");
+		System.out.print("\tnot ok\n");
+		err = true;
+		throw e;		
 	}
 
 	@Override
 	public void endTest(Test test) {
-		// TODO Auto-generated method stub
+		eventList = null;
 		
+		if(!err) System.out.print("\tok\n");
 	}
 
 	@Override
 	public void startTest(Test test) {
-		// TODO Auto-generated method stub
-		
+		eventList.add("start");
 	}
 
+	@Override
+	public void actualizar() {
+		eventList.add("actualizar");
+	}
 }
