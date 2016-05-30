@@ -37,6 +37,9 @@ public final class allTest {
 	    System.out.println("************ TEST SIMULADOR ************");
 	    result = JUnitCore.runClasses(
 	    	testSimulador.InterfazTest.class,
+	    	testSimulador.ListaObservadoresObservablesTest.class,
+	    	testSimulador.ObservadorTestListener.class,
+	    	testSimulador.PanelBotonesTest.class,
 	    	testSimulador.SimulacionTest.class
 	    );
 	    for (Failure failure : result.getFailures()) {

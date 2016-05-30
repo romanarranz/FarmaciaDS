@@ -5,7 +5,6 @@ import javax.swing.*;
 import controlVelocidad.*;
 import monitorizacion.Monitorizacion;
 import monitorizacion.Notificaciones;
-import testMonitorizacion.*;
 
 @SuppressWarnings("serial")
 public class PanelEtiquetas extends JPanel implements Observador {
