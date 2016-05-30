@@ -1,5 +1,6 @@
 package testSimulador;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -56,7 +57,29 @@ public class ListaObservadoresObservablesTest {
 	
 	@Test
 	public void testInsertaObservador(){
+		System.out.print("\ttestInsertaObservador...");
+		try {
+			// cuando se llama cualquier @Test se ejecuta @Before por lo tanto se habrá inicialzado
+			// la interfaz y se habran añadido 2 observadores a la lista de observadores
+			assertEquals(l.size(), 2);
+			
+			// comprobamos adicionalmente que pertenecen a la clase Observador
+			for(Object o: l){
+				assertTrue(o instanceof Observador);
+			}
+			
+			// no obstante pruebo a añadir otro mas
+			int size = l.size();
+			l.add(oT);
+			assertTrue(size < l.size());
+		}
+		catch(AssertionError e){
+			System.out.print("\tnot ok\n");
+			err = true;
+			throw e;
+		}
 		
+		if(!err) System.out.print("\tok\n");
 	}
 	
 	@Test
@@ -70,6 +93,25 @@ public class ListaObservadoresObservablesTest {
 	
 	@Test
 	public void testEliminaObservador(){
+		System.out.print("\ttestEliminaObservador...");
+		try {
+			
+			// elimino un observador
+			int size = l.size();
+			l.remove(0);
+			
+			assertTrue(size > l.size());
+			
+			// elimino todos los observadores
+			l.clear();
+			assertEquals(l.size(), 0);
+		}
+		catch(AssertionError e){
+			System.out.print("\tnot ok\n");
+			err = true;
+			throw e;
+		}
 		
+		if(!err) System.out.print("\tok\n");
 	}
 }

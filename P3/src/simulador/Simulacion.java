@@ -5,7 +5,12 @@ public class Simulacion extends ListaObservadoresObservables implements Runnable
 	private boolean running = true;
 	private int t;
 	
+	private PanelEtiquetas pe;
+	private PanelBotones pb;
+	
 	public Simulacion(PanelEtiquetas panelE, PanelBotones panelB){
+		pe = panelE;
+		pb = panelB;
 		this.incluir(panelE);
 		this.incluir(panelB);
 		t = 0;
@@ -35,10 +40,10 @@ public class Simulacion extends ListaObservadoresObservables implements Runnable
 	}
 	
 	public PanelEtiquetas getPanelEtiquetas(){
-		return (PanelEtiquetas) this.getObservadores().get(0);
+		return pe;
 	}
 	
 	public PanelBotones getPanelBotones(){
-		return (PanelBotones) this.getObservadores().get(1);
+		return pb;
 	}
 }
