@@ -143,10 +143,33 @@ public class PanelEtiquetas extends JPanel implements Observador {
 		interfaz.etiquetaVelAuto.setText(Integer.toString(control.leerVelSeleccionada()));
 		etiquetaVelMediaV.setText(Double.toString(monitor.comprobarvelMed()));
 		
+		if(this == null){
+			System.out.println("\n\n\nWTF");
+		}
+		else if(ListaObservadoresObservables.eventosProducidos.get(this) == null){
+			System.out.println("\n\n\nPEV-WTF2");
+		}
+		else if(ListaObservadoresObservables.eventosProducidos == null){
+			System.out.println("\n\n\nWTF3");
+		}
+		ListaObservadoresObservables.eventosProducidos.get(this).add(new String("Mostrar Velocidad"));
 	}
 	synchronized void mostrarRevoluciones() {
 		etiquetaRotacionV.setText(Integer.toString(control.obtenerRev()));
 		etiquetaRotaciontV.setText(Long.toString(control.obtenerRevtotal()));
+		
+		if(this == null){
+			System.out.println("\n\n\nPER-WTF");
+		}
+		else if(ListaObservadoresObservables.eventosProducidos.get(this) == null){
+			System.out.println("\n\n\nPER-WTF2");
+		}
+		else if(ListaObservadoresObservables.eventosProducidos == null){
+			System.out.println("\n\n\nPER-WTF3");
+		}
+		
+		
+		ListaObservadoresObservables.eventosProducidos.get(this).add(new String("Mostrar Revoluciones"));
 	}
 	synchronized private void mostrarNotificaciones() {
 		String notificacionAceite = monitor.comprobarNotificacionesAceite();
@@ -154,18 +177,51 @@ public class PanelEtiquetas extends JPanel implements Observador {
 		String notificacionRev = monitor.comprobarNotificacionesGeneral();
 		if(notificacionAceite == Notificaciones.NOTIFACEITE){
 			etiquetaNotifi1.setText(notificacionAceite);
+			
+			if(this == null){
+				System.out.println("\n\n\nPEN-WTF");
+			}
+			else if(ListaObservadoresObservables.eventosProducidos.get(this) == null){
+				System.out.println("\n\n\nPEN-WTF2");
+			}
+			else if(ListaObservadoresObservables.eventosProducidos == null){
+				System.out.println("\n\n\nPEN-WTF3");
+			}
+			ListaObservadoresObservables.eventosProducidos.get(this).add(new String("Notifica Aceite"));
 		}
 		else{
 			etiquetaNotifi1.setText("1---");
 		}
 		if(notificacionPastillas == Notificaciones.NOTIFPASTILLAS){
 			etiquetaNotifi2.setText(notificacionPastillas);
+			
+			if(this == null){
+				System.out.println("\n\n\nPEP-WTF");
+			}
+			else if(ListaObservadoresObservables.eventosProducidos.get(this) == null){
+				System.out.println("\n\n\nPEP-WTF2");
+			}
+			else if(ListaObservadoresObservables.eventosProducidos == null){
+				System.out.println("\n\n\nPEP-WTF3");
+			}
+			ListaObservadoresObservables.eventosProducidos.get(this).add(new String("Notifica Pastillas"));
 		}
 		else{
 			etiquetaNotifi2.setText("2---");
 		}
 		if(notificacionRev == Notificaciones.NOTIFREV){
 			etiquetaNotifi3.setText(notificacionRev);
+			
+			if(this == null){
+				System.out.println("\n\n\nWTF");
+			}
+			else if(ListaObservadoresObservables.eventosProducidos.get(this) == null){
+				System.out.println("\n\n\nPENRV-WTF2");
+			}
+			else if(ListaObservadoresObservables.eventosProducidos == null){
+				System.out.println("\n\n\nWTF3");
+			}
+			ListaObservadoresObservables.eventosProducidos.get(this).add(new String("Notifica Revision"));
 		}
 		else{
 			etiquetaNotifi3.setText("3---");
@@ -175,6 +231,17 @@ public class PanelEtiquetas extends JPanel implements Observador {
 	private void mostrarGasolina() {
 		etiquetaCombustibleV.setText(Double.toString(monitor.comprobarCombustible()));	
 		etiquetaCombustibleMV.setText(Double.toString(monitor.comprobarCombustibleMedio()));
+		
+		if(this == null){
+			System.out.println("\n\n\nWTF");
+		}
+		else if(ListaObservadoresObservables.eventosProducidos.get(this) == null){
+			System.out.println("\n\n\nPEG-WTF2");
+		}
+		else if(ListaObservadoresObservables.eventosProducidos == null){
+			System.out.println("\n\n\nWTF3");
+		}
+		ListaObservadoresObservables.eventosProducidos.get(this).add(new String("Mostrar Gasolina"));
 	}
 	
 	@Override

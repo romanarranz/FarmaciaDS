@@ -4,24 +4,29 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.awt.Label;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import junit.framework.TestResult;
 import simulador.Interfaz;
+import simulador.ListaObservadoresObservables;
 import simulador.Observador;
 import simulador.Simulacion;
 
-public class ListaObservadoresObservablesTest {
+public class ListaObservadoresObservablesTest extends Thread {
 	
 	private Interfaz i;
 	private Simulacion s;
 	private List<Observador> l;
 	private ObservadorTestListener oT;
-	private TestResult result;
 	private boolean err;
 	
 	@BeforeClass
@@ -31,12 +36,16 @@ public class ListaObservadoresObservablesTest {
 	
 	@Before
 	public void testInit(){
+		oT = new ObservadorTestListener();
 		i = new Interfaz();
 		s = i.getSimulacion();
 		l = s.getObservadores();
-		result = new TestResult();
-	    result.addListener(oT);
 	    err = false;
+	}
+	
+	@After
+	public void destroy(){
+		ListaObservadoresObservables.eventosProducidos = null;
 	}
 	
 	@Test
@@ -70,7 +79,7 @@ public class ListaObservadoresObservablesTest {
 			
 			// no obstante pruebo a añadir otro mas
 			int size = l.size();
-			l.add(oT);
+			s.incluir(oT);
 			assertTrue(size < l.size());
 		}
 		catch(AssertionError e){
@@ -84,11 +93,46 @@ public class ListaObservadoresObservablesTest {
 	
 	@Test
 	public void testNotificarObservadores(){
-		// añadir a la lista de observadores los objetos que se espera que tendra la lista de eventos:
-		// 1- objeto correspondiente al inicio del test
-		// 2- otro correspondiente a la llamada de actualizar
+		System.out.print("\ttestNotificarObservadores...");
+		try{
+			List<Object> listaEventos = new ArrayList<Object>();
+			s.incluir(oT);
+			
+			// arrancamos el motor
+			MouseEvent me = new MouseEvent(new Label(), 0, 0, 0, 0, 0, 0, false);
+			ActionEvent ae = new ActionEvent(me.getSource(), me.getID(), me.paramString());
+			
+			// encender
+			i.getSimulacion().getPanelBotones().BotonEncenderActionPerformed(ae);
+			
+			// Acelerador: pulso boton
+			i.getSimulacion().getPanelBotones().toggleAcelerador();
+			i.getSimulacion().getPanelBotones().BotonAcelerarActionPerformed(ae);
+			
+			// Mantener velocidad
+			i.getSimulacion().getPanelBotones().BotonMantenerActionPerformed(ae);
+			
+			// Apagando el motor
+			i.getSimulacion().getPanelBotones().BotonEncenderActionPerformed(ae);			
+			
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				err = true;
+			}
+			System.out.println();
+			for (Map.Entry<Observador, List<Object>> entry : ListaObservadoresObservables.eventosProducidos.entrySet())				
+			    System.out.println(entry.getKey().getClass().getSimpleName() + "\n\t" + entry.getValue().toString());
+			
+		}
+		catch(AssertionError e){
+			System.out.print("\tnot ok\n");
+			err = true;
+			throw e;
+		}
 		
-		// COMPARAR esta lista con la que tiene el escuchador ficticio... (ObservadorTestListener)
+		if(!err) System.out.print("\tok\n");
 	}
 	
 	@Test

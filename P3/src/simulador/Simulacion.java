@@ -1,4 +1,8 @@
 package simulador;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+
 public class Simulacion extends ListaObservadoresObservables implements Runnable {
 	
 	private final int INTERVALO = 100; 
@@ -9,6 +13,7 @@ public class Simulacion extends ListaObservadoresObservables implements Runnable
 	private PanelBotones pb;
 	
 	public Simulacion(PanelEtiquetas panelE, PanelBotones panelB){
+		ListaObservadoresObservables.eventosProducidos = new LinkedHashMap<Observador, List<Object>>();
 		pe = panelE;
 		pb = panelB;
 		this.incluir(panelE);

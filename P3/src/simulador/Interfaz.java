@@ -46,4 +46,8 @@ public class Interfaz extends JApplet {
 	public Simulacion getSimulacion(){
 		return this.simulacion;
 	}
+	
+	public JLabel getEtiquetaEstado(){
+		return etiquetaEstado;
+	}
 }
