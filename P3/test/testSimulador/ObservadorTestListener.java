@@ -23,15 +23,7 @@ public class ObservadorTestListener implements Observador {
 
 	@Override
 	public void actualizar() {
-		if(this == null){
-			System.out.println("\n\n\nO-WTF");
-		}
-		else if(ListaObservadoresObservables.eventosProducidos.get(this) == null){
-			System.out.println("\n\n\nO-WTF2");
-		}
-		else if(ListaObservadoresObservables.eventosProducidos == null){
-			System.out.println("\n\n\nO-WTF3");
-		}
+
 		ListaObservadoresObservables.eventosProducidos.get(this).add(new String("actualizarObservadorTest"));
 	}
 }

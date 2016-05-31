@@ -1,6 +1,7 @@
 package simulador;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,11 +12,12 @@ public class ListaObservadoresObservables extends Observable {
 	
 	public ListaObservadoresObservables(){
 		observadores = new ArrayList<>();
+		eventosProducidos = new LinkedHashMap<Observador, List<Object>>();
 	}
 	
 	public void incluir(Observador o){
 		observadores.add(o);
-		eventosProducidos.put(o, new ArrayList<Object>());
+		eventosProducidos.put(o, new ArrayList<>());
 	}
 	
 	public void eliminar(Observador o){

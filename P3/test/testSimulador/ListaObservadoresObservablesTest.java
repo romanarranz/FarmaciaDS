@@ -110,17 +110,18 @@ public class ListaObservadoresObservablesTest extends Thread {
 			i.getSimulacion().getPanelBotones().BotonAcelerarActionPerformed(ae);
 			
 			// Mantener velocidad
-			i.getSimulacion().getPanelBotones().BotonMantenerActionPerformed(ae);
+			i.getSimulacion().getPanelBotones().BotonMantenerActionPerformed(ae);			
 			
 			// Apagando el motor
-			i.getSimulacion().getPanelBotones().BotonEncenderActionPerformed(ae);			
+			i.getSimulacion().getPanelBotones().BotonEncenderActionPerformed(ae);
 			
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-				err = true;
+			try{
+				Thread.sleep(110);
 			}
+			catch(java.lang.InterruptedException e){
+				e.printStackTrace();	
+			}
+			
 			System.out.println();
 			for (Map.Entry<Observador, List<Object>> entry : ListaObservadoresObservables.eventosProducidos.entrySet())				
 			    System.out.println(entry.getKey().getClass().getSimpleName() + "\n\t" + entry.getValue().toString());
@@ -129,6 +130,12 @@ public class ListaObservadoresObservablesTest extends Thread {
 		catch(AssertionError e){
 			System.out.print("\tnot ok\n");
 			err = true;
+			throw e;
+		}
+		catch(Exception e){
+			System.out.print("\tnot ok\n");
+			err = true;
+			e.printStackTrace();
 			throw e;
 		}
 		
