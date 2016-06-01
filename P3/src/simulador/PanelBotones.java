@@ -129,20 +129,20 @@ public class PanelBotones extends JPanel implements Observador {
 			control.acelera.pisar();
 			control.freno.soltar();
 			
-			ListaObservadoresObservables.eventosProducidos.get(this).add(new String("Acelerando"));
+			interfaz.getSimulacion().getEventosProducidos().get(this).add(new String("Acelerando"));
 		}
 		else{
 			interfaz.etiquetaEstado.setText("Parado");
 			control.freno.pisar();
 			
-			ListaObservadoresObservables.eventosProducidos.get(this).add(new String("Parado"));
+			interfaz.getSimulacion().getEventosProducidos().get(this).add(new String("Parado"));
 		}
 	}
 	synchronized public void BotonMantenerActionPerformed(ActionEvent evt) {
 		interfaz.etiquetaEstado.setText("Manteniendo");
 		control.cambiarPalanca(Palanca.MANTENIENDO);
 		
-		ListaObservadoresObservables.eventosProducidos.get(this).add(new String("Manteniendo"));
+		interfaz.getSimulacion().getEventosProducidos().get(this).add(new String("Manteniendo"));
 	}
 	synchronized private void BotonPararActionPerformed(ActionEvent evt) {
 		interfaz.etiquetaEstado.setText("Para SCAV");
@@ -150,7 +150,7 @@ public class PanelBotones extends JPanel implements Observador {
 		control.freno.soltar();
 		control.acelera.soltar();
 		
-		ListaObservadoresObservables.eventosProducidos.get(this).add(new String("Para SCAV"));
+		interfaz.getSimulacion().getEventosProducidos().get(this).add(new String("Para SCAV"));
 	}
 	synchronized public void BotonReiniciarActionPerformed(ActionEvent evt) {
 		interfaz.etiquetaEstado.setText("Reiniciando");
@@ -158,7 +158,7 @@ public class PanelBotones extends JPanel implements Observador {
 		control.freno.soltar();
 		control.acelera.soltar();
 		
-		ListaObservadoresObservables.eventosProducidos.get(this).add(new String("Reiniciando"));
+		interfaz.getSimulacion().getEventosProducidos().get(this).add(new String("Reiniciando"));
 	}
 	synchronized public void BotonFrenoActionPerformed(ActionEvent evt) {	
 		if(BotonFreno.isSelected()){
@@ -168,14 +168,14 @@ public class PanelBotones extends JPanel implements Observador {
 			control.freno.pisar();
 			control.acelera.soltar();
 			
-			ListaObservadoresObservables.eventosProducidos.get(this).add(new String("Frenando"));
+			interfaz.getSimulacion().getEventosProducidos().get(this).add(new String("Frenando"));
 		}
 		else{
 			BotonFreno.setText("Frenar");
 			control.freno.soltar();
 			interfaz.etiquetaEstado.setText("Punto muerto");	
 			
-			ListaObservadoresObservables.eventosProducidos.get(this).add(new String("Punto Muerto"));
+			interfaz.getSimulacion().getEventosProducidos().get(this).add(new String("Punto Muerto"));
 		}
 	}
 	synchronized public void BotonEncenderActionPerformed(ActionEvent evt) {
@@ -184,43 +184,43 @@ public class PanelBotones extends JPanel implements Observador {
 			BotonEncender.setText("Apagar");
 			interfaz.etiquetaEstado.setText("Arrancado");
 			
-			ListaObservadoresObservables.eventosProducidos.get(this).add(new String("Arrancando"));
+			interfaz.getSimulacion().getEventosProducidos().get(this).add(new String("Arrancando"));
 		}
 		else{
 			BotonEncender.setText("Arrancar");
 			control.acelera.soltar();
 			interfaz.etiquetaEstado.setText("Parado2");	
 			
-			ListaObservadoresObservables.eventosProducidos.get(this).add(new String("Parado2"));
+			interfaz.getSimulacion().getEventosProducidos().get(this).add(new String("Parado2"));
 		}
 	}
 	synchronized public void BotonRepostarActionPerformed(ActionEvent evt) {
 		monitor.cambiarANivelInicial();
 		
-		ListaObservadoresObservables.eventosProducidos.get(this).add(new String("Repostar"));
+		interfaz.getSimulacion().getEventosProducidos().get(this).add(new String("Repostar"));
 	}
 	synchronized public void BotonRestearActionPerformed(ActionEvent evt) {
 		monitor.reseteo();
 		
-		ListaObservadoresObservables.eventosProducidos.get(this).add(new String("Restear"));
+		interfaz.getSimulacion().getEventosProducidos().get(this).add(new String("Restear"));
 	}
 	synchronized private void BotonMecanico1ActionPerformed(ActionEvent evt) {
 		monitor.mecanicoAceite();
 		monitor.NotificaMecanico();	
 		
-		ListaObservadoresObservables.eventosProducidos.get(this).add(new String("Mecanico Aceite"));
+		interfaz.getSimulacion().getEventosProducidos().get(this).add(new String("Mecanico Aceite"));
 	}
 	synchronized private void BotonMecanico2ActionPerformed(ActionEvent evt) {
 		monitor.mecanicoPastillas();
 		monitor.NotificaMecanico();
 		
-		ListaObservadoresObservables.eventosProducidos.get(this).add(new String("Mecanico Pastillas"));
+		interfaz.getSimulacion().getEventosProducidos().get(this).add(new String("Mecanico Pastillas"));
 	}
 	synchronized private void BotonMecanico3ActionPerformed(ActionEvent evt) {
 		monitor.mecanicoGeneral();
 		monitor.NotificaMecanico();
 		
-		ListaObservadoresObservables.eventosProducidos.get(this).add(new String("Mecanico General"));
+		interfaz.getSimulacion().getEventosProducidos().get(this).add(new String("Mecanico General"));
 	}
 	private void activarBotones() {
 		if(control.motor.leerEstado()){

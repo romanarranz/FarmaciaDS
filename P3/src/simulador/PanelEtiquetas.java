@@ -144,13 +144,13 @@ public class PanelEtiquetas extends JPanel implements Observador {
 		interfaz.etiquetaVelAuto.setText(Integer.toString(control.leerVelSeleccionada()));
 		etiquetaVelMediaV.setText(Double.toString(monitor.comprobarvelMed()));
 		
-		ListaObservadoresObservables.eventosProducidos.get(this).add(new String("Mostrar Velocidad"));
+		interfaz.getSimulacion().getEventosProducidos().get(this).add(new String("Mostrar Velocidad"));
 	}
 	synchronized void mostrarRevoluciones() {
 		etiquetaRotacionV.setText(Integer.toString(control.obtenerRev()));
 		etiquetaRotaciontV.setText(Long.toString(control.obtenerRevtotal()));
 		
-		ListaObservadoresObservables.eventosProducidos.get(this).add(new String("Mostrar Revoluciones"));
+		interfaz.getSimulacion().getEventosProducidos().get(this).add(new String("Mostrar Revoluciones"));
 	}
 	synchronized private void mostrarNotificaciones() {
 		String notificacionAceite = monitor.comprobarNotificacionesAceite();
@@ -159,7 +159,7 @@ public class PanelEtiquetas extends JPanel implements Observador {
 		if(notificacionAceite == Notificaciones.NOTIFACEITE){
 			etiquetaNotifi1.setText(notificacionAceite);
 			
-			ListaObservadoresObservables.eventosProducidos.get(this).add(new String("Notifica Aceite"));
+			interfaz.getSimulacion().getEventosProducidos().get(this).add(new String("Notifica Aceite"));
 		}
 		else{
 			etiquetaNotifi1.setText("1---");
@@ -167,7 +167,7 @@ public class PanelEtiquetas extends JPanel implements Observador {
 		if(notificacionPastillas == Notificaciones.NOTIFPASTILLAS){
 			etiquetaNotifi2.setText(notificacionPastillas);
 						
-			ListaObservadoresObservables.eventosProducidos.get(this).add(new String("Notifica Pastillas"));
+			interfaz.getSimulacion().getEventosProducidos().get(this).add(new String("Notifica Pastillas"));
 		}
 		else{
 			etiquetaNotifi2.setText("2---");
@@ -175,7 +175,7 @@ public class PanelEtiquetas extends JPanel implements Observador {
 		if(notificacionRev == Notificaciones.NOTIFREV){
 			etiquetaNotifi3.setText(notificacionRev);
 		
-			ListaObservadoresObservables.eventosProducidos.get(this).add(new String("Notifica Revision"));
+			interfaz.getSimulacion().getEventosProducidos().get(this).add(new String("Notifica Revision"));
 		}
 		else{
 			etiquetaNotifi3.setText("3---");
@@ -186,7 +186,7 @@ public class PanelEtiquetas extends JPanel implements Observador {
 		etiquetaCombustibleV.setText(Double.toString(monitor.comprobarCombustible()));	
 		etiquetaCombustibleMV.setText(Double.toString(monitor.comprobarCombustibleMedio()));
 		
-		ListaObservadoresObservables.eventosProducidos.get(this).add(new String("Mostrar Gasolina"));
+		interfaz.getSimulacion().getEventosProducidos().get(this).add(new String("Mostrar Gasolina"));
 	}
 	
 	@Override

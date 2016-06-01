@@ -9,16 +9,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import simulador.Interfaz;
-import simulador.ListaObservadoresObservables;
 import simulador.Observador;
+import simulador.PanelBotones;
 import simulador.Simulacion;
 
 public class ListaObservadoresObservablesTest extends Thread {
@@ -36,16 +34,11 @@ public class ListaObservadoresObservablesTest extends Thread {
 	
 	@Before
 	public void testInit(){
-		oT = new ObservadorTestListener();
 		i = new Interfaz();
+		oT = new ObservadorTestListener(i);		
 		s = i.getSimulacion();
 		l = s.getObservadores();
 	    err = false;
-	}
-	
-	@After
-	public void destroy(){
-		ListaObservadoresObservables.eventosProducidos = null;
 	}
 	
 	@Test
@@ -95,7 +88,7 @@ public class ListaObservadoresObservablesTest extends Thread {
 	public void testNotificarObservadores(){
 		System.out.print("\ttestNotificarObservadores...");
 		try{
-			List<Object> listaEventos = new ArrayList<Object>();
+			List<Object> eventosPanelBotones = new ArrayList<Object>();
 			s.incluir(oT);
 			
 			// arrancamos el motor
@@ -104,28 +97,39 @@ public class ListaObservadoresObservablesTest extends Thread {
 			
 			// encender
 			i.getSimulacion().getPanelBotones().BotonEncenderActionPerformed(ae);
+			eventosPanelBotones.add(new String("Parado2"));			
 			
 			// Acelerador: pulso boton
 			i.getSimulacion().getPanelBotones().toggleAcelerador();
 			i.getSimulacion().getPanelBotones().BotonAcelerarActionPerformed(ae);
+			eventosPanelBotones.add(new String("Acelerando"));
 			
 			// Mantener velocidad
 			i.getSimulacion().getPanelBotones().BotonMantenerActionPerformed(ae);			
+			eventosPanelBotones.add(new String("Manteniendo"));
 			
-			// Apagando el motor
-			i.getSimulacion().getPanelBotones().BotonEncenderActionPerformed(ae);
-			
+			// esperamos 1 segundo para que intervengan varias actualizaciones del patron observador
 			try{
-				Thread.sleep(110);
+				Thread.sleep(1000);
 			}
 			catch(java.lang.InterruptedException e){
 				e.printStackTrace();	
 			}
 			
-			System.out.println();
-			for (Map.Entry<Observador, List<Object>> entry : ListaObservadoresObservables.eventosProducidos.entrySet())				
-			    System.out.println(entry.getKey().getClass().getSimpleName() + "\n\t" + entry.getValue().toString());
+			// Apagando el motor
+			i.getSimulacion().getPanelBotones().BotonEncenderActionPerformed(ae);
+			eventosPanelBotones.add(new String("Parado2"));
 			
+			/*
+			System.out.println();
+			for (Map.Entry<Observador, List<Object>> entry : s.getEventosProducidos().entrySet())				
+			    System.out.println(entry.getKey().getClass().getSimpleName() + "\n\t" + entry.getValue().toString());
+			*/
+			
+			// la lista que hemos definido debe coincidir con la misma lista de eventos que tenga ese observador 
+			// que ha ido rellenando 
+			PanelBotones pb = s.getPanelBotones();
+			assertEquals(eventosPanelBotones, s.getEventosProducidos().get(pb));			
 		}
 		catch(AssertionError e){
 			System.out.print("\tnot ok\n");

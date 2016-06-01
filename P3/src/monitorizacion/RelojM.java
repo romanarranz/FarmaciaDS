@@ -15,7 +15,6 @@ public class RelojM extends Thread{
 			try{ 
 				sleep(INTERVALO);
 				t += INTERVALO;
-				System.out.println("RelojM"+t);
 			}
 			catch(java.lang.InterruptedException e){
 				e.printStackTrace();

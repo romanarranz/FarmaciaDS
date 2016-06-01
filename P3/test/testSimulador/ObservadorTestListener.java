@@ -1,6 +1,6 @@
 package testSimulador;
 
-import simulador.ListaObservadoresObservables;
+import simulador.Interfaz;
 import simulador.Observador;
 
 /*
@@ -19,11 +19,14 @@ Comprobamos la lista de eventos que hemos disparado (string) con las listas de e
 
 public class ObservadorTestListener implements Observador {
 	
-	public ObservadorTestListener() {}
+	private Interfaz i;
+	
+	public ObservadorTestListener(Interfaz in){
+		i = in;
+	}
 
 	@Override
 	public void actualizar() {
-
-		ListaObservadoresObservables.eventosProducidos.get(this).add(new String("actualizarObservadorTest"));
+		i.getSimulacion().getEventosProducidos().get(this).add(new String("actualizarObservadorTest"));
 	}
 }

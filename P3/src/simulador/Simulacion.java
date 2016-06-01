@@ -27,7 +27,6 @@ public class Simulacion extends ListaObservadoresObservables implements Runnable
 			try{ 
 				Thread.sleep(INTERVALO);
 				t += INTERVALO;
-				System.out.println(t);
 			}
 			catch(java.lang.InterruptedException e){
 				e.printStackTrace();

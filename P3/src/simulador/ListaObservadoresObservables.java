@@ -8,7 +8,7 @@ import java.util.Map;
 public class ListaObservadoresObservables extends Observable {
 
 	private List<Observador> observadores;
-	public static Map<Observador, List<Object>> eventosProducidos;
+	public Map<Observador, List<Object>> eventosProducidos;
 	
 	public ListaObservadoresObservables(){
 		observadores = new ArrayList<>();
@@ -33,5 +33,9 @@ public class ListaObservadoresObservables extends Observable {
 		for(Observador o : observadores){
 			o.actualizar();
 		}
+	}
+	
+	public Map<Observador, List<Object>> getEventosProducidos(){
+		return eventosProducidos;
 	}
 }
